@@ -17,7 +17,6 @@ import com.terapico.uccaf.BaseUserContext;
 
 public class ImageCustomManager extends ImageManagerImpl {
 	
-	
 	@Override
 	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
 			throws IllegalAccessException {
@@ -44,18 +43,18 @@ public class ImageCustomManager extends ImageManagerImpl {
 		return value;
 	}
 	
-	public BlobObject helloImage2(int width, int height, String note) throws IOException {
+	public BlobObject helloImage2(String note, int width, int height,String backgroundColor) throws IOException {
 		
 		BlobObject blob = new BlobObject();
 		
 		int internalWidth = outOfThen(width,10,1400,600);
 		int internalHeight = outOfThen(height,10,1400,400);
 		
-		BufferedImage off_Image =
+		BufferedImage bufferredImage =
 				  new BufferedImage(internalWidth, internalHeight,
 				                    BufferedImage.TYPE_INT_ARGB);
-
-		Graphics2D g2 = off_Image.createGraphics();
+		
+		Graphics2D g2 = bufferredImage.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		Font f = new Font("Monospaced", Font.BOLD, 14);
@@ -74,7 +73,7 @@ public class ImageCustomManager extends ImageManagerImpl {
 		g2.draw(shape);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
-		ImageIO.write(off_Image, "png", bos);
+		ImageIO.write(bufferredImage, "png", bos);
 		blob.setData(bos.toByteArray());
 		blob.setMimeType(BlobObject.TYPE_PNG);
 		//BlobObject.TYPE_XLSX
