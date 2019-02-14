@@ -71,6 +71,7 @@ const renderReferenceCell=(value, record)=>{
 const displayColumns = [
   { title: 'Id', debugtype: 'string', dataIndex: 'id', width: '20',render: (text, record)=>renderTextCell(text,record) },
   { title: 'Name', debugtype: 'string', dataIndex: 'name', width: '14',render: (text, record)=>renderTextCell(text,record) },
+  { title: 'Image', dataIndex: 'image', render: (text, record) => renderImageCell(text,record,'Image') },
   { title: 'Create Time', dataIndex: 'createTime', render: (text, record) =>renderDateTimeCell(text,record)  },
   { title: 'Platform', dataIndex: 'platform', render: (text, record) => renderReferenceCell(text, record)},
 
@@ -79,6 +80,7 @@ const displayColumns = [
 const fieldLabels = {
   id: 'Id',
   name: 'Name',
+  image: 'Image',
   createTime: 'Create Time',
   platform: 'Platform',
 

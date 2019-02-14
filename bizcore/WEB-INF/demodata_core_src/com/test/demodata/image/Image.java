@@ -19,6 +19,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 	
 	public static final String ID_PROPERTY                    = "id"                ;
 	public static final String NAME_PROPERTY                  = "name"              ;
+	public static final String IMAGE_PROPERTY                 = "image"             ;
 	public static final String CREATE_TIME_PROPERTY           = "createTime"        ;
 	public static final String PLATFORM_PROPERTY              = "platform"          ;
 	public static final String VERSION_PROPERTY               = "version"           ;
@@ -45,6 +46,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 
 	protected		String              	mId                 ;
 	protected		String              	mName               ;
+	protected		String              	mImage              ;
 	protected		DateTime            	mCreateTime         ;
 	protected		Platform            	mPlatform           ;
 	protected		int                 	mVersion            ;
@@ -62,9 +64,10 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 	}
 	
-	public 	Image(String name, DateTime createTime, Platform platform)
+	public 	Image(String name, String image, DateTime createTime, Platform platform)
 	{
 		setName(name);
+		setImage(image);
 		setCreateTime(createTime);
 		setPlatform(platform);
 	
@@ -76,6 +79,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
      	
 		if(NAME_PROPERTY.equals(property)){
 			changeNameProperty(newValueExpr);
+		}
+		if(IMAGE_PROPERTY.equals(property)){
+			changeImageProperty(newValueExpr);
 		}
 		if(CREATE_TIME_PROPERTY.equals(property)){
 			changeCreateTimeProperty(newValueExpr);
@@ -94,6 +100,21 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		//they are surely different each other
 		updateName(newValue);
 		this.onChangeProperty(NAME_PROPERTY, oldValue, newValue);
+		return;
+  
+	}
+			
+			
+			
+	protected void changeImageProperty(String newValueExpr){
+		String oldValue = getImage();
+		String newValue = parseString(newValueExpr);
+		if(equalsString(oldValue , newValue)){
+			return;//they can be both null, or exact the same object, this is much faster than equals function
+		}
+		//they are surely different each other
+		updateImage(newValue);
+		this.onChangeProperty(IMAGE_PROPERTY, oldValue, newValue);
 		return;
   
 	}
@@ -141,6 +162,19 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 	}
 	public Image updateName(String name){
 		this.mName = trimString(name);;
+		this.changed = true;
+		return this;
+	}
+	
+	
+	public void setImage(String image){
+		this.mImage = trimString(encodeUrl(image));;
+	}
+	public String getImage(){
+		return this.mImage;
+	}
+	public Image updateImage(String image){
+		this.mImage = trimString(encodeUrl(image));;
 		this.changed = true;
 		return this;
 	}
@@ -219,6 +253,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 
 		appendKeyValuePair(result, ID_PROPERTY, getId());
 		appendKeyValuePair(result, NAME_PROPERTY, getName());
+		appendKeyValuePair(result, IMAGE_PROPERTY, getImage());
 		appendKeyValuePair(result, CREATE_TIME_PROPERTY, getCreateTime());
 		appendKeyValuePair(result, PLATFORM_PROPERTY, getPlatform());
 		appendKeyValuePair(result, VERSION_PROPERTY, getVersion());
@@ -238,6 +273,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		
 			dest.setId(getId());
 			dest.setName(getName());
+			dest.setImage(getImage());
 			dest.setCreateTime(getCreateTime());
 			dest.setPlatform(getPlatform());
 			dest.setVersion(getVersion());
@@ -253,6 +289,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		stringBuilder.append("Image{");
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\tname='"+getName()+"';");
+		stringBuilder.append("\timage='"+getImage()+"';");
 		stringBuilder.append("\tcreateTime='"+getCreateTime()+"';");
 		if(getPlatform() != null ){
  			stringBuilder.append("\tplatform='Platform("+getPlatform().getId()+")';");

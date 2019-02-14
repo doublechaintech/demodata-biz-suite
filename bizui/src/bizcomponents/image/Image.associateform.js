@@ -25,6 +25,7 @@ const testValues = {
 
 
 const imageKeys = [
+  'image',
 ]
 
 
@@ -154,6 +155,21 @@ class ImageAssociateForm extends Component {
 
 
 
+
+       
+            <Row gutter={16}>
+
+              <Col lg={6} md={12} sm={24}>
+                <ImageComponent
+                  buttonTitle="Image"
+                  handlePreview={this.handlePreview}
+                  handleChange={event => this.handleChange(event, 'image')}
+                  fileList={convertedImagesValues.image}
+                />
+              </Col>
+
+            </Row>
+         
 
 
 

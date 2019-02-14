@@ -41,6 +41,10 @@
 <span >${result.name}</span>
 </div>
 <div class="col-xs-12 col-md-3 summary-section">
+<span class="summary-label">${userContext.localeMap['image.image']}</span>
+<span >${result.image}</span>
+</div>
+<div class="col-xs-12 col-md-3 summary-section">
 <span class="summary-label">${userContext.localeMap['image.create_time']}</span>
 <span ><fmt:formatDate pattern="yyyy-MM-dd" value="${result.createTime}" /></span>
 </div>

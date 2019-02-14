@@ -19,6 +19,7 @@ const { TextArea } = Input
 const imageURLPrefix = '//localhost:2090'
 
 const imageKeys = [
+  'image',
 ]
 
 
@@ -288,6 +289,23 @@ class ImageUpdateForm extends Component {
         
         
 
+
+        <Card title={<div>{appLocaleName(userContext,"Attachment")} <Popover title={appLocaleName(userContext,"ScanQRCodetoUploadfromSmartPhone")} content={<div><img src='./qrtest.png'/></div>}><Icon type="qrcode" ></Icon></Popover></div>} className={styles.card} bordered={false}>
+          <Form >
+            <Row gutter={16}>
+
+              <Col lg={6} md={12} sm={24}>
+                <ImageComponent
+                  buttonTitle="Image"
+                  handlePreview={this.handlePreview}
+                  handleChange={event => this.handleChange(event, 'image')}
+                  fileList={convertedImagesValues.image}
+                />
+              </Col>
+
+            </Row>
+          </Form>
+        </Card>
 
         <FooterToolbar>
           {getErrorInfo()}

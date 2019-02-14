@@ -23,14 +23,14 @@ const load = (targetObjectId, parameters) => {
 
 
 const addImage = (targetObjectId, parameters) => {
-  const url = `${PREFIX}platformManager/addImage/platformId/name/tokensExpr/`
+  const url = `${PREFIX}platformManager/addImage/platformId/name/image/tokensExpr/`
   const platformId = targetObjectId
   const requestParameters = { ...parameters, platformId, tokensExpr: 'none' }
   return postForm({ url,requestParameters})
 }
 
 const updateImage = (targetObjectId, parameters) => {
-  const url = `${PREFIX}platformManager/updateImageProperties/platformId/id/name/tokensExpr/`
+  const url = `${PREFIX}platformManager/updateImageProperties/platformId/id/name/image/tokensExpr/`
   const platformId = targetObjectId
   const requestParameters = { ...parameters, platformId, tokensExpr: 'none' }
   return postForm({ url,requestParameters})

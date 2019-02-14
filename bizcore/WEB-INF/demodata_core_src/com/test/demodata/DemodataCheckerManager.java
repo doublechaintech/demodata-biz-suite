@@ -49,6 +49,14 @@ public class DemodataCheckerManager extends BaseManagerImpl {
 		
 	}	 			
 	
+	public static final String  IMAGE_OF_IMAGE ="image.image";
+	protected void checkImageOfImage(DemodataUserContext userContext, String image, List<Message> messageList)
+	{
+		
+	 	checkImage(image,0, 512,IMAGE_OF_IMAGE, messageList); 		
+		
+	}	 			
+	
 	public static final String  PLATFORM_OF_IMAGE ="image.platform";
 	protected void checkPlatformIdOfImage(DemodataUserContext userContext, String platformId, List<Message> messageList)
 	{
