@@ -68,8 +68,8 @@ public class ImageCustomManager extends ImageManagerImpl {
 		Graphics2D g2 = off_Image.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-		Font f = new Font("Monospaced", Font.BOLD, height);
-		g2.setFont(f);
+		Font font = new Font("Monospaced", Font.BOLD, height/2);
+		g2.setFont(font);
 		
 		//WritableRaster raster = bufferedImage .getRaster();
 		//DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
@@ -83,12 +83,17 @@ public class ImageCustomManager extends ImageManagerImpl {
         g2.setColor(Color.LIGHT_GRAY);
 		g2.fill(shape);
 		g2.setColor(Color.WHITE);
+		
 		shape = new Line2D.Double(0, 0, internalWidth-1, internalHeight-1);
-		g2.draw(shape);
+		//g2.draw(shape);
 		shape = new Line2D.Double(internalWidth-1, 0, 0, internalHeight-1);
-		g2.draw(shape);
+		//g2.draw(shape);
+		
+		
 		String text=String.format("%s", note,internalWidth,internalHeight);
-		g2.drawString(text,1,height); 
+		//g2.drawString(text,1,height/2); 
+		//this.drawCenteredString(g2, text, rectangle, font);
+		this.drawCenteredString(g2, text, 0,0,internalWidth,internalHeight, font);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
 		ImageIO.write(off_Image, "png", bos);
