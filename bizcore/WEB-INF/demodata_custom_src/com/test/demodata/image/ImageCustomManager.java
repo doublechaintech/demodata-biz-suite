@@ -27,6 +27,9 @@ public class ImageCustomManager extends ImageManagerImpl {
 		if(methodName.startsWith("index")){
             return accessOK();
         }
+		if(methodName.startsWith("show")){
+            return accessOK();
+        }
 		return super.checkAccess(baseUserContext, methodName, parameters);
 	}
 	
@@ -42,7 +45,11 @@ public class ImageCustomManager extends ImageManagerImpl {
 		
 		return value;
 	}
+	public BlobObject genImage(String note, int width, int height,String backgroundColor) throws IOException {
 	
+		return this.helloImage2(note, width, height, backgroundColor);
+	
+	}
 	public BlobObject helloImage2(String note, int width, int height,String backgroundColor) throws IOException {
 		
 		BlobObject blob = new BlobObject();
