@@ -19,7 +19,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 	
 	public static final String ID_PROPERTY                    = "id"                ;
 	public static final String NAME_PROPERTY                  = "name"              ;
-	public static final String IMAGE_PROPERTY                 = "image"             ;
+	public static final String IMAGE_PATH_PROPERTY            = "imagePath"         ;
 	public static final String CREATE_TIME_PROPERTY           = "createTime"        ;
 	public static final String PLATFORM_PROPERTY              = "platform"          ;
 	public static final String VERSION_PROPERTY               = "version"           ;
@@ -46,7 +46,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 
 	protected		String              	mId                 ;
 	protected		String              	mName               ;
-	protected		String              	mImage              ;
+	protected		String              	mImagePath          ;
 	protected		DateTime            	mCreateTime         ;
 	protected		Platform            	mPlatform           ;
 	protected		int                 	mVersion            ;
@@ -64,10 +64,10 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 	}
 	
-	public 	Image(String name, String image, DateTime createTime, Platform platform)
+	public 	Image(String name, String imagePath, DateTime createTime, Platform platform)
 	{
 		setName(name);
-		setImage(image);
+		setImagePath(imagePath);
 		setCreateTime(createTime);
 		setPlatform(platform);
 	
@@ -80,8 +80,8 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		if(NAME_PROPERTY.equals(property)){
 			changeNameProperty(newValueExpr);
 		}
-		if(IMAGE_PROPERTY.equals(property)){
-			changeImageProperty(newValueExpr);
+		if(IMAGE_PATH_PROPERTY.equals(property)){
+			changeImagePathProperty(newValueExpr);
 		}
 		if(CREATE_TIME_PROPERTY.equals(property)){
 			changeCreateTimeProperty(newValueExpr);
@@ -106,15 +106,15 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 			
 			
 			
-	protected void changeImageProperty(String newValueExpr){
-		String oldValue = getImage();
+	protected void changeImagePathProperty(String newValueExpr){
+		String oldValue = getImagePath();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
 			return;//they can be both null, or exact the same object, this is much faster than equals function
 		}
 		//they are surely different each other
-		updateImage(newValue);
-		this.onChangeProperty(IMAGE_PROPERTY, oldValue, newValue);
+		updateImagePath(newValue);
+		this.onChangeProperty(IMAGE_PATH_PROPERTY, oldValue, newValue);
 		return;
   
 	}
@@ -167,14 +167,14 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 	}
 	
 	
-	public void setImage(String image){
-		this.mImage = trimString(encodeUrl(image));;
+	public void setImagePath(String imagePath){
+		this.mImagePath = trimString(encodeUrl(imagePath));;
 	}
-	public String getImage(){
-		return this.mImage;
+	public String getImagePath(){
+		return this.mImagePath;
 	}
-	public Image updateImage(String image){
-		this.mImage = trimString(encodeUrl(image));;
+	public Image updateImagePath(String imagePath){
+		this.mImagePath = trimString(encodeUrl(imagePath));;
 		this.changed = true;
 		return this;
 	}
@@ -253,7 +253,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 
 		appendKeyValuePair(result, ID_PROPERTY, getId());
 		appendKeyValuePair(result, NAME_PROPERTY, getName());
-		appendKeyValuePair(result, IMAGE_PROPERTY, getImage());
+		appendKeyValuePair(result, IMAGE_PATH_PROPERTY, getImagePath());
 		appendKeyValuePair(result, CREATE_TIME_PROPERTY, getCreateTime());
 		appendKeyValuePair(result, PLATFORM_PROPERTY, getPlatform());
 		appendKeyValuePair(result, VERSION_PROPERTY, getVersion());
@@ -273,7 +273,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		
 			dest.setId(getId());
 			dest.setName(getName());
-			dest.setImage(getImage());
+			dest.setImagePath(getImagePath());
 			dest.setCreateTime(getCreateTime());
 			dest.setPlatform(getPlatform());
 			dest.setVersion(getVersion());
@@ -289,7 +289,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		stringBuilder.append("Image{");
 		stringBuilder.append("\tid='"+getId()+"';");
 		stringBuilder.append("\tname='"+getName()+"';");
-		stringBuilder.append("\timage='"+getImage()+"';");
+		stringBuilder.append("\timagePath='"+getImagePath()+"';");
 		stringBuilder.append("\tcreateTime='"+getCreateTime()+"';");
 		if(getPlatform() != null ){
  			stringBuilder.append("\tplatform='Platform("+getPlatform().getId()+")';");

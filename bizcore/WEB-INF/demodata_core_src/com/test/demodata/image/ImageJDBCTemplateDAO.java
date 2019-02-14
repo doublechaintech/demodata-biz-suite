@@ -442,7 +442,7 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
  		Object[] parameters = new Object[7];
  
  		parameters[0] = image.getName();
- 		parameters[1] = image.getImage();
+ 		parameters[1] = image.getImagePath();
  		parameters[2] = image.getCreateTime(); 	
  		if(image.getPlatform() != null){
  			parameters[3] = image.getPlatform().getId();
@@ -461,7 +461,7 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
 		parameters[0] =  image.getId();
  
  		parameters[1] = image.getName();
- 		parameters[2] = image.getImage();
+ 		parameters[2] = image.getImagePath();
  		parameters[3] = image.getCreateTime(); 	
  		if(image.getPlatform() != null){
  			parameters[4] = image.getPlatform().getId();

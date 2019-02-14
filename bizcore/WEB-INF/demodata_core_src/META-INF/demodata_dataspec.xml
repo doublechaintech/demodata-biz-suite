@@ -13,7 +13,7 @@
 		<fields>
 			<field name="id" nullable="false" type="string" checkType="StringLengthRange" min="5" max="64" description="Id" />
 			<field name="name" type="string" checkType="StringLengthRange" min="3" max="40" description="Name" />
-			<field name="image" type="string_image" checkType="Image" min="0" max="512" description="Image" />
+			<field name="image_path" type="string_image" checkType="Image" min="0" max="512" description="Image Path" />
 			<field name="create_time" type="date_time_create" checkType="DateTimeCreate" min="1900-01-01T00:00:00" max="createTime()" description="Create Time" />
 			<field name="platform" type="reference" checkType="exist(platform)" description="Platform" />
 			<field name="version" type="int" checkType="IntegerRange" min="0" max="Integer.MAX_VALUE" description="Version" />

@@ -1,7 +1,7 @@
 
 
 
-=================Execute Report (Model Time 190214T2329) @Thu Feb 14 23:30:09 CST 2019, 15 objects and 115 fields===========================
+=================Execute Report (Model Time 190214T2331) @Thu Feb 14 23:31:47 CST 2019, 15 objects and 115 fields===========================
 
 
 
@@ -34,7 +34,7 @@ image{
 	fields(6){
 		string	id('ABCDEFGIJK000001'), verb: false, required: true;
 		string	name('demo image'), verb: false, required: true;
-		string_image	image('banner-300-100-red.jpg'), verb: false, required: true;
+		string_image	image_path('banner-300-100-red.jpg'), verb: false, required: true;
 		date_time_create	create_time('createTime()'), verb: false, required: true;
 		platform	platform('$(object)'), verb: false, required: true, referenceBy: imageList;
 		int	version('2147483647'), verb: false, required: true;
@@ -58,7 +58,7 @@ image{
 	fields(6){
 		string	id('ABCDEFGIJK000001'), verb: false, required: true;
 		string	name('demo image'), verb: false, required: true;
-		string_image	image('banner-300-100-red.jpg'), verb: false, required: true;
+		string_image	image_path('banner-300-100-red.jpg'), verb: false, required: true;
 		date_time_create	create_time('createTime()'), verb: false, required: true;
 		platform	platform('$(object)'), verb: false, required: true, referenceBy: imageList;
 		int	version('2147483647'), verb: false, required: true;

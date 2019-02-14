@@ -49,11 +49,11 @@ public class DemodataCheckerManager extends BaseManagerImpl {
 		
 	}	 			
 	
-	public static final String  IMAGE_OF_IMAGE ="image.image";
-	protected void checkImageOfImage(DemodataUserContext userContext, String image, List<Message> messageList)
+	public static final String  IMAGE_PATH_OF_IMAGE ="image.image_path";
+	protected void checkImagePathOfImage(DemodataUserContext userContext, String imagePath, List<Message> messageList)
 	{
 		
-	 	checkImage(image,0, 512,IMAGE_OF_IMAGE, messageList); 		
+	 	checkImage(imagePath,0, 512,IMAGE_PATH_OF_IMAGE, messageList); 		
 		
 	}	 			
 	

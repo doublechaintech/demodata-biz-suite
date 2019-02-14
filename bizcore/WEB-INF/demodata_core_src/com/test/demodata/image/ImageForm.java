@@ -48,17 +48,17 @@ public class ImageForm extends BaseForm {
 	}
 
 
-	public ImageForm imageField(String parameterName, String initValue){
-		FormField field = imageFromImage(parameterName, initValue);		
+	public ImageForm imagePathField(String parameterName, String initValue){
+		FormField field = imagePathFromImage(parameterName, initValue);		
 		this.addFormField(field);
 		return this;
 	}
 	
-	public ImageForm imageField(String initValue){
-		return imageField("image",initValue);
+	public ImageForm imagePathField(String initValue){
+		return imagePathField("imagePath",initValue);
 	}
-	public ImageForm imageField(){
-		return imageField("image","");
+	public ImageForm imagePathField(){
+		return imagePathField("imagePath","");
 	}
 
 

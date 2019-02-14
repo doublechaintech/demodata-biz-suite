@@ -358,7 +358,7 @@ public class PlatformManagerImpl extends CustomDemodataCheckerManager implements
 	
 	
 
-	protected void checkParamsForAddingImage(DemodataUserContext userContext, String platformId, String name, String image,String [] tokensExpr) throws Exception{
+	protected void checkParamsForAddingImage(DemodataUserContext userContext, String platformId, String name, String imagePath,String [] tokensExpr) throws Exception{
 		
 		
 
@@ -369,18 +369,18 @@ public class PlatformManagerImpl extends CustomDemodataCheckerManager implements
 		
 		userContext.getChecker().checkNameOfImage(name);
 		
-		userContext.getChecker().checkImageOfImage(image);
+		userContext.getChecker().checkImagePathOfImage(imagePath);
 	
 		userContext.getChecker().throwExceptionIfHasErrors(PlatformManagerException.class);
 
 	
 	}
-	public  Platform addImage(DemodataUserContext userContext, String platformId, String name, String image, String [] tokensExpr) throws Exception
+	public  Platform addImage(DemodataUserContext userContext, String platformId, String name, String imagePath, String [] tokensExpr) throws Exception
 	{	
 		
-		checkParamsForAddingImage(userContext,platformId,name, image,tokensExpr);
+		checkParamsForAddingImage(userContext,platformId,name, imagePath,tokensExpr);
 		
-		Image image = createImage(userContext,name, image);
+		Image image = createImage(userContext,name, imagePath);
 		
 		Platform platform = loadPlatform(userContext, platformId, allTokens());
 		synchronized(platform){ 
@@ -393,20 +393,20 @@ public class PlatformManagerImpl extends CustomDemodataCheckerManager implements
 			return present(userContext,platform, mergedAllTokens(tokensExpr));
 		}
 	}
-	protected void checkParamsForUpdatingImageProperties(DemodataUserContext userContext, String platformId,String id,String name,String image,String [] tokensExpr) throws Exception {
+	protected void checkParamsForUpdatingImageProperties(DemodataUserContext userContext, String platformId,String id,String name,String imagePath,String [] tokensExpr) throws Exception {
 		
 		userContext.getChecker().checkIdOfPlatform(platformId);
 		userContext.getChecker().checkIdOfImage(id);
 		
 		userContext.getChecker().checkNameOfImage( name);
-		userContext.getChecker().checkImageOfImage( image);
+		userContext.getChecker().checkImagePathOfImage( imagePath);
 
 		userContext.getChecker().throwExceptionIfHasErrors(PlatformManagerException.class);
 		
 	}
-	public  Platform updateImageProperties(DemodataUserContext userContext, String platformId, String id,String name,String image, String [] tokensExpr) throws Exception
+	public  Platform updateImageProperties(DemodataUserContext userContext, String platformId, String id,String name,String imagePath, String [] tokensExpr) throws Exception
 	{	
-		checkParamsForUpdatingImageProperties(userContext,platformId,id,name,image,tokensExpr);
+		checkParamsForUpdatingImageProperties(userContext,platformId,id,name,imagePath,tokensExpr);
 
 		Map<String, Object> options = tokens()
 				.allTokens()
@@ -422,7 +422,7 @@ public class PlatformManagerImpl extends CustomDemodataCheckerManager implements
 		Image item = platformToUpdate.getImageList().first();
 		
 		item.updateName( name );
-		item.updateImage( image );
+		item.updateImagePath( imagePath );
 
 		
 		//checkParamsForAddingImage(userContext,platformId,name, code, used,tokensExpr);
@@ -433,13 +433,13 @@ public class PlatformManagerImpl extends CustomDemodataCheckerManager implements
 	}
 	
 	
-	protected Image createImage(DemodataUserContext userContext, String name, String image) throws Exception{
+	protected Image createImage(DemodataUserContext userContext, String name, String imagePath) throws Exception{
 
 		Image image = new Image();
 		
 		
 		image.setName(name);		
-		image.setImage(image);		
+		image.setImagePath(imagePath);		
 		image.setCreateTime(userContext.now());
 	
 		
@@ -556,8 +556,8 @@ public class PlatformManagerImpl extends CustomDemodataCheckerManager implements
 			userContext.getChecker().checkNameOfImage(parseString(newValueExpr));
 		}
 		
-		if(Image.IMAGE_PROPERTY.equals(property)){
-			userContext.getChecker().checkImageOfImage(parseString(newValueExpr));
+		if(Image.IMAGE_PATH_PROPERTY.equals(property)){
+			userContext.getChecker().checkImagePathOfImage(parseString(newValueExpr));
 		}
 		
 	

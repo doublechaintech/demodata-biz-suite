@@ -19,7 +19,7 @@ const { TextArea } = Input
 const imageURLPrefix = '//localhost:2090'
 
 const imageKeys = [
-  'image',
+  'imagePath',
 ]
 
 
@@ -296,10 +296,10 @@ class ImageUpdateForm extends Component {
 
               <Col lg={6} md={12} sm={24}>
                 <ImageComponent
-                  buttonTitle="Image"
+                  buttonTitle="Image Path"
                   handlePreview={this.handlePreview}
-                  handleChange={event => this.handleChange(event, 'image')}
-                  fileList={convertedImagesValues.image}
+                  handleChange={event => this.handleChange(event, 'imagePath')}
+                  fileList={convertedImagesValues.imagePath}
                 />
               </Col>
 
