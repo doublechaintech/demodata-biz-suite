@@ -30,6 +30,9 @@ public class ImageCustomManager extends ImageManagerImpl {
 		if(methodName.startsWith("show")){
             return accessOK();
         }
+		if(methodName.startsWith("gen")){
+            return accessOK();
+        }
 		return super.checkAccess(baseUserContext, methodName, parameters);
 	}
 	
