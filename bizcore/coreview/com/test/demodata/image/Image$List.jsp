@@ -101,8 +101,8 @@
 <c:if test="${param.referName ne 'name'}">
 	<th>${userContext.localeMap['image.name']}</th>
 </c:if>
-<c:if test="${param.referName ne 'image'}">
-	<th>${userContext.localeMap['image.image']}</th>
+<c:if test="${param.referName ne 'imagePath'}">
+	<th>${userContext.localeMap['image.image_path']}</th>
 </c:if>
 <c:if test="${param.referName ne 'createTime'}">
 	<th>${userContext.localeMap['image.create_time']}</th>
@@ -117,7 +117,7 @@
 			<c:forEach var="item" items="${imageList}">
 				<tr currentVersion='${item.version}' id="image-${item.id}" ><td><a class="link-action-removed" href="./imageManager/view/${item.id}/"> ${item.id}</a></td>
 <c:if test="${param.referName ne 'name'}">	<td contenteditable='true' class='edit-value'  propertyToChange='name' storedCellValue='${item.name}' prefix='${ownerBeanName}Manager/updateImage/${result.id}/${item.id}/'>${item.name}</td>
-</c:if><c:if test="${param.referName ne 'image'}">	<td contenteditable='true' class='edit-value'  propertyToChange='image' storedCellValue='${item.image}' prefix='${ownerBeanName}Manager/updateImage/${result.id}/${item.id}/'>${item.image}</td>
+</c:if><c:if test="${param.referName ne 'imagePath'}">	<td contenteditable='true' class='edit-value'  propertyToChange='imagePath' storedCellValue='${item.imagePath}' prefix='${ownerBeanName}Manager/updateImage/${result.id}/${item.id}/'>${item.imagePath}</td>
 </c:if><c:if test="${param.referName ne 'createTime'}">	<td contenteditable='true' class='edit-value'  propertyToChange='createTime' storedCellValue='${item.createTime}' prefix='${ownerBeanName}Manager/updateImage/${result.id}/${item.id}/'><fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${item.createTime}" /></td>
 </c:if><c:if test="${param.referName ne 'platform'}">
 	<td class="select_candidate_td"

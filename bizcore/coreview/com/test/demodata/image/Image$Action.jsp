@@ -19,7 +19,7 @@
 	
 	<li><span>${userContext.localeMap['image.id']}</span> ${image.id}</li>
 <li><span>${userContext.localeMap['image.name']}</span> ${image.name}</li>
-<li><span>${userContext.localeMap['image.image']}</span> ${image.image}</li>
+<li><span>${userContext.localeMap['image.image_path']}</span> ${image.imagePath}</li>
 <li><span>${userContext.localeMap['image.create_time']}</span> <fmt:formatDate pattern="yyyy-MM-dd" value="${image.createTime}" /></li>
 
 	

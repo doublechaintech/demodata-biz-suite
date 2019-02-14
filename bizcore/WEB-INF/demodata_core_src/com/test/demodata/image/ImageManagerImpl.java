@@ -161,7 +161,7 @@ public class ImageManagerImpl extends CustomDemodataCheckerManager implements Im
  	
 
 
-	public Image createImage(DemodataUserContext userContext,String name, String image, String platformId) throws Exception
+	public Image createImage(DemodataUserContext userContext,String name, String imagePath, String platformId) throws Exception
 	{
 		
 		
@@ -169,7 +169,7 @@ public class ImageManagerImpl extends CustomDemodataCheckerManager implements Im
 		
 
 		userContext.getChecker().checkNameOfImage(name);
-		userContext.getChecker().checkImageOfImage(image);
+		userContext.getChecker().checkImagePathOfImage(imagePath);
 	
 		userContext.getChecker().throwExceptionIfHasErrors(ImageManagerException.class);
 
@@ -177,7 +177,7 @@ public class ImageManagerImpl extends CustomDemodataCheckerManager implements Im
 		Image image=createNewImage();	
 
 		image.setName(name);
-		image.setImage(image);
+		image.setImagePath(imagePath);
 		image.setCreateTime(userContext.now());
 			
 		Platform platform = loadPlatform(userContext, platformId,emptyOptions());
@@ -211,8 +211,8 @@ public class ImageManagerImpl extends CustomDemodataCheckerManager implements Im
 		if(Image.NAME_PROPERTY.equals(property)){
 			userContext.getChecker().checkNameOfImage(parseString(newValueExpr));
 		}
-		if(Image.IMAGE_PROPERTY.equals(property)){
-			userContext.getChecker().checkImageOfImage(parseString(newValueExpr));
+		if(Image.IMAGE_PATH_PROPERTY.equals(property)){
+			userContext.getChecker().checkImagePathOfImage(parseString(newValueExpr));
 		}		
 
 		

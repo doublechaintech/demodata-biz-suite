@@ -68,11 +68,11 @@ public class DemodataChecker extends BaseChecker{
 		return this;
 	}	 			
 
-	public static final String  IMAGE_OF_IMAGE ="image.image";
-	public DemodataChecker checkImageOfImage(String image)
+	public static final String  IMAGE_PATH_OF_IMAGE ="image.image_path";
+	public DemodataChecker checkImagePathOfImage(String imagePath)
 	{
 		
-	 	checkImage(image,0, 512,IMAGE_OF_IMAGE ); 		
+	 	checkImage(imagePath,0, 512,IMAGE_PATH_OF_IMAGE ); 		
 		
 		return this;
 	}	 			

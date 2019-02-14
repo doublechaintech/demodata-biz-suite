@@ -27,9 +27,9 @@ public interface PlatformManager{
 	/*======================================================DATA MAINTENANCE===========================================================*/
 	
 
-	//public  ImageManager getImageManager(DemodataUserContext userContext, String platformId, String name, String image ,String [] tokensExpr)  throws Exception;
+	//public  ImageManager getImageManager(DemodataUserContext userContext, String platformId, String name, String imagePath ,String [] tokensExpr)  throws Exception;
 	
-	public  Platform addImage(DemodataUserContext userContext, String platformId, String name, String image , String [] tokensExpr)  throws Exception;
+	public  Platform addImage(DemodataUserContext userContext, String platformId, String name, String imagePath , String [] tokensExpr)  throws Exception;
 	public  Platform removeImage(DemodataUserContext userContext, String platformId, String imageId, int imageVersion,String [] tokensExpr)  throws Exception;
 	public  Platform updateImage(DemodataUserContext userContext, String platformId, String imageId, int imageVersion, String property, String newValueExpr,String [] tokensExpr)  throws Exception;
 
