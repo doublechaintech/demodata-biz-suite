@@ -23,8 +23,8 @@ const testValues = {
   email: '',
   pwd: 'C183EC89F92A462CF45B95504792EC4625E847C90536EEFE512D1C9DB8602E95',
   verificationCode: '0',
-  verificationCodeExpire: '2019-02-04 23:16:39',
-  lastLoginTime: '2019-01-24 23:53:13',
+  verificationCodeExpire: '2019-02-14 17:56:01',
+  lastLoginTime: '2019-01-27 19:53:21',
   domainId: 'UD000001',
 }
 */
