@@ -39,6 +39,7 @@
 	 	<property name="checkerBeanName" value="checker" />
 	 	
 	</bean>
+	<bean id="imageManager" class="com.test.demodata.image.ImageCustomManager" parent="imageManagerBase" ></bean>
 	
 
 	
