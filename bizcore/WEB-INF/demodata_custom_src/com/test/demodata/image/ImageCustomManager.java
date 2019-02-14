@@ -1,5 +1,6 @@
 package com.test.demodata.image;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
@@ -57,54 +58,43 @@ public class ImageCustomManager extends ImageManagerImpl {
 	}
 	public BlobObject helloImage2(String note, int width, int height,String backgroundColor) throws IOException {
 		
-		BlobObject blob = new BlobObject();
-		
 		int internalWidth = outOfThen(width,10,1400,600);
 		int internalHeight = outOfThen(height,10,1400,400);
 		
-		BufferedImage bufferredImage =
+		BufferedImage off_Image =
 				  new BufferedImage(internalWidth, internalHeight,
 				                    BufferedImage.TYPE_INT_ARGB);
-		
-		Graphics2D g2 = bufferredImage.createGraphics();
+
+		Graphics2D g2 = off_Image.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		GradientPaint graytowhite = new GradientPaint(0,0,Color.GRAY,width, 0,Color.WHITE);
-		g2.setPaint(graytowhite);
-		
-		
+		Font f = new Font("Monospaced", Font.BOLD, height);
+		g2.setFont(f);
 		
 		//WritableRaster raster = bufferedImage .getRaster();
 		//DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-		Shape shape = new Rectangle2D.Double(1, 1,
-				internalWidth-2,
-				internalHeight-2);
+		Shape shape = new Rectangle2D.Double(0, 0,
+				internalWidth,
+				internalHeight);
 		
+		GradientPaint graytowhite = new GradientPaint(0,0,Color.GRAY,width, 0,Color.WHITE);
+		g2.setPaint(graytowhite);
+		g2.setStroke(new BasicStroke(2f));
+        g2.setColor(Color.LIGHT_GRAY);
 		g2.fill(shape);
-		shape = new Line2D.Double(0, 0, internalWidth, internalHeight);
+		g2.setColor(Color.WHITE);
+		shape = new Line2D.Double(0, 0, internalWidth-1, internalHeight-1);
 		g2.draw(shape);
-		shape = new Line2D.Double(internalWidth, 0, 0, internalHeight);
+		shape = new Line2D.Double(internalWidth-1, 0, 0, internalHeight-1);
 		g2.draw(shape);
-		
-		Font f = new Font("Monospaced", Font.BOLD, 14);
-		g2.setFont(f);
-		String text=String.format("%s(%dX%d)", note,internalWidth,internalHeight);
-		g2.drawString(text,1,15); 
-		
-		
-		
-		
+		String text=String.format("%s", note,internalWidth,internalHeight);
+		g2.drawString(text,1,height); 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
-		ImageIO.write(bufferredImage, "png", bos);
+		ImageIO.write(off_Image, "png", bos);
+		BlobObject blob = new BlobObject();
 		blob.setData(bos.toByteArray());
 		blob.setMimeType(BlobObject.TYPE_PNG);
-		
-		
-		
-		
-		
 		//BlobObject.TYPE_XLSX
 		return blob;
 		
