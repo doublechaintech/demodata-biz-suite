@@ -3,7 +3,9 @@ package com.test.demodata.image;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GradientPaint;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -104,7 +106,18 @@ public class ImageCustomManager extends ImageManagerImpl {
 		return blob;
 		
 	}
-	
+	public void drawCenteredString(Graphics g, String text, int left, int top, int width,int height, Font font) {
+	    // Get the FontMetrics
+	    FontMetrics metrics = g.getFontMetrics(font);
+	    // Determine the X coordinate for the text
+	    int x =left + (width - metrics.stringWidth(text)) / 2;
+	    // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+	    int y = top + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+	    // Set the font
+	    g.setFont(font);
+	    // Draw the String
+	    g.drawString(text, x, y);
+	}
 	public BlobObject helloImage() throws IOException {
 		
 		BlobObject blob = new BlobObject();
