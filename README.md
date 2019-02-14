@@ -1,39 +1,23 @@
 # client-biz-suite
-Client Business Suite Template
 
-使用准备，保证skynet-common-app-framework和skynet-react-framework连个项目在你的根目录下
+## 动态生成图片，在项目启动时候使用
 
-$ ll skynet-common-app-framework skynet-react-framework
+格式如下
 
-```
-zhangxilais-MacBook-Pro:githome Philip$ ls skynet-common-app-framework skynet-react-framework
-skynet-common-app-framework:
-LICENSE		README.md	WEB-INF		build.gradle	settings.gradle	statics		viewlayers
+https://demo.doublechaintech.com/demodata/imageManager/genImage/banner/1000/420/ba/
+参数解释
 
-skynet-react-framework:
-CODE_OF_CONDUCT.md	README.zh-CN.md		dump.rdb		package.json		src
-LICENSE			appveyor.yml		mock			package.json.back	tests
-README.md		bbt_custom_src		package-lock.json	public			yarn.lock
-```
-然后准备工作区
+* 固定前缀 https://demo.doublechaintech.com/demodata/imageManager/genImage
+* 图片文字，这里是banner
+* 高度，这里是1000
+* 宽度，这里是420
+* 背景颜色，默认black
 
+这个是例子
 
-curl https://raw.githubusercontent.com/philipgreat/client-biz-suite/master/create.sh|bash -s kai5
-
-在github上创建一个空的git repository(需要确认是否已经创建）
-
-然后进入目录，执行bash gitinit.sh
+<img src="https://demo.doublechaintech.com/demodata/imageManager/genImage/banner/1000/420/ba/"/>
 
 
 
-## bizcore: 服务器端核心代码项目， Business Core
-## bizui：中台集成界面项目， Business UI，不是闭嘴！
-## datavisual: 数据大屏前台项目， Data Visual
-## databrain： 大数据后台运算中心
-## iot： 物联网子项目， Internet of Things
-## rnapp： Reactive Native项目
-## wxapp: 微信小程序项目
 
 
-
-# demodata-biz-suite 
