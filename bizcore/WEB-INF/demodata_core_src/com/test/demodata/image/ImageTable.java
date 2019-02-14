@@ -19,15 +19,16 @@ public class ImageTable{
 	static final String TABLE_NAME="image_data";
 	static final String COLUMN_ID = "id";
 	static final String COLUMN_NAME = "name";
+	static final String COLUMN_IMAGE = "image";
 	static final String COLUMN_CREATE_TIME = "create_time";
 	static final String COLUMN_PLATFORM = "platform";
 	static final String COLUMN_VERSION = "version";
  
 	static final String []ALL_CLOUMNS = {COLUMN_ID, 
-		COLUMN_NAME, COLUMN_CREATE_TIME, COLUMN_PLATFORM, 
+		COLUMN_NAME, COLUMN_IMAGE, COLUMN_CREATE_TIME, COLUMN_PLATFORM, 
 		COLUMN_VERSION};
 	static final String []NORMAL_CLOUMNS = {
-		COLUMN_NAME, COLUMN_CREATE_TIME, COLUMN_PLATFORM
+		COLUMN_NAME, COLUMN_IMAGE, COLUMN_CREATE_TIME, COLUMN_PLATFORM
 		};
 	
 	

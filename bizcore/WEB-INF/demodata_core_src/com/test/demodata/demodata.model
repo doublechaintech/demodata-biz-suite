@@ -6,7 +6,7 @@
 	
 >
    <platform name="Demo Data Service"  _features="custom">
-    	<image  name="demo image" create_time="createTime()"  platform="$(platform)"/>
+    	<image  name="demo image" image="banner-300-100-red.jpg" create_time="createTime()"  platform="$(platform)"/>
     </platform>
 	
 	

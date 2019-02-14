@@ -82,6 +82,20 @@ public class PlatformForm extends BaseForm {
 	}
 
 
+	public PlatformForm imageFieldForImage(String parameterName, String initValue){
+		FormField field =  imageFromImage(parameterName, initValue);		
+		this.addFormField(field);
+		return this;
+	}
+	
+	public PlatformForm imageFieldForImage(String initValue){
+		return imageFieldForImage("image",initValue);
+	}
+	public PlatformForm imageFieldForImage(){
+		return imageFieldForImage("image","");
+	}
+
+
 	public PlatformForm createTimeFieldForImage(String parameterName, String initValue){
 		FormField field =  createTimeFromImage(parameterName, initValue);		
 		this.addFormField(field);

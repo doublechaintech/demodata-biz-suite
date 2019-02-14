@@ -9,25 +9,25 @@
 	<bean id="checker" class="com.test.demodata.DemodataChecker" scope="prototype"></bean>
 
 	<bean id="platformManagerBase" class="com.test.demodata.platform.PlatformManagerImpl"/>
-	<bean id="platformManager" class="com.test.demodata.platform.PlatformManagerImpl" parent="platformManagerBase" ></bean>
+	<bean id="platformManager" class="com.test.demodata.platform.PlatformCustomManagerImpl" parent="platformManagerBase" ></bean>
 	
 	<bean id="imageManagerBase" class="com.test.demodata.image.ImageManagerImpl"/>
 	<bean id="imageManager" class="com.test.demodata.image.ImageManagerImpl" parent="imageManagerBase" ></bean>
 	
 	<bean id="userDomainManagerBase" class="com.test.demodata.userdomain.UserDomainManagerImpl"/>
-	<bean id="userDomainManager" class="com.test.demodata.userdomain.UserDomainManagerImpl" parent="userDomainManagerBase" ></bean>
+	<bean id="userDomainManager" class="com.test.demodata.userdomain.UserDomainCustomManagerImpl" parent="userDomainManagerBase" ></bean>
 	
 	<bean id="userWhiteListManagerBase" class="com.test.demodata.userwhitelist.UserWhiteListManagerImpl"/>
 	<bean id="userWhiteListManager" class="com.test.demodata.userwhitelist.UserWhiteListManagerImpl" parent="userWhiteListManagerBase" ></bean>
 	
 	<bean id="secUserManagerBase" class="com.test.demodata.secuser.SecUserManagerImpl"/>
-	<bean id="secUserManager" class="com.test.demodata.secuser.SecUserManagerImpl" parent="secUserManagerBase" ></bean>
+	<bean id="secUserManager" class="com.test.demodata.secuser.SecUserCustomManagerImpl" parent="secUserManagerBase" ></bean>
 	
 	<bean id="secUserBlockingManagerBase" class="com.test.demodata.secuserblocking.SecUserBlockingManagerImpl"/>
-	<bean id="secUserBlockingManager" class="com.test.demodata.secuserblocking.SecUserBlockingManagerImpl" parent="secUserBlockingManagerBase" ></bean>
+	<bean id="secUserBlockingManager" class="com.test.demodata.secuserblocking.SecUserBlockingCustomManagerImpl" parent="secUserBlockingManagerBase" ></bean>
 	
 	<bean id="userAppManagerBase" class="com.test.demodata.userapp.UserAppManagerImpl"/>
-	<bean id="userAppManager" class="com.test.demodata.userapp.UserAppManagerImpl" parent="userAppManagerBase" ></bean>
+	<bean id="userAppManager" class="com.test.demodata.userapp.UserAppCustomManagerImpl" parent="userAppManagerBase" ></bean>
 	
 	<bean id="listAccessManagerBase" class="com.test.demodata.listaccess.ListAccessManagerImpl"/>
 	<bean id="listAccessManager" class="com.test.demodata.listaccess.ListAccessManagerImpl" parent="listAccessManagerBase" ></bean>

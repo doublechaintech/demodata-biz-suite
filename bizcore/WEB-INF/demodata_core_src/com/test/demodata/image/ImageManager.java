@@ -12,7 +12,7 @@ public interface ImageManager{
 
 		
 
-	public Image createImage(DemodataUserContext userContext, String name, String platformId) throws Exception;	
+	public Image createImage(DemodataUserContext userContext, String name, String image, String platformId) throws Exception;	
 	public Image updateImage(DemodataUserContext userContext,String imageId, int imageVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception;
 	public Image loadImage(DemodataUserContext userContext, String imageId, String [] tokensExpr) throws Exception;
 	public Image internalSaveImage(DemodataUserContext userContext, Image image) throws Exception;

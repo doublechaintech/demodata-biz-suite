@@ -68,6 +68,15 @@ public class DemodataChecker extends BaseChecker{
 		return this;
 	}	 			
 
+	public static final String  IMAGE_OF_IMAGE ="image.image";
+	public DemodataChecker checkImageOfImage(String image)
+	{
+		
+	 	checkImage(image,0, 512,IMAGE_OF_IMAGE ); 		
+		
+		return this;
+	}	 			
+
 	public static final String  PLATFORM_OF_IMAGE ="image.platform";
 	public DemodataChecker checkPlatformIdOfImage(String platformId)
 	{

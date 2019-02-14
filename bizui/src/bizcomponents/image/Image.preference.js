@@ -39,7 +39,8 @@ const topColResponsiveProps = {
 const internalImageListOf = (image) =>{
   const userContext = null
   const imageList = [
-	 ]
+	   {"title":'Image',"imageLocation":image.image},
+]
   const filteredList = imageList.filter((item)=>item.imageLocation!=null)
   if(filteredList.length===0){
     return null

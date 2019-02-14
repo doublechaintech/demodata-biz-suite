@@ -14,6 +14,7 @@ public class ImageMapper extends BaseRowMapper<Image>{
 		 		
  		setId(image, rs, rowNumber); 		
  		setName(image, rs, rowNumber); 		
+ 		setImage(image, rs, rowNumber); 		
  		setCreateTime(image, rs, rowNumber); 		
  		setPlatform(image, rs, rowNumber); 		
  		setVersion(image, rs, rowNumber);
@@ -47,6 +48,18 @@ public class ImageMapper extends BaseRowMapper<Image>{
 		}
 		
 		image.setName(name);
+	}
+		
+	protected void setImage(Image image, ResultSet rs, int rowNumber) throws SQLException{
+	
+		//there will be issue when the type is double/int/long
+		String image = rs.getString(ImageTable.COLUMN_IMAGE);
+		if(image == null){
+			//do nothing when nothing found in database
+			return;
+		}
+		
+		image.setImage(image);
 	}
 		
 	protected void setCreateTime(Image image, ResultSet rs, int rowNumber) throws SQLException{

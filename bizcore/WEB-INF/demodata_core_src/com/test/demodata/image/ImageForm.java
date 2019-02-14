@@ -48,6 +48,20 @@ public class ImageForm extends BaseForm {
 	}
 
 
+	public ImageForm imageField(String parameterName, String initValue){
+		FormField field = imageFromImage(parameterName, initValue);		
+		this.addFormField(field);
+		return this;
+	}
+	
+	public ImageForm imageField(String initValue){
+		return imageField("image",initValue);
+	}
+	public ImageForm imageField(){
+		return imageField("image","");
+	}
+
+
 	public ImageForm createTimeField(String parameterName, String initValue){
 		FormField field = createTimeFromImage(parameterName, initValue);		
 		this.addFormField(field);

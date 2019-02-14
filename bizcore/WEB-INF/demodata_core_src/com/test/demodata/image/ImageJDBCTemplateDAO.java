@@ -439,30 +439,32 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
  		return prepareImageCreateParameters(image);
  	}
  	protected Object[] prepareImageUpdateParameters(Image image){
- 		Object[] parameters = new Object[6];
+ 		Object[] parameters = new Object[7];
  
  		parameters[0] = image.getName();
- 		parameters[1] = image.getCreateTime(); 	
+ 		parameters[1] = image.getImage();
+ 		parameters[2] = image.getCreateTime(); 	
  		if(image.getPlatform() != null){
- 			parameters[2] = image.getPlatform().getId();
+ 			parameters[3] = image.getPlatform().getId();
  		}
  		
- 		parameters[3] = image.nextVersion();
- 		parameters[4] = image.getId();
- 		parameters[5] = image.getVersion();
+ 		parameters[4] = image.nextVersion();
+ 		parameters[5] = image.getId();
+ 		parameters[6] = image.getVersion();
  				
  		return parameters;
  	}
  	protected Object[] prepareImageCreateParameters(Image image){
-		Object[] parameters = new Object[4];
+		Object[] parameters = new Object[5];
 		String newImageId=getNextId();
 		image.setId(newImageId);
 		parameters[0] =  image.getId();
  
  		parameters[1] = image.getName();
- 		parameters[2] = image.getCreateTime(); 	
+ 		parameters[2] = image.getImage();
+ 		parameters[3] = image.getCreateTime(); 	
  		if(image.getPlatform() != null){
- 			parameters[3] = image.getPlatform().getId();
+ 			parameters[4] = image.getPlatform().getId();
  		
  		}
  				
