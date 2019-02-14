@@ -15,7 +15,7 @@ https://demo.doublechaintech.com/demodata/imageManager/genImage/banner/1000/420/
 
 这个是例子
 
-<img src="https://demo.doublechaintech.com/demodata/imageManager/genImage/banner/1000/420/ba/"/>
+<img src="https://demo.doublechaintech.com/demodata/imageManager/genImage/banner/1000/421/ba/"/>
 
 
 
