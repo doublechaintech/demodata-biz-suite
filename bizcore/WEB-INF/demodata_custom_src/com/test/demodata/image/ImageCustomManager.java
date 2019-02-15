@@ -73,6 +73,9 @@ public class ImageCustomManager extends ImageManagerImpl {
 		colorMap.put("pink", Color.PINK);
 		colorMap.put("black", Color.BLACK);
 		colorMap.put("white", Color.WHITE);
+		colorMap.put("yellow", Color.ORANGE);
+		colorMap.put("magenta", Color.MAGENTA);
+		colorMap.put("cyan", Color.CYAN);
 		
 		Color color = colorMap.get(key);
 		if(color==null) {
