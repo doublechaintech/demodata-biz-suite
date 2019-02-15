@@ -21,13 +21,28 @@ import javax.imageio.ImageIO;
 
 import com.terapico.caf.BlobObject;
 import com.terapico.uccaf.BaseUserContext;
+import com.test.demodata.UserContext;
 
-public class ImageCustomManager extends ImageManagerImpl {
+public class ImageCustomManager extends ImageMiddleManager {
+	
+	
+	
 	
 	@Override
 	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
 			throws IllegalAccessException {
 	
+		
+		UserContext userContext = (UserContext)baseUserContext;
+		
+		if(userContext.getRemoteIP().equals("127.0.0.1")) {
+			return accessOK();
+		}
+		//::1
+		if(userContext.getRemoteIP().equals("::1")) {
+			return accessOK();
+		}
+		
 		if(methodName.startsWith("hello")){
             return accessOK();
         }//indexIt
