@@ -133,8 +133,8 @@ public class ImageCustomManager extends ImageManagerImpl {
 		//this.drawCenteredString(g2, text, rectangle, font);
 		this.drawCenteredString(g2, text, 0,0,internalWidth,internalHeight, font);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		
 		ImageIO.write(off_Image, "png", bos);
+		bos.close();
 		BlobObject blob = new BlobObject();
 		blob.setData(bos.toByteArray());
 		blob.setMimeType(BlobObject.TYPE_PNG);
