@@ -14,6 +14,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -58,6 +60,31 @@ public class ImageCustomManager extends ImageManagerImpl {
 		return this.helloImage2(note, width, height, backgroundColor);
 	
 	}
+	
+	protected Color parseColor(String backgroundColor) {
+		
+		String key = backgroundColor.toLowerCase();
+		Map<String, Color> colorMap=new HashMap<String, Color>();
+		
+		colorMap.put("gray", Color.GRAY);
+		colorMap.put("red", Color.RED);
+		colorMap.put("blue", Color.BLUE);
+		colorMap.put("green", Color.GREEN);
+		colorMap.put("pink", Color.PINK);
+		colorMap.put("black", Color.BLACK);
+		colorMap.put("white", Color.WHITE);
+		
+		Color color = colorMap.get(key);
+		if(color==null) {
+			try {
+				return Color.decode(backgroundColor);
+			}catch(Exception e) {
+				return Color.GRAY;
+			}
+		}
+		return color;
+	}
+	
 	public BlobObject helloImage2(String note, int width, int height,String backgroundColor) throws IOException {
 		
 		int internalWidth = outOfThen(width,10,1400,600);
@@ -70,7 +97,7 @@ public class ImageCustomManager extends ImageManagerImpl {
 		Graphics2D g2 = off_Image.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-		Font font = new Font("Monospaced", Font.BOLD, height/2);
+		Font font = new Font("Monospaced", Font.BOLD, internalHeight/4);
 		g2.setFont(font);
 		
 		//WritableRaster raster = bufferedImage .getRaster();
@@ -82,7 +109,10 @@ public class ImageCustomManager extends ImageManagerImpl {
 		GradientPaint graytowhite = new GradientPaint(0,0,Color.GRAY,width, 0,Color.WHITE);
 		g2.setPaint(graytowhite);
 		g2.setStroke(new BasicStroke(2f));
-        g2.setColor(Color.LIGHT_GRAY);
+		
+		Color color = parseColor(backgroundColor);
+		
+        g2.setColor(color);
 		g2.fill(shape);
 		g2.setColor(Color.WHITE);
 		
@@ -118,30 +148,7 @@ public class ImageCustomManager extends ImageManagerImpl {
 	    // Draw the String
 	    g.drawString(text, x, y);
 	}
-	public BlobObject helloImage() throws IOException {
-		
-		BlobObject blob = new BlobObject();
-		
-		BufferedImage off_Image =
-				  new BufferedImage(400, 300,
-				                    BufferedImage.TYPE_INT_ARGB);
-
-		Graphics2D g2 = off_Image.createGraphics();
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-		Font f = new Font("Monospaced", Font.BOLD, 44);
-		g2.setFont(f);
-		g2.drawString("Big Banner",10,50); 
-		//WritableRaster raster = bufferedImage .getRaster();
-		//DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ImageIO.write(off_Image, "png", bos);
-		blob.setData(bos.toByteArray());
-		blob.setMimeType("image/png");
-		return blob;
-		
-	}
+	
 }
 
 
