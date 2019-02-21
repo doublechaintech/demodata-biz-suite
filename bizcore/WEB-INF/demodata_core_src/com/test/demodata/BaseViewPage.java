@@ -1,9 +1,12 @@
 
 package com.test.demodata;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,6 +162,27 @@ public abstract class BaseViewPage extends HashMap<String, Object> {
 			return doRenderingBaseEntity(fieldScope, (BaseEntity) value, path);
 		}
 		// 最后了，没办法了
+		if (fieldScope.isRevers()) {
+			if (value instanceof BigDecimal) {
+				return ((BigDecimal) value).negate();
+			}
+			if (value instanceof Double) {
+				return -((Double)value);
+			}
+			if (value instanceof Float) {
+				return -((Float)value);
+			}
+			if (value instanceof Integer) {
+				return -((Integer)value);
+			}
+			if (value instanceof BigInteger) {
+				return ((BigInteger)value).negate();
+			}
+			if (value instanceof String) {
+				return new StringBuffer((int) value).reverse().toString();
+			}
+			// 其他数据类型忽略 reverse()
+		}
 		return value;
 	}
 
@@ -196,6 +220,9 @@ public abstract class BaseViewPage extends HashMap<String, Object> {
 			if (convertResult != null) {
 				resultList.add(convertResult);
 			}
+		}
+		if (fieldScope.isRevers()) {
+			Collections.reverse(resultList);
 		}
 		return resultList;
 	}

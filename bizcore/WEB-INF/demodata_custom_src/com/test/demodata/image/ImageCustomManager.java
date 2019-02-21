@@ -28,35 +28,7 @@ public class ImageCustomManager extends ImageMiddleManager {
 	
 	
 	
-	@Override
-	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
-			throws IllegalAccessException {
 	
-		
-		UserContext userContext = (UserContext)baseUserContext;
-		
-		if(userContext.getRemoteIP().equals("127.0.0.1")) {
-			return accessOK();
-		}
-		//::1
-		if(userContext.getRemoteIP().equals("::1")) {
-			return accessOK();
-		}
-		
-		if(methodName.startsWith("hello")){
-            return accessOK();
-        }//indexIt
-		if(methodName.startsWith("index")){
-            return accessOK();
-        }
-		if(methodName.startsWith("show")){
-            return accessOK();
-        }
-		if(methodName.startsWith("gen")){
-            return accessOK();
-        }
-		return super.checkAccess(baseUserContext, methodName, parameters);
-	}
 	
 	
 	protected int outOfThen(int value, int min, int max, int defaultValue) {
@@ -72,6 +44,68 @@ public class ImageCustomManager extends ImageMiddleManager {
 	}
 	public BlobObject genImage(String note, int width, int height,String backgroundColor) throws IOException {
 	
+		return this.helloImage2(note, width, height, backgroundColor);
+	
+	}
+	public static Object assignValue(Object[] valuesWithDefault, int index, String expr) {
+		Object value=valuesWithDefault[index];
+		try {
+			
+			
+			if(value instanceof Integer) {
+				return Integer.parseInt(expr);
+			}
+			if(value instanceof Long) {
+				return Long.parseLong(expr);
+			}
+			if(value instanceof Double) {
+				return Double.parseDouble(expr);
+			}
+			return expr;
+			
+		}catch(Exception e){
+			//not able to parse
+			return value;
+		}
+		
+	}
+	protected Object[] guessParameters(String input) {
+		Object[] values= {"BANNER",400,200,"grey"};
+		int index=input.lastIndexOf(".");
+		if(index<0) {
+			return values;
+		}
+		String [] parts=input.substring(0,index).split("-");
+		
+		//parts[0]=String.format("%s%02d", parts[0],lineNumber);
+		
+		int length = parts.length;
+		
+		
+
+		for(int i=0;i<length;i++) {
+			int offset = i;
+			values[offset] = assignValue(values,offset,parts[i]);
+			
+		}
+		
+		for(int i=0;i<length;i++) {
+			int offset = i;
+			values[offset] = assignValue(values,offset,parts[i]);
+			
+		}
+		return values;
+		
+	}
+	public BlobObject genWithFileName(String noteExpr) throws IOException {
+		//parameters like banner-123-123-red
+		
+		Object [] params=guessParameters(noteExpr);
+		String note =(String)params[0];
+		int width=(Integer)params[1];
+		int height=(Integer)params[2];
+		String backgroundColor=(String)params[3];;
+		
 		return this.helloImage2(note, width, height, backgroundColor);
 	
 	}
@@ -108,8 +142,8 @@ public class ImageCustomManager extends ImageMiddleManager {
 	
 	public BlobObject helloImage2(String note, int width, int height,String backgroundColor) throws IOException {
 		
-		int internalWidth = outOfThen(width,10,1400,600);
-		int internalHeight = outOfThen(height,10,1400,400);
+		int internalWidth = outOfThen(width,10,2400,600);
+		int internalHeight = outOfThen(height,10,2400,400);
 		
 		BufferedImage off_Image =
 				  new BufferedImage(internalWidth, internalHeight,

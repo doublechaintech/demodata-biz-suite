@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<root org="test"
+
+	chinese_name="Demo Data Service" 
+	english_name="Demo Data Service"
+	
+>
+   <platform name="Demo Data Service"  _features="custom">
+    	<image  name="demo image" image_path="banner-800-400-red.jpg" create_time="createTime()"  platform="$(platform)"/>
+    </platform>
+	
+	
+    <!--  
+    -->
+	
+</root>
+
+
+
+
+
+
+
+
+

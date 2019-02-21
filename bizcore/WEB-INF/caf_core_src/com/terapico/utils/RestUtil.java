@@ -22,6 +22,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RestUtil {
@@ -37,7 +38,7 @@ public class RestUtil {
 			throws ClientProtocolException, IOException {
 
 		CloseableHttpClient httpClient = getHttpClient();
-		HttpGet getRequest = new HttpGet("http://localhost:8080/RESTfulExample/json/product/get");
+		HttpGet getRequest = new HttpGet(url);
 		getRequest.addHeader("Accept", "application/json");
 		getRequest.addHeader("Cookie", sessionId);
 
@@ -48,7 +49,13 @@ public class RestUtil {
 		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+		
+		
+		
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		
 		Object responseObj = mapper.readValue(br, clazz);
 		
 		return responseObj;

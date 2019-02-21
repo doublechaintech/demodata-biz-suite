@@ -27,4 +27,4 @@ output/*
 lib/*
 WEB-INF/lib/*
 .history
-/classes/
+.gradle

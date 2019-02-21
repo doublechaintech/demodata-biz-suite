@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<bean id="checker" class="com.test.demodata.DemodataChecker" scope="prototype"></bean>
+
+	<bean id="platformManagerBase" class="com.test.demodata.platform.PlatformManagerImpl"/>
+	<bean id="platformManager" class="com.test.demodata.platform.PlatformCustomManagerImpl" parent="platformManagerBase" ></bean>
+	
+	<bean id="imageManagerBase" class="com.test.demodata.image.ImageManagerImpl"/>
+	<bean id="imageManager" class="com.test.demodata.image.ImageManagerImpl" parent="imageManagerBase" ></bean>
+	
+	<bean id="userDomainManagerBase" class="com.test.demodata.userdomain.UserDomainManagerImpl"/>
+	<bean id="userDomainManager" class="com.test.demodata.userdomain.UserDomainCustomManagerImpl" parent="userDomainManagerBase" ></bean>
+	
+	<bean id="userWhiteListManagerBase" class="com.test.demodata.userwhitelist.UserWhiteListManagerImpl"/>
+	<bean id="userWhiteListManager" class="com.test.demodata.userwhitelist.UserWhiteListManagerImpl" parent="userWhiteListManagerBase" ></bean>
+	
+	<bean id="secUserManagerBase" class="com.test.demodata.secuser.SecUserManagerImpl"/>
+	<bean id="secUserManager" class="com.test.demodata.secuser.SecUserCustomManagerImpl" parent="secUserManagerBase" ></bean>
+	
+	<bean id="secUserBlockingManagerBase" class="com.test.demodata.secuserblocking.SecUserBlockingManagerImpl"/>
+	<bean id="secUserBlockingManager" class="com.test.demodata.secuserblocking.SecUserBlockingCustomManagerImpl" parent="secUserBlockingManagerBase" ></bean>
+	
+	<bean id="userAppManagerBase" class="com.test.demodata.userapp.UserAppManagerImpl"/>
+	<bean id="userAppManager" class="com.test.demodata.userapp.UserAppCustomManagerImpl" parent="userAppManagerBase" ></bean>
+	
+	<bean id="listAccessManagerBase" class="com.test.demodata.listaccess.ListAccessManagerImpl"/>
+	<bean id="listAccessManager" class="com.test.demodata.listaccess.ListAccessManagerImpl" parent="listAccessManagerBase" ></bean>
+	
+	<bean id="objectAccessManagerBase" class="com.test.demodata.objectaccess.ObjectAccessManagerImpl"/>
+	<bean id="objectAccessManager" class="com.test.demodata.objectaccess.ObjectAccessManagerImpl" parent="objectAccessManagerBase" ></bean>
+	
+	<bean id="loginHistoryManagerBase" class="com.test.demodata.loginhistory.LoginHistoryManagerImpl"/>
+	<bean id="loginHistoryManager" class="com.test.demodata.loginhistory.LoginHistoryManagerImpl" parent="loginHistoryManagerBase" ></bean>
+	
+	<bean id="genericFormManagerBase" class="com.test.demodata.genericform.GenericFormManagerImpl"/>
+	<bean id="genericFormManager" class="com.test.demodata.genericform.GenericFormCustomManagerImpl" parent="genericFormManagerBase" ></bean>
+	
+	<bean id="formMessageManagerBase" class="com.test.demodata.formmessage.FormMessageManagerImpl"/>
+	<bean id="formMessageManager" class="com.test.demodata.formmessage.FormMessageManagerImpl" parent="formMessageManagerBase" ></bean>
+	
+	<bean id="formFieldMessageManagerBase" class="com.test.demodata.formfieldmessage.FormFieldMessageManagerImpl"/>
+	<bean id="formFieldMessageManager" class="com.test.demodata.formfieldmessage.FormFieldMessageManagerImpl" parent="formFieldMessageManagerBase" ></bean>
+	
+	<bean id="formFieldManagerBase" class="com.test.demodata.formfield.FormFieldManagerImpl"/>
+	<bean id="formFieldManager" class="com.test.demodata.formfield.FormFieldManagerImpl" parent="formFieldManagerBase" ></bean>
+	
+	<bean id="formActionManagerBase" class="com.test.demodata.formaction.FormActionManagerImpl"/>
+	<bean id="formActionManager" class="com.test.demodata.formaction.FormActionManagerImpl" parent="formActionManagerBase" ></bean>
+	
+
+	<bean id="managerGroupBase" class="com.test.demodata.ManagerGroup">
+		<property name="platformManager" ref="platformManager"/>
+		<property name="imageManager" ref="imageManager"/>
+		<property name="userDomainManager" ref="userDomainManager"/>
+		<property name="userWhiteListManager" ref="userWhiteListManager"/>
+		<property name="secUserManager" ref="secUserManager"/>
+		<property name="secUserBlockingManager" ref="secUserBlockingManager"/>
+		<property name="userAppManager" ref="userAppManager"/>
+		<property name="listAccessManager" ref="listAccessManager"/>
+		<property name="objectAccessManager" ref="objectAccessManager"/>
+		<property name="loginHistoryManager" ref="loginHistoryManager"/>
+		<property name="genericFormManager" ref="genericFormManager"/>
+		<property name="formMessageManager" ref="formMessageManager"/>
+		<property name="formFieldMessageManager" ref="formFieldMessageManager"/>
+		<property name="formFieldManager" ref="formFieldManager"/>
+		<property name="formActionManager" ref="formActionManager"/>
+	</bean>
+	<bean id="managerGroup" parent="managerGroupBase"></bean>
+	
+
+
+</beans>
+
+
+
+
+
+
+
+
