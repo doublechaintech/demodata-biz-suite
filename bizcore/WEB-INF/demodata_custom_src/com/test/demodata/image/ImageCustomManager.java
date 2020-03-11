@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 
 import com.terapico.caf.BlobObject;
 import com.terapico.uccaf.BaseUserContext;
+import com.test.demodata.DemodataUserContext;
 import com.test.demodata.UserContext;
 
 public class ImageCustomManager extends ImageMiddleManager {
@@ -47,6 +48,54 @@ public class ImageCustomManager extends ImageMiddleManager {
 		return this.helloImage2(note, width, height, backgroundColor);
 	
 	}
+	public BlobObject genImage2(String note, int width, int height,String backgroundColor) throws IOException {
+
+		return this.helloImage2(note, width, height, backgroundColor);
+
+
+
+	}
+	public String hello(String note) throws IOException {
+
+		return "hello 水电费world"+note+ImageMiddleManager.OK;
+
+
+
+	}
+	public String hello3(String note) throws IOException {
+
+		return "hello3: "+note;
+		
+	}
+	
+	public Object helloImage(DemodataUserContext userContext,String imageId) throws Exception {
+
+		return this.view(userContext, imageId);
+		
+	}
+	
+	
+	public SuperImage helloImage2(DemodataUserContext userContext,String imageId) throws Exception {
+
+		Image image = (Image) this.view(userContext, imageId);
+		
+		SuperImage sImage=new SuperImage();
+		image.copyTo(sImage);
+		return sImage;
+		
+	}
+	
+	public SuperImage query(DemodataUserContext userContext,String imageId, String uploadTime) throws Exception {
+
+		Image image = (Image) this.loadImage(userContext, imageId, this.emptyOptions() );
+		
+		SuperImage sImage=new SuperImage();
+		image.copyTo(sImage);
+		return sImage;
+		
+	}
+	
+	
 	public static Object assignValue(Object[] valuesWithDefault, int index, String expr) {
 		Object value=valuesWithDefault[index];
 		try {

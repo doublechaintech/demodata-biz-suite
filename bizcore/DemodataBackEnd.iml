@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/activation-1.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/aggs-matrix-stats-client-5.6.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-java-sdk-core-3.5.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-java-sdk-dysmsapi-1.0.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-java-sdk-sts-3.0.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-sdk-mns-1.1.8.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-sdk-oss-2.8.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/ant-1.9.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/ant-launcher-1.9.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/asm-6.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/asm-all-5.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/bcpkix-jdk15on-1.59.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/bcprov-jdk15on-1.59.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/c3p0-0.9.5.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/cglib-3.2.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-beanutils-1.9.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-codec-1.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-collections-3.2.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-collections4-4.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-dbcp-1.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-io-2.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-lang3-3.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-logging-1.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-pool-1.5.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/commons-pool2-2.4.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/core-3.2.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/elasticsearch-5.6.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/elasticsearch-rest-client-5.6.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/elasticsearch-rest-high-level-client-5.6.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/gson-2.8.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/guava-20.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/HdrHistogram-2.1.9.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/HikariCP-java6-2.3.13.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/hppc-0.7.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/httpasyncclient-4.1.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/httpclient-4.5.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/httpcore-4.4.9.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/httpcore-nio-4.4.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/httpmime-4.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jackson-annotations-2.9.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jackson-core-2.9.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jackson-databind-2.9.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jackson-dataformat-cbor-2.8.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jackson-dataformat-smile-2.8.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jackson-dataformat-yaml-2.8.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/java-jwt-3.4.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jcl-over-slf4j-1.7.24.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jdom-1.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jedis-2.9.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jna-4.4.0-1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/joda-time-2.9.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/jopt-simple-5.0.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/json-20170516.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/kafka-clients-1.1.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/log4j-1.2.17.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/log4j-api-2.9.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-analyzers-common-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-backward-codecs-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-core-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-grouping-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-highlighter-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-join-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-memory-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-misc-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-queries-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-queryparser-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-sandbox-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-spatial-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-spatial-extras-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-spatial3d-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lucene-suggest-6.6.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/lz4-java-1.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/mail-1.4.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/mchange-commons-java-0.2.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/mysql-connector-java-6.0.6.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/neo4j-java-driver-1.5.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/parent-join-client-5.6.3.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/poi-3.17.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/qrcode-utils-1.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/quartz-2.3.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/securesm-1.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/servlet-api-2.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/slf4j-api-1.7.25.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/snakeyaml-1.15.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/snappy-java-1.1.7.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-aop-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-beans-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-context-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-context-support-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-core-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-expression-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-jdbc-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/spring-tx-4.3.16.RELEASE.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/t-digest-3.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/weixin-java-common-3.0.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/weixin-java-miniapp-3.0.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/weixin-java-pay-3.0.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/xmlpull-1.1.3.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/xpp3_min-1.1.4c.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/WEB-INF/lib/xstream-1.4.9.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/WEB-INF/demodata_core_src" expected_position="0" />
+      <src_folder value="file://$MODULE_DIR$/WEB-INF/demodata_custom_src" expected_position="1" />
+      <src_folder value="file://$MODULE_DIR$/WEB-INF/caf_core_src" expected_position="2" />
+      <src_folder value="file://$MODULE_DIR$/WEB-INF/caf_custom_src" expected_position="3" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/WEB-INF/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/WEB-INF/demodata_core_src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WEB-INF/demodata_custom_src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WEB-INF/caf_core_src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WEB-INF/caf_custom_src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module-library">
+      <library name="activation-1.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/activation-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="aggs-matrix-stats-client-5.6.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/aggs-matrix-stats-client-5.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="aliyun-java-sdk-core-3.5.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-java-sdk-core-3.5.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="aliyun-java-sdk-dysmsapi-1.0.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-java-sdk-dysmsapi-1.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="aliyun-java-sdk-sts-3.0.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-java-sdk-sts-3.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="aliyun-sdk-mns-1.1.8.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-sdk-mns-1.1.8.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="aliyun-sdk-oss-2.8.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/aliyun-sdk-oss-2.8.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="ant-1.9.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/ant-1.9.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="ant-launcher-1.9.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/ant-launcher-1.9.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="asm-6.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/asm-6.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="asm-all-5.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/asm-all-5.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="bcpkix-jdk15on-1.59.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/bcpkix-jdk15on-1.59.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="bcprov-jdk15on-1.59.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/bcprov-jdk15on-1.59.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="c3p0-0.9.5.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/c3p0-0.9.5.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="cglib-3.2.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/cglib-3.2.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-beanutils-1.9.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-beanutils-1.9.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-codec-1.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-codec-1.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-collections-3.2.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-collections-3.2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-collections4-4.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-collections4-4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-dbcp-1.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-dbcp-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-io-2.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-io-2.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-lang3-3.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-lang3-3.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-logging-1.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-logging-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-pool-1.5.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-pool-1.5.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-pool2-2.4.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/commons-pool2-2.4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="core-3.2.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/core-3.2.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="elasticsearch-5.6.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/elasticsearch-5.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="elasticsearch-rest-client-5.6.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/elasticsearch-rest-client-5.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="elasticsearch-rest-high-level-client-5.6.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/elasticsearch-rest-high-level-client-5.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="gson-2.8.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/gson-2.8.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="guava-20.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/guava-20.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="HdrHistogram-2.1.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/HdrHistogram-2.1.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="HikariCP-java6-2.3.13.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/HikariCP-java6-2.3.13.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="hppc-0.7.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/hppc-0.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpasyncclient-4.1.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/httpasyncclient-4.1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpclient-4.5.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/httpclient-4.5.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-4.4.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/httpcore-4.4.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-nio-4.4.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/httpcore-nio-4.4.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpmime-4.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/httpmime-4.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-annotations-2.9.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jackson-annotations-2.9.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-core-2.9.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jackson-core-2.9.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-databind-2.9.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jackson-databind-2.9.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-dataformat-cbor-2.8.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jackson-dataformat-cbor-2.8.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-dataformat-smile-2.8.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jackson-dataformat-smile-2.8.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-dataformat-yaml-2.8.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jackson-dataformat-yaml-2.8.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="java-jwt-3.4.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/java-jwt-3.4.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcl-over-slf4j-1.7.24.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jcl-over-slf4j-1.7.24.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jdom-1.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jdom-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jedis-2.9.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jedis-2.9.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jna-4.4.0-1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jna-4.4.0-1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="joda-time-2.9.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/joda-time-2.9.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jopt-simple-5.0.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/jopt-simple-5.0.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="json-20170516.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/json-20170516.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="kafka-clients-1.1.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/kafka-clients-1.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="log4j-1.2.17.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/log4j-1.2.17.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="log4j-api-2.9.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/log4j-api-2.9.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-analyzers-common-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-analyzers-common-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-backward-codecs-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-backward-codecs-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-core-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-core-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-grouping-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-grouping-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-highlighter-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-highlighter-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-join-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-join-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-memory-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-memory-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-misc-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-misc-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-queries-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-queries-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-queryparser-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-queryparser-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-sandbox-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-sandbox-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-spatial-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-spatial-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-spatial-extras-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-spatial-extras-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-spatial3d-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-spatial3d-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lucene-suggest-6.6.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lucene-suggest-6.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="lz4-java-1.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/lz4-java-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="mail-1.4.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/mail-1.4.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="mchange-commons-java-0.2.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/mchange-commons-java-0.2.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="mysql-connector-java-6.0.6.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/mysql-connector-java-6.0.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="neo4j-java-driver-1.5.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/neo4j-java-driver-1.5.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="parent-join-client-5.6.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/parent-join-client-5.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="poi-3.17.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/poi-3.17.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="qrcode-utils-1.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/qrcode-utils-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="quartz-2.3.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/quartz-2.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="securesm-1.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/securesm-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="servlet-api-2.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/servlet-api-2.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="slf4j-api-1.7.25.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/slf4j-api-1.7.25.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="snakeyaml-1.15.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/snakeyaml-1.15.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="snappy-java-1.1.7.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/snappy-java-1.1.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-aop-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-aop-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-beans-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-beans-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-context-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-context-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-context-support-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-context-support-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-core-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-core-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-expression-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-expression-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-jdbc-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-jdbc-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-tx-4.3.16.RELEASE.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/spring-tx-4.3.16.RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="t-digest-3.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/t-digest-3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="weixin-java-common-3.0.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/weixin-java-common-3.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="weixin-java-miniapp-3.0.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/weixin-java-miniapp-3.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="weixin-java-pay-3.0.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/weixin-java-pay-3.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="xmlpull-1.1.3.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/xmlpull-1.1.3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="xpp3_min-1.1.4c.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/xpp3_min-1.1.4c.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="xstream-1.4.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/xstream-1.4.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>

@@ -20,7 +20,7 @@ import com.test.demodata.DemodataUserContext;
 
 import com.test.demodata.platform.Platform;
 
-import com.test.demodata.platform.PlatformDAO;
+import com.test.demodata.platform.PlatformCustom2DAO;
 
 
 
@@ -29,11 +29,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements ImageDAO{
  
  	
- 	private  PlatformDAO  platformDAO;
- 	public void setPlatformDAO(PlatformDAO platformDAO){
+ 	private  PlatformCustom2DAO  platformDAO;
+ 	public void setPlatformDAO(PlatformCustom2DAO platformDAO){
 	 	this.platformDAO = platformDAO;
  	}
- 	public PlatformDAO getPlatformDAO(){
+ 	public PlatformCustom2DAO getPlatformDAO(){
 	 	return this.platformDAO;
  	}
 

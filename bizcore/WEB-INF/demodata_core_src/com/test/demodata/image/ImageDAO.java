@@ -7,7 +7,7 @@ import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
-import com.test.demodata.platform.PlatformDAO;
+import com.test.demodata.platform.PlatformCustom2DAO;
 
 
 public interface ImageDAO{

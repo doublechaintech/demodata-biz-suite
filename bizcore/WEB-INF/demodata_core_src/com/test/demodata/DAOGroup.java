@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.test.demodata.platform.Platform;
-import com.test.demodata.platform.PlatformDAO;
+import com.test.demodata.platform.PlatformCustom2DAO;
 import com.test.demodata.platform.PlatformTokens;
 import com.test.demodata.image.Image;
 import com.test.demodata.image.ImageDAO;
@@ -51,7 +51,7 @@ import com.test.demodata.formaction.FormActionTokens;
 
 public class DAOGroup {
 
-	protected PlatformDAO platformDAO;
+	protected PlatformCustom2DAO platformDAO;
 
 	protected ImageDAO imageDAO;
 
@@ -83,13 +83,13 @@ public class DAOGroup {
 
 	
 
-	public PlatformDAO getPlatformDAO(){
+	public PlatformAO getPlatformDAO(){
 		return this.platformDAO;
 	}
-	public void setPlatformDAO(PlatformDAO dao){
+	public void setPlatformDAO(PlatformCustomDAO dao){
 		this.platformDAO = dao;
 	}
-
+	
 
 	public ImageDAO getImageDAO(){
 		return this.imageDAO;

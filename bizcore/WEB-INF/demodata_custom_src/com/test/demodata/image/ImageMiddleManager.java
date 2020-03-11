@@ -14,7 +14,9 @@ import com.test.demodata.DemodataUserContext;
 
 public class ImageMiddleManager  extends ImageManagerImpl{
 
-	
+
+	public static  final String OK="12312313";
+
 	@Override
 	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
 			throws IllegalAccessException {
@@ -58,6 +60,7 @@ public class ImageMiddleManager  extends ImageManagerImpl{
 				Image image = loadRemoteImage(userContext,serviceName,imageId,tokensExpr);
 				imageList.add(image);
 			} catch (ClientProtocolException e) {
+
 				
 			} catch (IOException e) {
 				
@@ -65,6 +68,8 @@ public class ImageMiddleManager  extends ImageManagerImpl{
 			
 
 		 });
+
+
 		 
 		 userContext.log(imageList.stream().map(item->item.getId()).collect(Collectors.joining(";")));
 		 
