@@ -4,8 +4,10 @@ package com.test.demodata.secuser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -13,7 +15,8 @@ import com.test.demodata.KeyValuePair;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.test.demodata.userdomain.UserDomain;
 import com.test.demodata.userapp.UserApp;
-import com.test.demodata.secuserblocking.SecUserBlocking;
+import com.test.demodata.wechatworkappidentify.WechatWorkappIdentify;
+import com.test.demodata.wechatminiappidentify.WechatMiniappIdentify;
 import com.test.demodata.loginhistory.LoginHistory;
 
 @JsonSerialize(using = SecUserSerializer.class)
@@ -25,16 +28,19 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 	public static final String MOBILE_PROPERTY                = "mobile"            ;
 	public static final String EMAIL_PROPERTY                 = "email"             ;
 	public static final String PWD_PROPERTY                   = "pwd"               ;
+	public static final String WEIXIN_OPENID_PROPERTY         = "weixinOpenid"      ;
+	public static final String WEIXIN_APPID_PROPERTY          = "weixinAppid"       ;
+	public static final String ACCESS_TOKEN_PROPERTY          = "accessToken"       ;
 	public static final String VERIFICATION_CODE_PROPERTY     = "verificationCode"  ;
 	public static final String VERIFICATION_CODE_EXPIRE_PROPERTY = "verificationCodeExpire";
 	public static final String LAST_LOGIN_TIME_PROPERTY       = "lastLoginTime"     ;
 	public static final String DOMAIN_PROPERTY                = "domain"            ;
-	public static final String BLOCKING_PROPERTY              = "blocking"          ;
-	public static final String CURRENT_STATUS_PROPERTY        = "currentStatus"     ;
 	public static final String VERSION_PROPERTY               = "version"           ;
 
 	public static final String USER_APP_LIST                            = "userAppList"       ;
 	public static final String LOGIN_HISTORY_LIST                       = "loginHistoryList"  ;
+	public static final String WECHAT_WORKAPP_IDENTIFY_LIST             = "wechatWorkappIdentifyList";
+	public static final String WECHAT_MINIAPP_IDENTIFY_LIST             = "wechatMiniappIdentifyList";
 
 	public static final String INTERNAL_TYPE="SecUser";
 	public String getInternalType(){
@@ -60,45 +66,42 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 	protected		String              	mMobile             ;
 	protected		String              	mEmail              ;
 	protected		String              	mPwd                ;
+	protected		String              	mWeixinOpenid       ;
+	protected		String              	mWeixinAppid        ;
+	protected		String              	mAccessToken        ;
 	protected		int                 	mVerificationCode   ;
 	protected		DateTime            	mVerificationCodeExpire;
 	protected		DateTime            	mLastLoginTime      ;
 	protected		UserDomain          	mDomain             ;
-	protected		SecUserBlocking     	mBlocking           ;
-	protected		String              	mCurrentStatus      ;
 	protected		int                 	mVersion            ;
 	
 	
 	protected		SmartList<UserApp>  	mUserAppList        ;
 	protected		SmartList<LoginHistory>	mLoginHistoryList   ;
+	protected		SmartList<WechatWorkappIdentify>	mWechatWorkappIdentifyList;
+	protected		SmartList<WechatMiniappIdentify>	mWechatMiniappIdentifyList;
 	
 		
 	public 	SecUser(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static SecUser withId(String id){
+		SecUser secUser = new SecUser();
+		secUser.setId(id);
+		secUser.setVersion(Integer.MAX_VALUE);
+		return secUser;
+	}
+	public 	static SecUser refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setDomain( null );
-		setBlocking( null );
 
 		this.changed = true;
 	}
 	
-	public 	SecUser(String login, String mobile, String email, String pwd, int verificationCode, DateTime verificationCodeExpire, DateTime lastLoginTime, UserDomain domain, String currentStatus)
-	{
-		setLogin(login);
-		setMobile(mobile);
-		setEmail(email);
-		setPwd(pwd);
-		setVerificationCode(verificationCode);
-		setVerificationCodeExpire(verificationCodeExpire);
-		setLastLoginTime(lastLoginTime);
-		setDomain(domain);
-		setCurrentStatus(currentStatus);
-
-		this.mUserAppList = new SmartList<UserApp>();
-		this.mLoginHistoryList = new SmartList<LoginHistory>();	
-	}
 	
 	//Support for changing the property
 	
@@ -116,6 +119,15 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		if(PWD_PROPERTY.equals(property)){
 			changePwdProperty(newValueExpr);
 		}
+		if(WEIXIN_OPENID_PROPERTY.equals(property)){
+			changeWeixinOpenidProperty(newValueExpr);
+		}
+		if(WEIXIN_APPID_PROPERTY.equals(property)){
+			changeWeixinAppidProperty(newValueExpr);
+		}
+		if(ACCESS_TOKEN_PROPERTY.equals(property)){
+			changeAccessTokenProperty(newValueExpr);
+		}
 		if(VERIFICATION_CODE_PROPERTY.equals(property)){
 			changeVerificationCodeProperty(newValueExpr);
 		}
@@ -131,6 +143,7 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeLoginProperty(String newValueExpr){
+	
 		String oldValue = getLogin();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -140,12 +153,13 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updateLogin(newValue);
 		this.onChangeProperty(LOGIN_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeMobileProperty(String newValueExpr){
+	
 		String oldValue = getMobile();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -155,12 +169,13 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updateMobile(newValue);
 		this.onChangeProperty(MOBILE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeEmailProperty(String newValueExpr){
+	
 		String oldValue = getEmail();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -170,12 +185,13 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updateEmail(newValue);
 		this.onChangeProperty(EMAIL_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changePwdProperty(String newValueExpr){
+	
 		String oldValue = getPwd();
 		String newValue = parseString(hashStringWithSHA256(newValueExpr));
 		if(equalsString(oldValue , newValue)){
@@ -185,12 +201,61 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updatePwd(newValueExpr);
 		this.onChangeProperty(PWD_PROPERTY, oldValue, newValue);
 		return;
-  
+   
+	}
+			
+			
+			
+	protected void changeWeixinOpenidProperty(String newValueExpr){
+	
+		String oldValue = getWeixinOpenid();
+		String newValue = parseString(newValueExpr);
+		if(equalsString(oldValue , newValue)){
+			return;//they can be both null, or exact the same object, this is much faster than equals function
+		}
+		//they are surely different each other
+		updateWeixinOpenid(newValue);
+		this.onChangeProperty(WEIXIN_OPENID_PROPERTY, oldValue, newValue);
+		return;
+   
+	}
+			
+			
+			
+	protected void changeWeixinAppidProperty(String newValueExpr){
+	
+		String oldValue = getWeixinAppid();
+		String newValue = parseString(newValueExpr);
+		if(equalsString(oldValue , newValue)){
+			return;//they can be both null, or exact the same object, this is much faster than equals function
+		}
+		//they are surely different each other
+		updateWeixinAppid(newValue);
+		this.onChangeProperty(WEIXIN_APPID_PROPERTY, oldValue, newValue);
+		return;
+   
+	}
+			
+			
+			
+	protected void changeAccessTokenProperty(String newValueExpr){
+	
+		String oldValue = getAccessToken();
+		String newValue = parseString(newValueExpr);
+		if(equalsString(oldValue , newValue)){
+			return;//they can be both null, or exact the same object, this is much faster than equals function
+		}
+		//they are surely different each other
+		updateAccessToken(newValue);
+		this.onChangeProperty(ACCESS_TOKEN_PROPERTY, oldValue, newValue);
+		return;
+   
 	}
 			
 			
 			
 	protected void changeVerificationCodeProperty(String newValueExpr){
+	
 		int oldValue = getVerificationCode();
 		int newValue = parseInt(newValueExpr);
 		if(equalsInt(oldValue , newValue)){
@@ -200,12 +265,13 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updateVerificationCode(newValue);
 		this.onChangeProperty(VERIFICATION_CODE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeVerificationCodeExpireProperty(String newValueExpr){
+	
 		DateTime oldValue = getVerificationCodeExpire();
 		DateTime newValue = parseTimestamp(newValueExpr);
 		if(equalsTimestamp(oldValue , newValue)){
@@ -215,12 +281,13 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updateVerificationCodeExpire(newValue);
 		this.onChangeProperty(VERIFICATION_CODE_EXPIRE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeLastLoginTimeProperty(String newValueExpr){
+	
 		DateTime oldValue = getLastLoginTime();
 		DateTime newValue = parseTimestamp(newValueExpr);
 		if(equalsTimestamp(oldValue , newValue)){
@@ -230,11 +297,71 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		updateLastLoginTime(newValue);
 		this.onChangeProperty(LAST_LOGIN_TIME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(LOGIN_PROPERTY.equals(property)){
+			return getLogin();
+		}
+		if(MOBILE_PROPERTY.equals(property)){
+			return getMobile();
+		}
+		if(EMAIL_PROPERTY.equals(property)){
+			return getEmail();
+		}
+		if(PWD_PROPERTY.equals(property)){
+			return getPwd();
+		}
+		if(WEIXIN_OPENID_PROPERTY.equals(property)){
+			return getWeixinOpenid();
+		}
+		if(WEIXIN_APPID_PROPERTY.equals(property)){
+			return getWeixinAppid();
+		}
+		if(ACCESS_TOKEN_PROPERTY.equals(property)){
+			return getAccessToken();
+		}
+		if(VERIFICATION_CODE_PROPERTY.equals(property)){
+			return getVerificationCode();
+		}
+		if(VERIFICATION_CODE_EXPIRE_PROPERTY.equals(property)){
+			return getVerificationCodeExpire();
+		}
+		if(LAST_LOGIN_TIME_PROPERTY.equals(property)){
+			return getLastLoginTime();
+		}
+		if(DOMAIN_PROPERTY.equals(property)){
+			return getDomain();
+		}
+		if(USER_APP_LIST.equals(property)){
+			List<BaseEntity> list = getUserAppList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+		if(LOGIN_HISTORY_LIST.equals(property)){
+			List<BaseEntity> list = getLoginHistoryList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+		if(WECHAT_WORKAPP_IDENTIFY_LIST.equals(property)){
+			List<BaseEntity> list = getWechatWorkappIdentifyList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+		if(WECHAT_MINIAPP_IDENTIFY_LIST.equals(property)){
+			List<BaseEntity> list = getWechatMiniappIdentifyList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -251,6 +378,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setLogin(String login){
@@ -264,6 +394,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeLogin(String login){
+		if(login != null) { setLogin(login);}
+	}
 	
 	
 	public void setMobile(String mobile){
@@ -276,6 +409,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.mMobile = trimString(mobile);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeMobile(String mobile){
+		if(mobile != null) { setMobile(mobile);}
 	}
 	
 	
@@ -297,6 +433,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeEmail(String email){
+		if(email != null) { setEmail(email);}
+	}
 	
 	
 	public void setPwd(String pwd){
@@ -309,6 +448,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.mPwd = hashStringWithSHA256(trimString(pwd));;
 		this.changed = true;
 		return this;
+	}
+	public void mergePwd(String pwd){
+		if(pwd != null) { setPwd(pwd);}
 	}
 	
 	
@@ -325,6 +467,54 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 	}
 	
 		
+	public void setWeixinOpenid(String weixinOpenid){
+		this.mWeixinOpenid = trimString(weixinOpenid);;
+	}
+	public String getWeixinOpenid(){
+		return this.mWeixinOpenid;
+	}
+	public SecUser updateWeixinOpenid(String weixinOpenid){
+		this.mWeixinOpenid = trimString(weixinOpenid);;
+		this.changed = true;
+		return this;
+	}
+	public void mergeWeixinOpenid(String weixinOpenid){
+		if(weixinOpenid != null) { setWeixinOpenid(weixinOpenid);}
+	}
+	
+	
+	public void setWeixinAppid(String weixinAppid){
+		this.mWeixinAppid = trimString(weixinAppid);;
+	}
+	public String getWeixinAppid(){
+		return this.mWeixinAppid;
+	}
+	public SecUser updateWeixinAppid(String weixinAppid){
+		this.mWeixinAppid = trimString(weixinAppid);;
+		this.changed = true;
+		return this;
+	}
+	public void mergeWeixinAppid(String weixinAppid){
+		if(weixinAppid != null) { setWeixinAppid(weixinAppid);}
+	}
+	
+	
+	public void setAccessToken(String accessToken){
+		this.mAccessToken = trimString(accessToken);;
+	}
+	public String getAccessToken(){
+		return this.mAccessToken;
+	}
+	public SecUser updateAccessToken(String accessToken){
+		this.mAccessToken = trimString(accessToken);;
+		this.changed = true;
+		return this;
+	}
+	public void mergeAccessToken(String accessToken){
+		if(accessToken != null) { setAccessToken(accessToken);}
+	}
+	
+	
 	public void setVerificationCode(int verificationCode){
 		this.mVerificationCode = verificationCode;;
 	}
@@ -335,6 +525,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.mVerificationCode = verificationCode;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVerificationCode(int verificationCode){
+		setVerificationCode(verificationCode);
 	}
 	
 	
@@ -349,6 +542,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeVerificationCodeExpire(DateTime verificationCodeExpire){
+		setVerificationCodeExpire(verificationCodeExpire);
+	}
 	
 	
 	public void setLastLoginTime(DateTime lastLoginTime){
@@ -361,6 +557,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.mLastLoginTime = lastLoginTime;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeLastLoginTime(DateTime lastLoginTime){
+		setLastLoginTime(lastLoginTime);
 	}
 	
 	
@@ -375,43 +574,15 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeDomain(UserDomain domain){
+		if(domain != null) { setDomain(domain);}
+	}
 	
 	
 	public void clearDomain(){
 		setDomain ( null );
 		this.changed = true;
 	}
-	
-	public void setBlocking(SecUserBlocking blocking){
-		this.mBlocking = blocking;;
-	}
-	public SecUserBlocking getBlocking(){
-		return this.mBlocking;
-	}
-	public SecUser updateBlocking(SecUserBlocking blocking){
-		this.mBlocking = blocking;;
-		this.changed = true;
-		return this;
-	}
-	
-	
-	public void clearBlocking(){
-		setBlocking ( null );
-		this.changed = true;
-	}
-	
-	public void setCurrentStatus(String currentStatus){
-		this.mCurrentStatus = trimString(currentStatus);;
-	}
-	public String getCurrentStatus(){
-		return this.mCurrentStatus;
-	}
-	public SecUser updateCurrentStatus(String currentStatus){
-		this.mCurrentStatus = trimString(currentStatus);;
-		this.changed = true;
-		return this;
-	}
-	
 	
 	public void setVersion(int version){
 		this.mVersion = version;;
@@ -423,6 +594,9 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -456,7 +630,16 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		}
 		getUserAppList().addAll(userAppList);
 	}
-	
+	public  void mergeUserAppList(SmartList<UserApp> userAppList){
+		if(userAppList==null){
+			return;
+		}
+		if(userAppList.isEmpty()){
+			return;
+		}
+		addUserAppList( userAppList );
+		
+	}
 	public  UserApp removeUserApp(UserApp userAppIndex){
 		
 		int index = getUserAppList().indexOf(userAppIndex);
@@ -554,7 +737,16 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		}
 		getLoginHistoryList().addAll(loginHistoryList);
 	}
-	
+	public  void mergeLoginHistoryList(SmartList<LoginHistory> loginHistoryList){
+		if(loginHistoryList==null){
+			return;
+		}
+		if(loginHistoryList.isEmpty()){
+			return;
+		}
+		addLoginHistoryList( loginHistoryList );
+		
+	}
 	public  LoginHistory removeLoginHistory(LoginHistory loginHistoryIndex){
 		
 		int index = getLoginHistoryList().indexOf(loginHistoryIndex);
@@ -623,10 +815,223 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 	
 
 
+	public  SmartList<WechatWorkappIdentify> getWechatWorkappIdentifyList(){
+		if(this.mWechatWorkappIdentifyList == null){
+			this.mWechatWorkappIdentifyList = new SmartList<WechatWorkappIdentify>();
+			this.mWechatWorkappIdentifyList.setListInternalName (WECHAT_WORKAPP_IDENTIFY_LIST );
+			//有名字，便于做权限控制
+		}
+		
+		return this.mWechatWorkappIdentifyList;	
+	}
+	public  void setWechatWorkappIdentifyList(SmartList<WechatWorkappIdentify> wechatWorkappIdentifyList){
+		for( WechatWorkappIdentify wechatWorkappIdentify:wechatWorkappIdentifyList){
+			wechatWorkappIdentify.setSecUser(this);
+		}
+
+		this.mWechatWorkappIdentifyList = wechatWorkappIdentifyList;
+		this.mWechatWorkappIdentifyList.setListInternalName (WECHAT_WORKAPP_IDENTIFY_LIST );
+		
+	}
+	
+	public  void addWechatWorkappIdentify(WechatWorkappIdentify wechatWorkappIdentify){
+		wechatWorkappIdentify.setSecUser(this);
+		getWechatWorkappIdentifyList().add(wechatWorkappIdentify);
+	}
+	public  void addWechatWorkappIdentifyList(SmartList<WechatWorkappIdentify> wechatWorkappIdentifyList){
+		for( WechatWorkappIdentify wechatWorkappIdentify:wechatWorkappIdentifyList){
+			wechatWorkappIdentify.setSecUser(this);
+		}
+		getWechatWorkappIdentifyList().addAll(wechatWorkappIdentifyList);
+	}
+	public  void mergeWechatWorkappIdentifyList(SmartList<WechatWorkappIdentify> wechatWorkappIdentifyList){
+		if(wechatWorkappIdentifyList==null){
+			return;
+		}
+		if(wechatWorkappIdentifyList.isEmpty()){
+			return;
+		}
+		addWechatWorkappIdentifyList( wechatWorkappIdentifyList );
+		
+	}
+	public  WechatWorkappIdentify removeWechatWorkappIdentify(WechatWorkappIdentify wechatWorkappIdentifyIndex){
+		
+		int index = getWechatWorkappIdentifyList().indexOf(wechatWorkappIdentifyIndex);
+        if(index < 0){
+        	String message = "WechatWorkappIdentify("+wechatWorkappIdentifyIndex.getId()+") with version='"+wechatWorkappIdentifyIndex.getVersion()+"' NOT found!";
+            throw new IllegalStateException(message);
+        }
+        WechatWorkappIdentify wechatWorkappIdentify = getWechatWorkappIdentifyList().get(index);        
+        // wechatWorkappIdentify.clearSecUser(); //disconnect with SecUser
+        wechatWorkappIdentify.clearFromAll(); //disconnect with SecUser
+		
+		boolean result = getWechatWorkappIdentifyList().planToRemove(wechatWorkappIdentify);
+        if(!result){
+        	String message = "WechatWorkappIdentify("+wechatWorkappIdentifyIndex.getId()+") with version='"+wechatWorkappIdentifyIndex.getVersion()+"' NOT found!";
+            throw new IllegalStateException(message);
+        }
+        return wechatWorkappIdentify;
+        
+	
+	}
+	//断舍离
+	public  void breakWithWechatWorkappIdentify(WechatWorkappIdentify wechatWorkappIdentify){
+		
+		if(wechatWorkappIdentify == null){
+			return;
+		}
+		wechatWorkappIdentify.setSecUser(null);
+		//getWechatWorkappIdentifyList().remove();
+	
+	}
+	
+	public  boolean hasWechatWorkappIdentify(WechatWorkappIdentify wechatWorkappIdentify){
+	
+		return getWechatWorkappIdentifyList().contains(wechatWorkappIdentify);
+  
+	}
+	
+	public void copyWechatWorkappIdentifyFrom(WechatWorkappIdentify wechatWorkappIdentify) {
+
+		WechatWorkappIdentify wechatWorkappIdentifyInList = findTheWechatWorkappIdentify(wechatWorkappIdentify);
+		WechatWorkappIdentify newWechatWorkappIdentify = new WechatWorkappIdentify();
+		wechatWorkappIdentifyInList.copyTo(newWechatWorkappIdentify);
+		newWechatWorkappIdentify.setVersion(0);//will trigger copy
+		getWechatWorkappIdentifyList().add(newWechatWorkappIdentify);
+		addItemToFlexiableObject(COPIED_CHILD, newWechatWorkappIdentify);
+	}
+	
+	public  WechatWorkappIdentify findTheWechatWorkappIdentify(WechatWorkappIdentify wechatWorkappIdentify){
+		
+		int index =  getWechatWorkappIdentifyList().indexOf(wechatWorkappIdentify);
+		//The input parameter must have the same id and version number.
+		if(index < 0){
+ 			String message = "WechatWorkappIdentify("+wechatWorkappIdentify.getId()+") with version='"+wechatWorkappIdentify.getVersion()+"' NOT found!";
+			throw new IllegalStateException(message);
+		}
+		
+		return  getWechatWorkappIdentifyList().get(index);
+		//Performance issue when using LinkedList, but it is almost an ArrayList for sure!
+	}
+	
+	public  void cleanUpWechatWorkappIdentifyList(){
+		getWechatWorkappIdentifyList().clear();
+	}
+	
+	
+	
+
+
+	public  SmartList<WechatMiniappIdentify> getWechatMiniappIdentifyList(){
+		if(this.mWechatMiniappIdentifyList == null){
+			this.mWechatMiniappIdentifyList = new SmartList<WechatMiniappIdentify>();
+			this.mWechatMiniappIdentifyList.setListInternalName (WECHAT_MINIAPP_IDENTIFY_LIST );
+			//有名字，便于做权限控制
+		}
+		
+		return this.mWechatMiniappIdentifyList;	
+	}
+	public  void setWechatMiniappIdentifyList(SmartList<WechatMiniappIdentify> wechatMiniappIdentifyList){
+		for( WechatMiniappIdentify wechatMiniappIdentify:wechatMiniappIdentifyList){
+			wechatMiniappIdentify.setSecUser(this);
+		}
+
+		this.mWechatMiniappIdentifyList = wechatMiniappIdentifyList;
+		this.mWechatMiniappIdentifyList.setListInternalName (WECHAT_MINIAPP_IDENTIFY_LIST );
+		
+	}
+	
+	public  void addWechatMiniappIdentify(WechatMiniappIdentify wechatMiniappIdentify){
+		wechatMiniappIdentify.setSecUser(this);
+		getWechatMiniappIdentifyList().add(wechatMiniappIdentify);
+	}
+	public  void addWechatMiniappIdentifyList(SmartList<WechatMiniappIdentify> wechatMiniappIdentifyList){
+		for( WechatMiniappIdentify wechatMiniappIdentify:wechatMiniappIdentifyList){
+			wechatMiniappIdentify.setSecUser(this);
+		}
+		getWechatMiniappIdentifyList().addAll(wechatMiniappIdentifyList);
+	}
+	public  void mergeWechatMiniappIdentifyList(SmartList<WechatMiniappIdentify> wechatMiniappIdentifyList){
+		if(wechatMiniappIdentifyList==null){
+			return;
+		}
+		if(wechatMiniappIdentifyList.isEmpty()){
+			return;
+		}
+		addWechatMiniappIdentifyList( wechatMiniappIdentifyList );
+		
+	}
+	public  WechatMiniappIdentify removeWechatMiniappIdentify(WechatMiniappIdentify wechatMiniappIdentifyIndex){
+		
+		int index = getWechatMiniappIdentifyList().indexOf(wechatMiniappIdentifyIndex);
+        if(index < 0){
+        	String message = "WechatMiniappIdentify("+wechatMiniappIdentifyIndex.getId()+") with version='"+wechatMiniappIdentifyIndex.getVersion()+"' NOT found!";
+            throw new IllegalStateException(message);
+        }
+        WechatMiniappIdentify wechatMiniappIdentify = getWechatMiniappIdentifyList().get(index);        
+        // wechatMiniappIdentify.clearSecUser(); //disconnect with SecUser
+        wechatMiniappIdentify.clearFromAll(); //disconnect with SecUser
+		
+		boolean result = getWechatMiniappIdentifyList().planToRemove(wechatMiniappIdentify);
+        if(!result){
+        	String message = "WechatMiniappIdentify("+wechatMiniappIdentifyIndex.getId()+") with version='"+wechatMiniappIdentifyIndex.getVersion()+"' NOT found!";
+            throw new IllegalStateException(message);
+        }
+        return wechatMiniappIdentify;
+        
+	
+	}
+	//断舍离
+	public  void breakWithWechatMiniappIdentify(WechatMiniappIdentify wechatMiniappIdentify){
+		
+		if(wechatMiniappIdentify == null){
+			return;
+		}
+		wechatMiniappIdentify.setSecUser(null);
+		//getWechatMiniappIdentifyList().remove();
+	
+	}
+	
+	public  boolean hasWechatMiniappIdentify(WechatMiniappIdentify wechatMiniappIdentify){
+	
+		return getWechatMiniappIdentifyList().contains(wechatMiniappIdentify);
+  
+	}
+	
+	public void copyWechatMiniappIdentifyFrom(WechatMiniappIdentify wechatMiniappIdentify) {
+
+		WechatMiniappIdentify wechatMiniappIdentifyInList = findTheWechatMiniappIdentify(wechatMiniappIdentify);
+		WechatMiniappIdentify newWechatMiniappIdentify = new WechatMiniappIdentify();
+		wechatMiniappIdentifyInList.copyTo(newWechatMiniappIdentify);
+		newWechatMiniappIdentify.setVersion(0);//will trigger copy
+		getWechatMiniappIdentifyList().add(newWechatMiniappIdentify);
+		addItemToFlexiableObject(COPIED_CHILD, newWechatMiniappIdentify);
+	}
+	
+	public  WechatMiniappIdentify findTheWechatMiniappIdentify(WechatMiniappIdentify wechatMiniappIdentify){
+		
+		int index =  getWechatMiniappIdentifyList().indexOf(wechatMiniappIdentify);
+		//The input parameter must have the same id and version number.
+		if(index < 0){
+ 			String message = "WechatMiniappIdentify("+wechatMiniappIdentify.getId()+") with version='"+wechatMiniappIdentify.getVersion()+"' NOT found!";
+			throw new IllegalStateException(message);
+		}
+		
+		return  getWechatMiniappIdentifyList().get(index);
+		//Performance issue when using LinkedList, but it is almost an ArrayList for sure!
+	}
+	
+	public  void cleanUpWechatMiniappIdentifyList(){
+		getWechatMiniappIdentifyList().clear();
+	}
+	
+	
+	
+
+
 	public void collectRefercences(BaseEntity owner, List<BaseEntity> entityList, String internalType){
 
 		addToEntityList(this, entityList, getDomain(), internalType);
-		addToEntityList(this, entityList, getBlocking(), internalType);
 
 		
 	}
@@ -636,6 +1041,8 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		List<BaseEntity> entityList = new ArrayList<BaseEntity>();
 		collectFromList(this, entityList, getUserAppList(), internalType);
 		collectFromList(this, entityList, getLoginHistoryList(), internalType);
+		collectFromList(this, entityList, getWechatWorkappIdentifyList(), internalType);
+		collectFromList(this, entityList, getWechatMiniappIdentifyList(), internalType);
 
 		return entityList;
 	}
@@ -645,6 +1052,8 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		
 		listOfList.add( getUserAppList());
 		listOfList.add( getLoginHistoryList());
+		listOfList.add( getWechatWorkappIdentifyList());
+		listOfList.add( getWechatMiniappIdentifyList());
 			
 
 		return listOfList;
@@ -659,12 +1068,13 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		appendKeyValuePair(result, MOBILE_PROPERTY, getMaskedMobile());
 		appendKeyValuePair(result, EMAIL_PROPERTY, getEmail());
 		appendKeyValuePair(result, PWD_PROPERTY, getMaskedPwd());
+		appendKeyValuePair(result, WEIXIN_OPENID_PROPERTY, getWeixinOpenid());
+		appendKeyValuePair(result, WEIXIN_APPID_PROPERTY, getWeixinAppid());
+		appendKeyValuePair(result, ACCESS_TOKEN_PROPERTY, getAccessToken());
 		appendKeyValuePair(result, VERIFICATION_CODE_PROPERTY, getVerificationCode());
 		appendKeyValuePair(result, VERIFICATION_CODE_EXPIRE_PROPERTY, getVerificationCodeExpire());
 		appendKeyValuePair(result, LAST_LOGIN_TIME_PROPERTY, getLastLoginTime());
 		appendKeyValuePair(result, DOMAIN_PROPERTY, getDomain());
-		appendKeyValuePair(result, BLOCKING_PROPERTY, getBlocking());
-		appendKeyValuePair(result, CURRENT_STATUS_PROPERTY, getCurrentStatus());
 		appendKeyValuePair(result, VERSION_PROPERTY, getVersion());
 		appendKeyValuePair(result, USER_APP_LIST, getUserAppList());
 		if(!getUserAppList().isEmpty()){
@@ -675,6 +1085,16 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		if(!getLoginHistoryList().isEmpty()){
 			appendKeyValuePair(result, "loginHistoryCount", getLoginHistoryList().getTotalCount());
 			appendKeyValuePair(result, "loginHistoryCurrentPageNumber", getLoginHistoryList().getCurrentPageNumber());
+		}
+		appendKeyValuePair(result, WECHAT_WORKAPP_IDENTIFY_LIST, getWechatWorkappIdentifyList());
+		if(!getWechatWorkappIdentifyList().isEmpty()){
+			appendKeyValuePair(result, "wechatWorkappIdentifyCount", getWechatWorkappIdentifyList().getTotalCount());
+			appendKeyValuePair(result, "wechatWorkappIdentifyCurrentPageNumber", getWechatWorkappIdentifyList().getCurrentPageNumber());
+		}
+		appendKeyValuePair(result, WECHAT_MINIAPP_IDENTIFY_LIST, getWechatMiniappIdentifyList());
+		if(!getWechatMiniappIdentifyList().isEmpty()){
+			appendKeyValuePair(result, "wechatMiniappIdentifyCount", getWechatMiniappIdentifyList().getTotalCount());
+			appendKeyValuePair(result, "wechatMiniappIdentifyCurrentPageNumber", getWechatMiniappIdentifyList().getCurrentPageNumber());
 		}
 
 		
@@ -695,21 +1115,81 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 			dest.setMobile(getMobile());
 			dest.setEmail(getEmail());
 			dest.setPwd(getPwd());
+			dest.setWeixinOpenid(getWeixinOpenid());
+			dest.setWeixinAppid(getWeixinAppid());
+			dest.setAccessToken(getAccessToken());
 			dest.setVerificationCode(getVerificationCode());
 			dest.setVerificationCodeExpire(getVerificationCodeExpire());
 			dest.setLastLoginTime(getLastLoginTime());
 			dest.setDomain(getDomain());
-			dest.setBlocking(getBlocking());
-			dest.setCurrentStatus(getCurrentStatus());
 			dest.setVersion(getVersion());
 			dest.setUserAppList(getUserAppList());
 			dest.setLoginHistoryList(getLoginHistoryList());
+			dest.setWechatWorkappIdentifyList(getWechatWorkappIdentifyList());
+			dest.setWechatMiniappIdentifyList(getWechatMiniappIdentifyList());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof SecUser){
+		
+			
+			SecUser dest =(SecUser)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeLogin(getLogin());
+			dest.mergeMobile(getMobile());
+			dest.mergeEmail(getEmail());
+			dest.mergePwd(getPwd());
+			dest.mergeWeixinOpenid(getWeixinOpenid());
+			dest.mergeWeixinAppid(getWeixinAppid());
+			dest.mergeAccessToken(getAccessToken());
+			dest.mergeVerificationCode(getVerificationCode());
+			dest.mergeVerificationCodeExpire(getVerificationCodeExpire());
+			dest.mergeLastLoginTime(getLastLoginTime());
+			dest.mergeDomain(getDomain());
+			dest.mergeVersion(getVersion());
+			dest.mergeUserAppList(getUserAppList());
+			dest.mergeLoginHistoryList(getLoginHistoryList());
+			dest.mergeWechatWorkappIdentifyList(getWechatWorkappIdentifyList());
+			dest.mergeWechatMiniappIdentifyList(getWechatMiniappIdentifyList());
 
 		}
 		super.copyTo(baseDest);
 		return baseDest;
 	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof SecUser){
+		
+			
+			SecUser dest =(SecUser)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeLogin(getLogin());
+			dest.mergeMobile(getMobile());
+			dest.mergeEmail(getEmail());
+			dest.mergePwd(getPwd());
+			dest.mergeWeixinOpenid(getWeixinOpenid());
+			dest.mergeWeixinAppid(getWeixinAppid());
+			dest.mergeAccessToken(getAccessToken());
+			dest.mergeVerificationCode(getVerificationCode());
+			dest.mergeVerificationCodeExpire(getVerificationCodeExpire());
+			dest.mergeLastLoginTime(getLastLoginTime());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getLogin(), getMobile(), getEmail(), getPwd(), getWeixinOpenid(), getWeixinAppid(), getAccessToken(), getVerificationCode(), getVerificationCodeExpire(), getLastLoginTime(), getDomain(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 
@@ -719,16 +1199,15 @@ public class SecUser extends BaseEntity implements  java.io.Serializable{
 		stringBuilder.append("\tmobile='"+getMobile()+"';");
 		stringBuilder.append("\temail='"+getEmail()+"';");
 		stringBuilder.append("\tpwd='"+getPwd()+"';");
+		stringBuilder.append("\tweixinOpenid='"+getWeixinOpenid()+"';");
+		stringBuilder.append("\tweixinAppid='"+getWeixinAppid()+"';");
+		stringBuilder.append("\taccessToken='"+getAccessToken()+"';");
 		stringBuilder.append("\tverificationCode='"+getVerificationCode()+"';");
 		stringBuilder.append("\tverificationCodeExpire='"+getVerificationCodeExpire()+"';");
 		stringBuilder.append("\tlastLoginTime='"+getLastLoginTime()+"';");
 		if(getDomain() != null ){
  			stringBuilder.append("\tdomain='UserDomain("+getDomain().getId()+")';");
  		}
-		if(getBlocking() != null ){
- 			stringBuilder.append("\tblocking='SecUserBlocking("+getBlocking().getId()+")';");
- 		}
-		stringBuilder.append("\tcurrentStatus='"+getCurrentStatus()+"';");
 		stringBuilder.append("\tversion='"+getVersion()+"';");
 		stringBuilder.append("}");
 

@@ -3,16 +3,20 @@ package com.test.demodata.formmessage;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.genericform.GenericForm;
+
 import com.test.demodata.genericform.GenericFormDAO;
 
 
-public interface FormMessageDAO{
+public interface FormMessageDAO extends BaseDAO{
 
-	
+	public SmartList<FormMessage> loadAll();
 	public FormMessage load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<FormMessage> formMessageList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface FormMessageDAO{
 	
 	
 	public SmartList<FormMessage> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<FormMessage> findFormMessageByForm(String genericFormId, Map<String,Object> options);
  	public int countFormMessageByForm(String genericFormId, Map<String,Object> options);
@@ -50,6 +55,7 @@ public interface FormMessageDAO{
  	public void analyzeFormMessageByForm(SmartList<FormMessage> resultList, String genericFormId, Map<String,Object> options);
 
  
- }
+ 
+}
 
 

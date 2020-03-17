@@ -3,10 +3,12 @@ package com.test.demodata.formfield;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.genericform.GenericFormDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class FormFieldJDBCTemplateDAO extends DemodataNamingServiceDAO implements FormFieldDAO{
+
+public class FormFieldJDBCTemplateDAO extends DemodataBaseDAOImpl implements FormFieldDAO{
  
  	
  	private  GenericFormDAO  genericFormDAO;
@@ -47,6 +52,11 @@ public class FormFieldJDBCTemplateDAO extends DemodataNamingServiceDAO implement
 		return loadInternalFormField(accessKey, options);
 	}
 	*/
+	
+	public SmartList<FormField> loadAll() {
+	    return this.loadAll(getFormFieldMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -425,25 +435,55 @@ public class FormFieldJDBCTemplateDAO extends DemodataNamingServiceDAO implement
  	protected Object[] prepareFormFieldUpdateParameters(FormField formField){
  		Object[] parameters = new Object[19];
  
+ 		
  		parameters[0] = formField.getLabel();
+ 		
+ 		
  		parameters[1] = formField.getLocaleKey();
+ 		
+ 		
  		parameters[2] = formField.getParameterName();
- 		parameters[3] = formField.getType(); 	
+ 		
+ 		
+ 		parameters[3] = formField.getType();
+ 		 	
  		if(formField.getForm() != null){
  			parameters[4] = formField.getForm().getId();
  		}
  
+ 		
  		parameters[5] = formField.getPlaceholder();
+ 		
+ 		
  		parameters[6] = formField.getDefaultValue();
+ 		
+ 		
  		parameters[7] = formField.getDescription();
+ 		
+ 		
  		parameters[8] = formField.getFieldGroup();
+ 		
+ 		
  		parameters[9] = formField.getMinimumValue();
+ 		
+ 		
  		parameters[10] = formField.getMaximumValue();
+ 		
+ 		
  		parameters[11] = formField.getRequired();
+ 		
+ 		
  		parameters[12] = formField.getDisabled();
+ 		
+ 		
  		parameters[13] = formField.getCustomRendering();
+ 		
+ 		
  		parameters[14] = formField.getCandidateValues();
- 		parameters[15] = formField.getSuggestValues();		
+ 		
+ 		
+ 		parameters[15] = formField.getSuggestValues();
+ 				
  		parameters[16] = formField.nextVersion();
  		parameters[17] = formField.getId();
  		parameters[18] = formField.getVersion();
@@ -456,26 +496,56 @@ public class FormFieldJDBCTemplateDAO extends DemodataNamingServiceDAO implement
 		formField.setId(newFormFieldId);
 		parameters[0] =  formField.getId();
  
+ 		
  		parameters[1] = formField.getLabel();
+ 		
+ 		
  		parameters[2] = formField.getLocaleKey();
+ 		
+ 		
  		parameters[3] = formField.getParameterName();
- 		parameters[4] = formField.getType(); 	
+ 		
+ 		
+ 		parameters[4] = formField.getType();
+ 		 	
  		if(formField.getForm() != null){
  			parameters[5] = formField.getForm().getId();
  		
  		}
  		
+ 		
  		parameters[6] = formField.getPlaceholder();
+ 		
+ 		
  		parameters[7] = formField.getDefaultValue();
+ 		
+ 		
  		parameters[8] = formField.getDescription();
+ 		
+ 		
  		parameters[9] = formField.getFieldGroup();
+ 		
+ 		
  		parameters[10] = formField.getMinimumValue();
+ 		
+ 		
  		parameters[11] = formField.getMaximumValue();
+ 		
+ 		
  		parameters[12] = formField.getRequired();
+ 		
+ 		
  		parameters[13] = formField.getDisabled();
+ 		
+ 		
  		parameters[14] = formField.getCustomRendering();
+ 		
+ 		
  		parameters[15] = formField.getCandidateValues();
- 		parameters[16] = formField.getSuggestValues();		
+ 		
+ 		
+ 		parameters[16] = formField.getSuggestValues();
+ 				
  				
  		return parameters;
  	}
@@ -538,6 +608,9 @@ public class FormFieldJDBCTemplateDAO extends DemodataNamingServiceDAO implement
 	public void enhanceList(List<FormField> formFieldList) {		
 		this.enhanceListInternal(formFieldList, this.getFormFieldMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<FormField> formFieldList = ownerEntity.collectRefsWithType(FormField.INTERNAL_TYPE);
@@ -570,6 +643,13 @@ public class FormFieldJDBCTemplateDAO extends DemodataNamingServiceDAO implement
 	public SmartList<FormField> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getFormFieldMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

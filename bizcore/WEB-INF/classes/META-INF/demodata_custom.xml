@@ -40,7 +40,6 @@
 	 	
 	</bean>
 	<bean id="imageManager" class="com.test.demodata.image.ImageCustomManager" parent="imageManagerBase" ></bean>
-	<bean id="platformDAO" class="com.test.demodata.platform.PlatformMyDAO" ></bean>
 	
 
 	

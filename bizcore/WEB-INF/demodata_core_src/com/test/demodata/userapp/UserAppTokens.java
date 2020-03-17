@@ -38,6 +38,15 @@ public class UserAppTokens extends CommonTokens{
 	protected UserAppTokens(){
 		//ensure not initialized outside the class
 	}
+	public  static  UserAppTokens of(Map<String,Object> options){
+		//ensure not initialized outside the class
+		UserAppTokens tokens = new UserAppTokens(options);
+		return tokens;
+		
+	}
+	protected UserAppTokens(Map<String,Object> options){
+		this.options = options;
+	}
 	
 	public UserAppTokens merge(String [] tokens){
 		this.parseTokens(tokens);
@@ -64,6 +73,7 @@ public class UserAppTokens extends CommonTokens{
 		
 		return start()
 			.withSecUser()
+			.withQuickLinkList()
 			.withListAccessList()
 			.withObjectAccessList();
 	
@@ -84,6 +94,11 @@ public class UserAppTokens extends CommonTokens{
 	public static Map <String,Object> empty(){
 		return start().done();
 	}
+	
+	public UserAppTokens analyzeAllLists(){		
+		addSimpleOptions(ALL_LISTS_ANALYZE);
+		return this;
+	}
 
 	protected static final String SECUSER = "secUser";
 	public String getSecUser(){
@@ -95,6 +110,76 @@ public class UserAppTokens extends CommonTokens{
 	}
 	
 	
+	protected static final String QUICK_LINK_LIST = "quickLinkList";
+	public String getQuickLinkList(){
+		return QUICK_LINK_LIST;
+	}
+	public UserAppTokens withQuickLinkList(){		
+		addSimpleOptions(QUICK_LINK_LIST);
+		return this;
+	}
+	public UserAppTokens analyzeQuickLinkList(){		
+		addSimpleOptions(QUICK_LINK_LIST+".anaylze");
+		return this;
+	}
+	public boolean analyzeQuickLinkListEnabled(){		
+		
+		if(checkOptions(this.options(), QUICK_LINK_LIST+".anaylze")){
+			return true; //most of the case, should call here
+		}
+		//if not true, then query for global setting
+		return checkOptions(this.options(), ALL_LISTS_ANALYZE);
+	}
+	public UserAppTokens extractMoreFromQuickLinkList(String idsSeperatedWithComma){		
+		addSimpleOptions(QUICK_LINK_LIST+".extractIds", idsSeperatedWithComma);
+		return this;
+	}
+	
+	
+	
+	
+	private int quickLinkListSortCounter = 0;
+	public UserAppTokens sortQuickLinkListWith(String field, String descOrAsc){		
+		addSortMoreOptions(QUICK_LINK_LIST,quickLinkListSortCounter++, field, descOrAsc);
+		return this;
+	}
+	private int quickLinkListSearchCounter = 0;
+	public UserAppTokens searchQuickLinkListWith(String field, String verb, String value){		
+		
+		withQuickLinkList();
+		addSearchMoreOptions(QUICK_LINK_LIST,quickLinkListSearchCounter++, field, verb, value);
+		return this;
+	}
+	
+	
+	
+	public UserAppTokens searchAllTextOfQuickLinkList(String verb, String value){	
+		String field = "id|name|icon|linkTarget";
+		addSearchMoreOptions(QUICK_LINK_LIST,quickLinkListSearchCounter++, field, verb, value);
+		return this;
+	}
+	
+	
+	
+	public UserAppTokens rowsPerPageOfQuickLinkList(int rowsPerPage){		
+		addSimpleOptions(QUICK_LINK_LIST+"RowsPerPage",rowsPerPage);
+		return this;
+	}
+	public UserAppTokens currentPageNumberOfQuickLinkList(int currentPageNumber){		
+		addSimpleOptions(QUICK_LINK_LIST+"CurrentPage",currentPageNumber);
+		return this;
+	}
+	public UserAppTokens retainColumnsOfQuickLinkList(String[] columns){		
+		addSimpleOptions(QUICK_LINK_LIST+"RetainColumns",columns);
+		return this;
+	}
+	public UserAppTokens excludeColumnsOfQuickLinkList(String[] columns){		
+		addSimpleOptions(QUICK_LINK_LIST+"ExcludeColumns",columns);
+		return this;
+	}
+	
+	
+		
 	protected static final String LIST_ACCESS_LIST = "listAccessList";
 	public String getListAccessList(){
 		return LIST_ACCESS_LIST;
@@ -109,7 +194,11 @@ public class UserAppTokens extends CommonTokens{
 	}
 	public boolean analyzeListAccessListEnabled(){		
 		
-		return checkOptions(this.options(), LIST_ACCESS_LIST+".anaylze");
+		if(checkOptions(this.options(), LIST_ACCESS_LIST+".anaylze")){
+			return true; //most of the case, should call here
+		}
+		//if not true, then query for global setting
+		return checkOptions(this.options(), ALL_LISTS_ANALYZE);
 	}
 	public UserAppTokens extractMoreFromListAccessList(String idsSeperatedWithComma){		
 		addSimpleOptions(LIST_ACCESS_LIST+".extractIds", idsSeperatedWithComma);
@@ -126,9 +215,13 @@ public class UserAppTokens extends CommonTokens{
 	}
 	private int listAccessListSearchCounter = 0;
 	public UserAppTokens searchListAccessListWith(String field, String verb, String value){		
+		
+		withListAccessList();
 		addSearchMoreOptions(LIST_ACCESS_LIST,listAccessListSearchCounter++, field, verb, value);
 		return this;
 	}
+	
+	
 	
 	public UserAppTokens searchAllTextOfListAccessList(String verb, String value){	
 		String field = "id|name|internalName";
@@ -171,7 +264,11 @@ public class UserAppTokens extends CommonTokens{
 	}
 	public boolean analyzeObjectAccessListEnabled(){		
 		
-		return checkOptions(this.options(), OBJECT_ACCESS_LIST+".anaylze");
+		if(checkOptions(this.options(), OBJECT_ACCESS_LIST+".anaylze")){
+			return true; //most of the case, should call here
+		}
+		//if not true, then query for global setting
+		return checkOptions(this.options(), ALL_LISTS_ANALYZE);
 	}
 	public UserAppTokens extractMoreFromObjectAccessList(String idsSeperatedWithComma){		
 		addSimpleOptions(OBJECT_ACCESS_LIST+".extractIds", idsSeperatedWithComma);
@@ -188,9 +285,13 @@ public class UserAppTokens extends CommonTokens{
 	}
 	private int objectAccessListSearchCounter = 0;
 	public UserAppTokens searchObjectAccessListWith(String field, String verb, String value){		
+		
+		withObjectAccessList();
 		addSearchMoreOptions(OBJECT_ACCESS_LIST,objectAccessListSearchCounter++, field, verb, value);
 		return this;
 	}
+	
+	
 	
 	public UserAppTokens searchAllTextOfObjectAccessList(String verb, String value){	
 		String field = "id|name|objectType|list1|list2|list3|list4|list5|list6|list7|list8|list9";
@@ -222,6 +323,7 @@ public class UserAppTokens extends CommonTokens{
 	
 	public  UserAppTokens searchEntireObjectText(String verb, String value){
 		
+		searchAllTextOfQuickLinkList(verb, value);	
 		searchAllTextOfListAccessList(verb, value);	
 		searchAllTextOfObjectAccessList(verb, value);	
 		return this;

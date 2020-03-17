@@ -3,10 +3,12 @@ package com.test.demodata.platform;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.image.ImageDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements PlatformDAO{
+
+public class PlatformJDBCTemplateDAO extends DemodataBaseDAOImpl implements PlatformDAO{
 
 
 			
@@ -57,6 +62,11 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
 		return loadInternalPlatform(accessKey, options);
 	}
 	*/
+	
+	public SmartList<Platform> loadAll() {
+	    return this.loadAll(getPlatformMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -196,9 +206,8 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
 	protected boolean isExtractImageListEnabled(Map<String,Object> options){		
  		return checkOptions(options,PlatformTokens.IMAGE_LIST);
  	}
- 	protected boolean isAnalyzeImageListEnabled(Map<String,Object> options){		
- 		return true;
- 		//return checkOptions(options,PlatformTokens.IMAGE_LIST+".analyze");
+ 	protected boolean isAnalyzeImageListEnabled(Map<String,Object> options){		 		
+ 		return PlatformTokens.of(options).analyzeImageListEnabled();
  	}
 	
 	protected boolean isSaveImageListEnabled(Map<String,Object> options){
@@ -443,7 +452,9 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
  	protected Object[] preparePlatformUpdateParameters(Platform platform){
  		Object[] parameters = new Object[4];
  
- 		parameters[0] = platform.getName();		
+ 		
+ 		parameters[0] = platform.getName();
+ 				
  		parameters[1] = platform.nextVersion();
  		parameters[2] = platform.getId();
  		parameters[3] = platform.getVersion();
@@ -456,7 +467,9 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
 		platform.setId(newPlatformId);
 		parameters[0] =  platform.getId();
  
- 		parameters[1] = platform.getName();		
+ 		
+ 		parameters[1] = platform.getName();
+ 				
  				
  		return parameters;
  	}
@@ -498,9 +511,9 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
 			return platform;
 		}
 		
-		for(Image image: externalImageList){
+		for(Image imageItem: externalImageList){
 
-			image.clearFromAll();
+			imageItem.clearFromAll();
 		}
 		
 		
@@ -626,6 +639,32 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
 	public void enhanceList(List<Platform> platformList) {		
 		this.enhanceListInternal(platformList, this.getPlatformMapper());
 	}
+	
+	
+	// 需要一个加载引用我的对象的enhance方法:Image的platform的ImageList
+	public SmartList<Image> loadOurImageList(DemodataUserContext userContext, List<Platform> us, Map<String,Object> options) throws Exception{
+		if (us == null || us.isEmpty()){
+			return new SmartList<>();
+		}
+		Set<String> ids = us.stream().map(it->it.getId()).collect(Collectors.toSet());
+		MultipleAccessKey key = new MultipleAccessKey();
+		key.put(Image.PLATFORM_PROPERTY, ids.toArray(new String[ids.size()]));
+		SmartList<Image> loadedObjs = userContext.getDAOGroup().getImageDAO().findImageWithKey(key, options);
+		Map<String, List<Image>> loadedMap = loadedObjs.stream().collect(Collectors.groupingBy(it->it.getPlatform().getId()));
+		us.forEach(it->{
+			String id = it.getId();
+			List<Image> loadedList = loadedMap.get(id);
+			if (loadedList == null || loadedList.isEmpty()) {
+				return;
+			}
+			SmartList<Image> loadedSmartList = new SmartList<>();
+			loadedSmartList.addAll(loadedList);
+			it.setImageList(loadedSmartList);
+		});
+		return loadedObjs;
+	}
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<Platform> platformList = ownerEntity.collectRefsWithType(Platform.INTERNAL_TYPE);
@@ -658,6 +697,93 @@ public class PlatformJDBCTemplateDAO extends DemodataNamingServiceDAO implements
 	public SmartList<Platform> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getPlatformMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+    
+	public Map<String, Integer> countBySql(String sql, Object[] params) {
+		if (params == null || params.length == 0) {
+			return new HashMap<>();
+		}
+		List<Map<String, Object>> result = this.getJdbcTemplateObject().queryForList(sql, params);
+		if (result == null || result.isEmpty()) {
+			return new HashMap<>();
+		}
+		Map<String, Integer> cntMap = new HashMap<>();
+		for (Map<String, Object> data : result) {
+			String key = (String) data.get("id");
+			Number value = (Number) data.get("count");
+			cntMap.put(key, value.intValue());
+		}
+		this.logSQLAndParameters("countBySql", sql, params, cntMap.size() + " Counts");
+		return cntMap;
+	}
+
+	public Integer singleCountBySql(String sql, Object[] params) {
+		Integer cnt = this.getJdbcTemplateObject().queryForObject(sql, params, Integer.class);
+		logSQLAndParameters("singleCountBySql", sql, params, cnt + "");
+		return cnt;
+	}
+
+	public BigDecimal summaryBySql(String sql, Object[] params) {
+		BigDecimal cnt = this.getJdbcTemplateObject().queryForObject(sql, params, BigDecimal.class);
+		logSQLAndParameters("summaryBySql", sql, params, cnt + "");
+		return cnt == null ? BigDecimal.ZERO : cnt;
+	}
+
+	public <T> List<T> queryForList(String sql, Object[] params, Class<T> claxx) {
+		List<T> result = this.getJdbcTemplateObject().queryForList(sql, params, claxx);
+		logSQLAndParameters("queryForList", sql, params, result.size() + " items");
+		return result;
+	}
+
+	public Map<String, Object> queryForMap(String sql, Object[] params) throws DataAccessException {
+		Map<String, Object> result = null;
+		try {
+			result = this.getJdbcTemplateObject().queryForMap(sql, params);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
+			// 空结果，返回null
+		}
+		logSQLAndParameters("queryForObject", sql, params, result == null ? "not found" : String.valueOf(result));
+		return result;
+	}
+
+	public <T> T queryForObject(String sql, Object[] params, Class<T> claxx) throws DataAccessException {
+		T result = null;
+		try {
+			result = this.getJdbcTemplateObject().queryForObject(sql, params, claxx);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
+			// 空结果，返回null
+		}
+		logSQLAndParameters("queryForObject", sql, params, result == null ? "not found" : String.valueOf(result));
+		return result;
+	}
+
+	public List<Map<String, Object>> queryAsMapList(String sql, Object[] params) {
+		List<Map<String, Object>> result = getJdbcTemplateObject().queryForList(sql, params);
+		logSQLAndParameters("queryAsMapList", sql, params, result.size() + " items");
+		return result;
+	}
+
+	public synchronized int updateBySql(String sql, Object[] params) {
+		int result = getJdbcTemplateObject().update(sql, params);
+		logSQLAndParameters("updateBySql", sql, params, result + " items");
+		return result;
+	}
+
+	public void execSqlWithRowCallback(String sql, Object[] args, RowCallbackHandler callback) {
+		getJdbcTemplateObject().query(sql, args, callback);
+	}
+
+	public void executeSql(String sql) {
+		logSQLAndParameters("executeSql", sql, new Object[] {}, "");
+		getJdbcTemplateObject().execute(sql);
+	}
+
+
 }
 
 

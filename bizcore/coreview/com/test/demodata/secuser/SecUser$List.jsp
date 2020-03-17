@@ -110,6 +110,15 @@
 <c:if test="${param.referName ne 'pwd'}">
 	<th>${userContext.localeMap['sec_user.pwd']}</th>
 </c:if>
+<c:if test="${param.referName ne 'weixinOpenid'}">
+	<th>${userContext.localeMap['sec_user.weixin_openid']}</th>
+</c:if>
+<c:if test="${param.referName ne 'weixinAppid'}">
+	<th>${userContext.localeMap['sec_user.weixin_appid']}</th>
+</c:if>
+<c:if test="${param.referName ne 'accessToken'}">
+	<th>${userContext.localeMap['sec_user.access_token']}</th>
+</c:if>
 <c:if test="${param.referName ne 'verificationCode'}">
 	<th>${userContext.localeMap['sec_user.verification_code']}</th>
 </c:if>
@@ -122,12 +131,6 @@
 <c:if test="${param.referName ne 'domain'}">
 	<th>${userContext.localeMap['sec_user.domain']}</th>
 </c:if>
-<c:if test="${param.referName ne 'blocking'}">
-	<th>${userContext.localeMap['sec_user.blocking']}</th>
-</c:if>
-<c:if test="${param.referName ne 'currentStatus'}">
-	<th>${userContext.localeMap['sec_user.current_status']}</th>
-</c:if>
 <th>${userContext.localeMap['@action']}</th>
 		</tr></thead>
 		<tbody>
@@ -138,6 +141,9 @@
 </c:if><c:if test="${param.referName ne 'mobile'}">	<td contenteditable='true' class='edit-value'  propertyToChange='mobile' storedCellValue='${item.maskedMobile}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.maskedMobile}</td>
 </c:if><c:if test="${param.referName ne 'email'}">	<td contenteditable='true' class='edit-value'  propertyToChange='email' storedCellValue='${item.email}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.email}</td>
 </c:if><c:if test="${param.referName ne 'pwd'}">	<td contenteditable='true' class='edit-value'  propertyToChange='pwd' storedCellValue='${item.maskedPwd}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.maskedPwd}</td>
+</c:if><c:if test="${param.referName ne 'weixinOpenid'}">	<td contenteditable='true' class='edit-value'  propertyToChange='weixinOpenid' storedCellValue='${item.weixinOpenid}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.weixinOpenid}</td>
+</c:if><c:if test="${param.referName ne 'weixinAppid'}">	<td contenteditable='true' class='edit-value'  propertyToChange='weixinAppid' storedCellValue='${item.weixinAppid}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.weixinAppid}</td>
+</c:if><c:if test="${param.referName ne 'accessToken'}">	<td contenteditable='true' class='edit-value'  propertyToChange='accessToken' storedCellValue='${item.accessToken}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.accessToken}</td>
 </c:if><c:if test="${param.referName ne 'verificationCode'}">	<td contenteditable='true' class='edit-value'  propertyToChange='verificationCode' storedCellValue='${item.verificationCode}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.verificationCode}</td>
 </c:if><c:if test="${param.referName ne 'verificationCodeExpire'}">	<td contenteditable='true' class='edit-value'  propertyToChange='verificationCodeExpire' storedCellValue='${item.verificationCodeExpire}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'><fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${item.verificationCodeExpire}" /></td>
 </c:if><c:if test="${param.referName ne 'lastLoginTime'}">	<td contenteditable='true' class='edit-value'  propertyToChange='lastLoginTime' storedCellValue='${item.lastLoginTime}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'><fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${item.lastLoginTime}" /></td>
@@ -160,27 +166,7 @@
 		</div>
 	</td>
 </c:if>
-<c:if test="${param.referName ne 'blocking'}">
-	<td class="select_candidate_td"
-			data-candidate-method="./secUserManager/requestCandidateBlocking/${ownerBeanName}/${item.id}/"
-			data-switch-method="./secUserManager/transferToAnotherBlocking/${item.id}/"
-			data-link-template="./secUserBlockingManager/view/${'$'}{ID}/">
-		<span class="display_span">
-			<c:if test="${not empty  item.blocking}">
-			<a href='./secUserBlockingManager/view/${item.blocking.id}/'>${item.blocking.displayName}</a>
-			</c:if>
-			<c:if test="${empty  item.blocking}">
-			<a href='#'></a>
-			</c:if>
-			<button class="btn btn-link candidate-action">...</button>
-		</span>
-		<div class="candidate_span" style="display:none;">
-			<input type="text" data-provide="typeahead" class="input-sm form-control candidate-filter-input" autocomplete="off" />
-		</div>
-	</td>
-</c:if>
-<c:if test="${param.referName ne 'currentStatus'}">	<td contenteditable='true' class='edit-value'  propertyToChange='currentStatus' storedCellValue='${item.currentStatus}' prefix='${ownerBeanName}Manager/updateSecUser/${result.id}/${item.id}/'>${item.currentStatus}</td>
-</c:if>
+
 				<td>
 
 				<a href='#${ownerBeanName}Manager/removeSecUser/${result.id}/${item.id}/' class='delete-action btn btn-danger btn-xs'><i class="fa fa-trash-o fa-lg"></i> ${userContext.localeMap['@delete']}</a>

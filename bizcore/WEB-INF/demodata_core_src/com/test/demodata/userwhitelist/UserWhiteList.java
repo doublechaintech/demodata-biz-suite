@@ -4,8 +4,10 @@ package com.test.demodata.userwhitelist;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -53,22 +55,25 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 	
 		
 	public 	UserWhiteList(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static UserWhiteList withId(String id){
+		UserWhiteList userWhiteList = new UserWhiteList();
+		userWhiteList.setId(id);
+		userWhiteList.setVersion(Integer.MAX_VALUE);
+		return userWhiteList;
+	}
+	public 	static UserWhiteList refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setDomain( null );
 
 		this.changed = true;
 	}
 	
-	public 	UserWhiteList(String userIdentity, String userSpecialFunctions, UserDomain domain)
-	{
-		setUserIdentity(userIdentity);
-		setUserSpecialFunctions(userSpecialFunctions);
-		setDomain(domain);
-	
-	}
 	
 	//Support for changing the property
 	
@@ -86,6 +91,7 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeUserIdentityProperty(String newValueExpr){
+	
 		String oldValue = getUserIdentity();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -95,12 +101,13 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		updateUserIdentity(newValue);
 		this.onChangeProperty(USER_IDENTITY_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeUserSpecialFunctionsProperty(String newValueExpr){
+	
 		String oldValue = getUserSpecialFunctions();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -110,11 +117,31 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		updateUserSpecialFunctions(newValue);
 		this.onChangeProperty(USER_SPECIAL_FUNCTIONS_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(USER_IDENTITY_PROPERTY.equals(property)){
+			return getUserIdentity();
+		}
+		if(USER_SPECIAL_FUNCTIONS_PROPERTY.equals(property)){
+			return getUserSpecialFunctions();
+		}
+		if(DOMAIN_PROPERTY.equals(property)){
+			return getDomain();
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -131,6 +158,9 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setUserIdentity(String userIdentity){
@@ -143,6 +173,9 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		this.mUserIdentity = trimString(userIdentity);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeUserIdentity(String userIdentity){
+		if(userIdentity != null) { setUserIdentity(userIdentity);}
 	}
 	
 	
@@ -157,6 +190,9 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeUserSpecialFunctions(String userSpecialFunctions){
+		if(userSpecialFunctions != null) { setUserSpecialFunctions(userSpecialFunctions);}
+	}
 	
 	
 	public void setDomain(UserDomain domain){
@@ -169,6 +205,9 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		this.mDomain = domain;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeDomain(UserDomain domain){
+		if(domain != null) { setDomain(domain);}
 	}
 	
 	
@@ -187,6 +226,9 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -246,7 +288,44 @@ public class UserWhiteList extends BaseEntity implements  java.io.Serializable{
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof UserWhiteList){
+		
+			
+			UserWhiteList dest =(UserWhiteList)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeUserIdentity(getUserIdentity());
+			dest.mergeUserSpecialFunctions(getUserSpecialFunctions());
+			dest.mergeDomain(getDomain());
+			dest.mergeVersion(getVersion());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof UserWhiteList){
+		
+			
+			UserWhiteList dest =(UserWhiteList)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeUserIdentity(getUserIdentity());
+			dest.mergeUserSpecialFunctions(getUserSpecialFunctions());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getUserIdentity(), getUserSpecialFunctions(), getDomain(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

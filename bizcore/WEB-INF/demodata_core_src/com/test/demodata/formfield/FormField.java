@@ -4,8 +4,10 @@ package com.test.demodata.formfield;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -79,35 +81,25 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 	
 		
 	public 	FormField(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static FormField withId(String id){
+		FormField formField = new FormField();
+		formField.setId(id);
+		formField.setVersion(Integer.MAX_VALUE);
+		return formField;
+	}
+	public 	static FormField refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setForm( null );
 
 		this.changed = true;
 	}
 	
-	public 	FormField(String label, String localeKey, String parameterName, String type, GenericForm form, String placeholder, String defaultValue, String description, String fieldGroup, String minimumValue, String maximumValue, boolean required, boolean disabled, boolean customRendering, String candidateValues, String suggestValues)
-	{
-		setLabel(label);
-		setLocaleKey(localeKey);
-		setParameterName(parameterName);
-		setType(type);
-		setForm(form);
-		setPlaceholder(placeholder);
-		setDefaultValue(defaultValue);
-		setDescription(description);
-		setFieldGroup(fieldGroup);
-		setMinimumValue(minimumValue);
-		setMaximumValue(maximumValue);
-		setRequired(required);
-		setDisabled(disabled);
-		setCustomRendering(customRendering);
-		setCandidateValues(candidateValues);
-		setSuggestValues(suggestValues);
-	
-	}
 	
 	//Support for changing the property
 	
@@ -164,6 +156,7 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeLabelProperty(String newValueExpr){
+	
 		String oldValue = getLabel();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -173,12 +166,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateLabel(newValue);
 		this.onChangeProperty(LABEL_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeLocaleKeyProperty(String newValueExpr){
+	
 		String oldValue = getLocaleKey();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -188,12 +182,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateLocaleKey(newValue);
 		this.onChangeProperty(LOCALE_KEY_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeParameterNameProperty(String newValueExpr){
+	
 		String oldValue = getParameterName();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -203,12 +198,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateParameterName(newValue);
 		this.onChangeProperty(PARAMETER_NAME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeTypeProperty(String newValueExpr){
+	
 		String oldValue = getType();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -218,12 +214,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateType(newValue);
 		this.onChangeProperty(TYPE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changePlaceholderProperty(String newValueExpr){
+	
 		String oldValue = getPlaceholder();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -233,12 +230,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updatePlaceholder(newValue);
 		this.onChangeProperty(PLACEHOLDER_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeDefaultValueProperty(String newValueExpr){
+	
 		String oldValue = getDefaultValue();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -248,12 +246,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateDefaultValue(newValue);
 		this.onChangeProperty(DEFAULT_VALUE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeDescriptionProperty(String newValueExpr){
+	
 		String oldValue = getDescription();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -263,12 +262,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateDescription(newValue);
 		this.onChangeProperty(DESCRIPTION_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeFieldGroupProperty(String newValueExpr){
+	
 		String oldValue = getFieldGroup();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -278,12 +278,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateFieldGroup(newValue);
 		this.onChangeProperty(FIELD_GROUP_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeMinimumValueProperty(String newValueExpr){
+	
 		String oldValue = getMinimumValue();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -293,12 +294,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateMinimumValue(newValue);
 		this.onChangeProperty(MINIMUM_VALUE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeMaximumValueProperty(String newValueExpr){
+	
 		String oldValue = getMaximumValue();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -308,12 +310,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateMaximumValue(newValue);
 		this.onChangeProperty(MAXIMUM_VALUE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeRequiredProperty(String newValueExpr){
+	
 		boolean oldValue = getRequired();
 		boolean newValue = parseBoolean(newValueExpr);
 		if(equalsBoolean(oldValue , newValue)){
@@ -323,12 +326,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateRequired(newValue);
 		this.onChangeProperty(REQUIRED_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeDisabledProperty(String newValueExpr){
+	
 		boolean oldValue = getDisabled();
 		boolean newValue = parseBoolean(newValueExpr);
 		if(equalsBoolean(oldValue , newValue)){
@@ -338,12 +342,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateDisabled(newValue);
 		this.onChangeProperty(DISABLED_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeCustomRenderingProperty(String newValueExpr){
+	
 		boolean oldValue = getCustomRendering();
 		boolean newValue = parseBoolean(newValueExpr);
 		if(equalsBoolean(oldValue , newValue)){
@@ -353,12 +358,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateCustomRendering(newValue);
 		this.onChangeProperty(CUSTOM_RENDERING_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeCandidateValuesProperty(String newValueExpr){
+	
 		String oldValue = getCandidateValues();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -368,12 +374,13 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateCandidateValues(newValue);
 		this.onChangeProperty(CANDIDATE_VALUES_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeSuggestValuesProperty(String newValueExpr){
+	
 		String oldValue = getSuggestValues();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -383,11 +390,70 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		updateSuggestValues(newValue);
 		this.onChangeProperty(SUGGEST_VALUES_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(LABEL_PROPERTY.equals(property)){
+			return getLabel();
+		}
+		if(LOCALE_KEY_PROPERTY.equals(property)){
+			return getLocaleKey();
+		}
+		if(PARAMETER_NAME_PROPERTY.equals(property)){
+			return getParameterName();
+		}
+		if(TYPE_PROPERTY.equals(property)){
+			return getType();
+		}
+		if(FORM_PROPERTY.equals(property)){
+			return getForm();
+		}
+		if(PLACEHOLDER_PROPERTY.equals(property)){
+			return getPlaceholder();
+		}
+		if(DEFAULT_VALUE_PROPERTY.equals(property)){
+			return getDefaultValue();
+		}
+		if(DESCRIPTION_PROPERTY.equals(property)){
+			return getDescription();
+		}
+		if(FIELD_GROUP_PROPERTY.equals(property)){
+			return getFieldGroup();
+		}
+		if(MINIMUM_VALUE_PROPERTY.equals(property)){
+			return getMinimumValue();
+		}
+		if(MAXIMUM_VALUE_PROPERTY.equals(property)){
+			return getMaximumValue();
+		}
+		if(REQUIRED_PROPERTY.equals(property)){
+			return getRequired();
+		}
+		if(DISABLED_PROPERTY.equals(property)){
+			return getDisabled();
+		}
+		if(CUSTOM_RENDERING_PROPERTY.equals(property)){
+			return getCustomRendering();
+		}
+		if(CANDIDATE_VALUES_PROPERTY.equals(property)){
+			return getCandidateValues();
+		}
+		if(SUGGEST_VALUES_PROPERTY.equals(property)){
+			return getSuggestValues();
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -404,6 +470,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setLabel(String label){
@@ -416,6 +485,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mLabel = trimString(label);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeLabel(String label){
+		if(label != null) { setLabel(label);}
 	}
 	
 	
@@ -430,6 +502,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeLocaleKey(String localeKey){
+		if(localeKey != null) { setLocaleKey(localeKey);}
+	}
 	
 	
 	public void setParameterName(String parameterName){
@@ -442,6 +517,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mParameterName = trimString(parameterName);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeParameterName(String parameterName){
+		if(parameterName != null) { setParameterName(parameterName);}
 	}
 	
 	
@@ -456,6 +534,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeType(String type){
+		if(type != null) { setType(type);}
+	}
 	
 	
 	public void setForm(GenericForm form){
@@ -468,6 +549,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mForm = form;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeForm(GenericForm form){
+		if(form != null) { setForm(form);}
 	}
 	
 	
@@ -487,6 +571,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergePlaceholder(String placeholder){
+		if(placeholder != null) { setPlaceholder(placeholder);}
+	}
 	
 	
 	public void setDefaultValue(String defaultValue){
@@ -499,6 +586,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mDefaultValue = trimString(defaultValue);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeDefaultValue(String defaultValue){
+		if(defaultValue != null) { setDefaultValue(defaultValue);}
 	}
 	
 	
@@ -513,6 +603,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeDescription(String description){
+		if(description != null) { setDescription(description);}
+	}
 	
 	
 	public void setFieldGroup(String fieldGroup){
@@ -525,6 +618,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mFieldGroup = trimString(fieldGroup);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeFieldGroup(String fieldGroup){
+		if(fieldGroup != null) { setFieldGroup(fieldGroup);}
 	}
 	
 	
@@ -539,6 +635,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeMinimumValue(String minimumValue){
+		if(minimumValue != null) { setMinimumValue(minimumValue);}
+	}
 	
 	
 	public void setMaximumValue(String maximumValue){
@@ -551,6 +650,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mMaximumValue = trimString(maximumValue);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeMaximumValue(String maximumValue){
+		if(maximumValue != null) { setMaximumValue(maximumValue);}
 	}
 	
 	
@@ -565,6 +667,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeRequired(boolean required){
+		setRequired(required);
+	}
 	
 	
 	public void setDisabled(boolean disabled){
@@ -577,6 +682,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mDisabled = disabled;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeDisabled(boolean disabled){
+		setDisabled(disabled);
 	}
 	
 	
@@ -591,6 +699,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeCustomRendering(boolean customRendering){
+		setCustomRendering(customRendering);
+	}
 	
 	
 	public void setCandidateValues(String candidateValues){
@@ -603,6 +714,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mCandidateValues = trimString(candidateValues);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeCandidateValues(String candidateValues){
+		if(candidateValues != null) { setCandidateValues(candidateValues);}
 	}
 	
 	
@@ -617,6 +731,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeSuggestValues(String suggestValues){
+		if(suggestValues != null) { setSuggestValues(suggestValues);}
+	}
 	
 	
 	public void setVersion(int version){
@@ -629,6 +746,9 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -714,7 +834,70 @@ public class FormField extends BaseEntity implements  java.io.Serializable{
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof FormField){
+		
+			
+			FormField dest =(FormField)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeLabel(getLabel());
+			dest.mergeLocaleKey(getLocaleKey());
+			dest.mergeParameterName(getParameterName());
+			dest.mergeType(getType());
+			dest.mergeForm(getForm());
+			dest.mergePlaceholder(getPlaceholder());
+			dest.mergeDefaultValue(getDefaultValue());
+			dest.mergeDescription(getDescription());
+			dest.mergeFieldGroup(getFieldGroup());
+			dest.mergeMinimumValue(getMinimumValue());
+			dest.mergeMaximumValue(getMaximumValue());
+			dest.mergeRequired(getRequired());
+			dest.mergeDisabled(getDisabled());
+			dest.mergeCustomRendering(getCustomRendering());
+			dest.mergeCandidateValues(getCandidateValues());
+			dest.mergeSuggestValues(getSuggestValues());
+			dest.mergeVersion(getVersion());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof FormField){
+		
+			
+			FormField dest =(FormField)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeLabel(getLabel());
+			dest.mergeLocaleKey(getLocaleKey());
+			dest.mergeParameterName(getParameterName());
+			dest.mergeType(getType());
+			dest.mergePlaceholder(getPlaceholder());
+			dest.mergeDefaultValue(getDefaultValue());
+			dest.mergeDescription(getDescription());
+			dest.mergeFieldGroup(getFieldGroup());
+			dest.mergeMinimumValue(getMinimumValue());
+			dest.mergeMaximumValue(getMaximumValue());
+			dest.mergeRequired(getRequired());
+			dest.mergeDisabled(getDisabled());
+			dest.mergeCustomRendering(getCustomRendering());
+			dest.mergeCandidateValues(getCandidateValues());
+			dest.mergeSuggestValues(getSuggestValues());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getLabel(), getLocaleKey(), getParameterName(), getType(), getForm(), getPlaceholder(), getDefaultValue(), getDescription(), getFieldGroup(), getMinimumValue(), getMaximumValue(), getRequired(), getDisabled(), getCustomRendering(), getCandidateValues(), getSuggestValues(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

@@ -1,9 +1,12 @@
 package com.terapico.utils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextUtil {
     public static boolean isBlank(String str) {
@@ -25,7 +28,7 @@ public class TextUtil {
         return bookIsbn.replaceAll("[^\\d]", "");
     }
 
-    public static String join(List<String> inputArray, String seperator) {
+    public static String join(Collection<String> inputArray, String seperator) {
         if (CollectionUtils.isEmpty(inputArray)) {
             return "";
         }
@@ -243,6 +246,9 @@ public class TextUtil {
     }
 
     public static String formatNumber(Number number, String format) {
+    	if (number == null) {
+    		number = new Integer(0);
+    	}
         return new DecimalFormat(format).format(number.doubleValue());
     }
 
@@ -280,8 +286,12 @@ public class TextUtil {
         if (isBlank(orgStr)) {
             return orgStr;
         }
+        boolean isMask = moreFlag.matches("^\\*+$");
+        if (isMask && (headChars + tailChars) >= orgStr.length()) {
+        	return orgStr;
+        }
         int finalLen = headChars + tailChars + (moreFlag == null ? 0 : moreFlag.length());
-        if (orgStr.length() <= finalLen) {
+        if (orgStr.length() <= finalLen && !isMask) {
             return orgStr;
         }
         StringBuilder sb = new StringBuilder();
@@ -309,12 +319,19 @@ public class TextUtil {
 	}
 
 	public static String encodeUrl(String urlStr) {
-		return urlStr;
+		return encodeEntireUrl(urlStr);
 	}
+//	private static String ENCODED_SLASH = URLEncoder.encode("/");
+			
 	public static String encodeEntireUrl(String urlStr) {
+		if (isBlank(urlStr)) {
+			return null;
+		}
 		try {
+//			String urlEncoded = URLEncoder.encode(urlStr, "ut-8");
+//			urlEncoded = urlEncoded.replace("%2F", replacement)
 			return new URI(urlStr).toASCIIString();
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return urlStr;
 		}
@@ -359,4 +376,48 @@ public class TextUtil {
 		String str = onlyNumber(inStr);
 		return str;
 	}
+
+	private static final Pattern ptnChnMobile = Pattern.compile("1[3-9]\\d{9}");
+	public static String formatChinaMobile(String mobile) {
+		String num = TextUtil.onlyNumber(mobile);
+		if (num.startsWith("86") || num.startsWith("086") || num.startsWith("0086")) {
+			int pos = num.indexOf("86");
+			num = num.substring(pos+2);
+		}
+		Matcher m = ptnChnMobile.matcher(num);
+		if (m.matches()) {
+			return num;
+		}
+		return null;
+	}
+	
+	public static String nullIfBlank(String input) {
+		if (isBlank(input)) {
+			return null;
+		}
+		return input.trim();
+	}
+
+	public static String firstNotBlank(String ...strings ) {
+		if (strings == null || strings.length == 0) {
+			return null;
+		}
+		for(String str : strings) {
+			if(!isBlank(str)) {
+				return str;
+			}
+		}
+		return null;
+	}
+
+	public static List<String> findAllMatched(String source, Pattern pattern) {
+		Matcher matcher = pattern.matcher(source);
+		List<String> list = new ArrayList<>();
+		while (matcher.find()) {
+			list.add(matcher.group());
+		}
+		return list;
+
+	}
+	
 }

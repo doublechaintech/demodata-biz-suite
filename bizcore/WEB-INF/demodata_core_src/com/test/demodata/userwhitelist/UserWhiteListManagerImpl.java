@@ -3,22 +3,25 @@ package com.test.demodata.userwhitelist;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
-import com.test.demodata.BaseEntity;
+import com.terapico.caf.Images;
+import com.terapico.caf.Password;
 
+import com.test.demodata.*;
+import com.test.demodata.tree.*;
+import com.test.demodata.treenode.*;
+import com.test.demodata.DemodataUserContextImpl;
+import com.test.demodata.iamservice.*;
+import com.test.demodata.services.IamService;
+import com.test.demodata.secuser.SecUser;
+import com.test.demodata.userapp.UserApp;
+import com.terapico.uccaf.BaseUserContext;
 
-import com.test.demodata.Message;
-import com.test.demodata.SmartList;
-import com.test.demodata.MultipleAccessKey;
-
-import com.test.demodata.DemodataUserContext;
-//import com.test.demodata.BaseManagerImpl;
-import com.test.demodata.DemodataCheckerManager;
-import com.test.demodata.CustomDemodataCheckerManager;
 
 import com.test.demodata.userdomain.UserDomain;
 
@@ -30,25 +33,32 @@ import com.test.demodata.userdomain.CandidateUserDomain;
 
 
 
-public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager implements UserWhiteListManager {
-	
+public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager implements UserWhiteListManager, BusinessHandler{
+
+  
+
+
 	private static final String SERVICE_TYPE = "UserWhiteList";
-	
+	@Override
+	public UserWhiteListDAO daoOf(DemodataUserContext userContext) {
+		return userWhiteListDaoOf(userContext);
+	}
+
 	@Override
 	public String serviceFor(){
 		return SERVICE_TYPE;
 	}
-	
-	
+
+
 	protected void throwExceptionWithMessage(String value) throws UserWhiteListManagerException{
-	
+
 		Message message = new Message();
 		message.setBody(value);
 		throw new UserWhiteListManagerException(message);
 
 	}
-	
-	
+
+
 
  	protected UserWhiteList saveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList, String [] tokensExpr) throws Exception{	
  		//return getUserWhiteListDAO().save(userWhiteList, tokens);
@@ -66,8 +76,8 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
  	
  	public UserWhiteList loadUserWhiteList(DemodataUserContext userContext, String userWhiteListId, String [] tokensExpr) throws Exception{				
  
- 		userContext.getChecker().checkIdOfUserWhiteList(userWhiteListId);
-		userContext.getChecker().throwExceptionIfHasErrors( UserWhiteListManagerException.class);
+ 		checkerOf(userContext).checkIdOfUserWhiteList(userWhiteListId);
+		checkerOf(userContext).throwExceptionIfHasErrors( UserWhiteListManagerException.class);
 
  			
  		Map<String,Object>tokens = parseTokens(tokensExpr);
@@ -80,8 +90,8 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
  	
  	 public UserWhiteList searchUserWhiteList(DemodataUserContext userContext, String userWhiteListId, String textToSearch,String [] tokensExpr) throws Exception{				
  
- 		userContext.getChecker().checkIdOfUserWhiteList(userWhiteListId);
-		userContext.getChecker().throwExceptionIfHasErrors( UserWhiteListManagerException.class);
+ 		checkerOf(userContext).checkIdOfUserWhiteList(userWhiteListId);
+		checkerOf(userContext).throwExceptionIfHasErrors( UserWhiteListManagerException.class);
 
  		
  		Map<String,Object>tokens = tokens().allTokens().searchEntireObjectText("startsWith", textToSearch).initWithArray(tokensExpr);
@@ -99,10 +109,10 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		addActions(userContext,userWhiteList,tokens);
 		
 		
-		UserWhiteList  userWhiteListToPresent = userContext.getDAOGroup().getUserWhiteListDAO().present(userWhiteList, tokens);
+		UserWhiteList  userWhiteListToPresent = userWhiteListDaoOf(userContext).present(userWhiteList, tokens);
 		
 		List<BaseEntity> entityListToNaming = userWhiteListToPresent.collectRefercencesFromLists();
-		userContext.getDAOGroup().getUserWhiteListDAO().alias(entityListToNaming);
+		userWhiteListDaoOf(userContext).alias(entityListToNaming);
 		
 		return  userWhiteListToPresent;
 		
@@ -123,14 +133,14 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		
  	}
  	protected UserWhiteList saveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList, Map<String,Object>tokens) throws Exception{	
- 		return userContext.getDAOGroup().getUserWhiteListDAO().save(userWhiteList, tokens);
+ 		return userWhiteListDaoOf(userContext).save(userWhiteList, tokens);
  	}
  	protected UserWhiteList loadUserWhiteList(DemodataUserContext userContext, String userWhiteListId, Map<String,Object>tokens) throws Exception{	
-		userContext.getChecker().checkIdOfUserWhiteList(userWhiteListId);
-		userContext.getChecker().throwExceptionIfHasErrors( UserWhiteListManagerException.class);
+		checkerOf(userContext).checkIdOfUserWhiteList(userWhiteListId);
+		checkerOf(userContext).throwExceptionIfHasErrors( UserWhiteListManagerException.class);
 
  
- 		return userContext.getDAOGroup().getUserWhiteListDAO().load(userWhiteListId, tokens);
+ 		return userWhiteListDaoOf(userContext).load(userWhiteListId, tokens);
  	}
 
 	
@@ -160,18 +170,18 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
  	
  	
 
-
-	public UserWhiteList createUserWhiteList(DemodataUserContext userContext,String userIdentity, String userSpecialFunctions, String domainId) throws Exception
+	public UserWhiteList createUserWhiteList(DemodataUserContext userContext, String userIdentity,String userSpecialFunctions,String domainId) throws Exception
+	//public UserWhiteList createUserWhiteList(DemodataUserContext userContext,String userIdentity, String userSpecialFunctions, String domainId) throws Exception
 	{
-		
-		
 
 		
 
-		userContext.getChecker().checkUserIdentityOfUserWhiteList(userIdentity);
-		userContext.getChecker().checkUserSpecialFunctionsOfUserWhiteList(userSpecialFunctions);
+		
+
+		checkerOf(userContext).checkUserIdentityOfUserWhiteList(userIdentity);
+		checkerOf(userContext).checkUserSpecialFunctionsOfUserWhiteList(userSpecialFunctions);
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserWhiteListManagerException.class);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserWhiteListManagerException.class);
 
 
 		UserWhiteList userWhiteList=createNewUserWhiteList();	
@@ -189,80 +199,87 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		onNewInstanceCreated(userContext, userWhiteList);
 		return userWhiteList;
 
-		
+
 	}
-	protected UserWhiteList createNewUserWhiteList() 
+	protected UserWhiteList createNewUserWhiteList()
 	{
-		
-		return new UserWhiteList();		
+
+		return new UserWhiteList();
 	}
-	
+
 	protected void checkParamsForUpdatingUserWhiteList(DemodataUserContext userContext,String userWhiteListId, int userWhiteListVersion, String property, String newValueExpr,String [] tokensExpr)throws Exception
 	{
 		
 
 		
 		
-		userContext.getChecker().checkIdOfUserWhiteList(userWhiteListId);
-		userContext.getChecker().checkVersionOfUserWhiteList( userWhiteListVersion);
+		checkerOf(userContext).checkIdOfUserWhiteList(userWhiteListId);
+		checkerOf(userContext).checkVersionOfUserWhiteList( userWhiteListVersion);
 		
 
 		if(UserWhiteList.USER_IDENTITY_PROPERTY.equals(property)){
-			userContext.getChecker().checkUserIdentityOfUserWhiteList(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkUserIdentityOfUserWhiteList(parseString(newValueExpr));
+		
+			
 		}
 		if(UserWhiteList.USER_SPECIAL_FUNCTIONS_PROPERTY.equals(property)){
-			userContext.getChecker().checkUserSpecialFunctionsOfUserWhiteList(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkUserSpecialFunctionsOfUserWhiteList(parseString(newValueExpr));
+		
+			
 		}		
 
 		
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserWhiteListManagerException.class);
-	
-		
+		checkerOf(userContext).throwExceptionIfHasErrors(UserWhiteListManagerException.class);
+
+
 	}
-	
-	
-	
+
+
+
 	public UserWhiteList clone(DemodataUserContext userContext, String fromUserWhiteListId) throws Exception{
-		
-		return userContext.getDAOGroup().getUserWhiteListDAO().clone(fromUserWhiteListId, this.allTokens());
+
+		return userWhiteListDaoOf(userContext).clone(fromUserWhiteListId, this.allTokens());
 	}
-	
-	public UserWhiteList internalSaveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList) throws Exception 
+
+	public UserWhiteList internalSaveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList) throws Exception
 	{
 		return internalSaveUserWhiteList(userContext, userWhiteList, allTokens());
 
 	}
-	public UserWhiteList internalSaveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList, Map<String,Object> options) throws Exception 
+	public UserWhiteList internalSaveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList, Map<String,Object> options) throws Exception
 	{
 		//checkParamsForUpdatingUserWhiteList(userContext, userWhiteListId, userWhiteListVersion, property, newValueExpr, tokensExpr);
-		
-		
-		synchronized(userWhiteList){ 
+
+
+		synchronized(userWhiteList){
 			//will be good when the userWhiteList loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to UserWhiteList.
+			if (userWhiteList.isChanged()){
 			
-			
+			}
 			userWhiteList = saveUserWhiteList(userContext, userWhiteList, options);
 			return userWhiteList;
-			
+
 		}
 
 	}
-	
-	public UserWhiteList updateUserWhiteList(DemodataUserContext userContext,String userWhiteListId, int userWhiteListVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception 
+
+	public UserWhiteList updateUserWhiteList(DemodataUserContext userContext,String userWhiteListId, int userWhiteListVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception
 	{
 		checkParamsForUpdatingUserWhiteList(userContext, userWhiteListId, userWhiteListVersion, property, newValueExpr, tokensExpr);
-		
-		
-		
+
+
+
 		UserWhiteList userWhiteList = loadUserWhiteList(userContext, userWhiteListId, allTokens());
 		if(userWhiteList.getVersion() != userWhiteListVersion){
 			String message = "The target version("+userWhiteList.getVersion()+") is not equals to version("+userWhiteListVersion+") provided";
 			throwExceptionWithMessage(message);
 		}
-		synchronized(userWhiteList){ 
+		synchronized(userWhiteList){
 			//will be good when the userWhiteList loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to UserWhiteList.
@@ -274,21 +291,21 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		}
 
 	}
-	
-	public UserWhiteList updateUserWhiteListProperty(DemodataUserContext userContext,String userWhiteListId, int userWhiteListVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception 
+
+	public UserWhiteList updateUserWhiteListProperty(DemodataUserContext userContext,String userWhiteListId, int userWhiteListVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception
 	{
 		checkParamsForUpdatingUserWhiteList(userContext, userWhiteListId, userWhiteListVersion, property, newValueExpr, tokensExpr);
-		
+
 		UserWhiteList userWhiteList = loadUserWhiteList(userContext, userWhiteListId, allTokens());
 		if(userWhiteList.getVersion() != userWhiteListVersion){
 			String message = "The target version("+userWhiteList.getVersion()+") is not equals to version("+userWhiteListVersion+") provided";
 			throwExceptionWithMessage(message);
 		}
-		synchronized(userWhiteList){ 
+		synchronized(userWhiteList){
 			//will be good when the userWhiteList loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to UserWhiteList.
-			
+
 			userWhiteList.changeProperty(property, newValueExpr);
 			
 			userWhiteList = saveUserWhiteList(userContext, userWhiteList, tokens().done());
@@ -300,7 +317,7 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 	protected Map<String,Object> emptyOptions(){
 		return tokens().done();
 	}
-	
+
 	protected UserWhiteListTokens tokens(){
 		return UserWhiteListTokens.start();
 	}
@@ -312,7 +329,7 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 	}
 	protected Map<String,Object> viewTokens(){
 		return tokens().allTokens()
-		.done();
+		.analyzeAllLists().done();
 
 	}
 	protected Map<String,Object> mergedAllTokens(String []tokens){
@@ -321,11 +338,11 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 	
 	protected void checkParamsForTransferingAnotherDomain(DemodataUserContext userContext, String userWhiteListId, String anotherDomainId) throws Exception
  	{
- 		
- 		userContext.getChecker().checkIdOfUserWhiteList(userWhiteListId);
- 		userContext.getChecker().checkIdOfUserDomain(anotherDomainId);//check for optional reference
- 		userContext.getChecker().throwExceptionIfHasErrors(UserWhiteListManagerException.class);
- 		
+
+ 		checkerOf(userContext).checkIdOfUserWhiteList(userWhiteListId);
+ 		checkerOf(userContext).checkIdOfUserDomain(anotherDomainId);//check for optional reference
+ 		checkerOf(userContext).throwExceptionIfHasErrors(UserWhiteListManagerException.class);
+
  	}
  	public UserWhiteList transferToAnotherDomain(DemodataUserContext userContext, String userWhiteListId, String anotherDomainId) throws Exception
  	{
@@ -344,10 +361,10 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		}
 
  	}
- 	
-	 	
- 	
- 	
+
+	
+
+
 	public CandidateUserDomain requestCandidateDomain(DemodataUserContext userContext, String ownerClass, String id, String filterKey, int pageNo) throws Exception {
 
 		CandidateUserDomain result = new CandidateUserDomain();
@@ -357,51 +374,52 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		result.setPageNo(pageNo);
 		result.setValueFieldName("id");
 		result.setDisplayFieldName("name");
-		
+
 		pageNo = Math.max(1, pageNo);
 		int pageSize = 20;
 		//requestCandidateProductForSkuAsOwner
-		SmartList<UserDomain> candidateList = userContext.getDAOGroup().getUserDomainDAO().requestCandidateUserDomainForUserWhiteList(userContext,ownerClass, id, filterKey, pageNo, pageSize);
+		SmartList<UserDomain> candidateList = userDomainDaoOf(userContext).requestCandidateUserDomainForUserWhiteList(userContext,ownerClass, id, filterKey, pageNo, pageSize);
 		result.setCandidates(candidateList);
 		int totalCount = candidateList.getTotalCount();
 		result.setTotalPage(Math.max(1, (totalCount + pageSize -1)/pageSize ));
 		return result;
 	}
- 	
+
  //--------------------------------------------------------------
 	
-	 	
+
  	protected UserDomain loadUserDomain(DemodataUserContext userContext, String newDomainId, Map<String,Object> options) throws Exception
  	{
-		
- 		return userContext.getDAOGroup().getUserDomainDAO().load(newDomainId, options);
+
+ 		return userDomainDaoOf(userContext).load(newDomainId, options);
  	}
  	
- 	
- 	
+
+
 	
 	//--------------------------------------------------------------
 
 	public void delete(DemodataUserContext userContext, String userWhiteListId, int userWhiteListVersion) throws Exception {
-		//deleteInternal(userContext, userWhiteListId, userWhiteListVersion);		
+		//deleteInternal(userContext, userWhiteListId, userWhiteListVersion);
 	}
 	protected void deleteInternal(DemodataUserContext userContext,
 			String userWhiteListId, int userWhiteListVersion) throws Exception{
-			
-		userContext.getDAOGroup().getUserWhiteListDAO().delete(userWhiteListId, userWhiteListVersion);
+
+		userWhiteListDaoOf(userContext).delete(userWhiteListId, userWhiteListVersion);
 	}
-	
+
 	public UserWhiteList forgetByAll(DemodataUserContext userContext, String userWhiteListId, int userWhiteListVersion) throws Exception {
-		return forgetByAllInternal(userContext, userWhiteListId, userWhiteListVersion);		
+		return forgetByAllInternal(userContext, userWhiteListId, userWhiteListVersion);
 	}
 	protected UserWhiteList forgetByAllInternal(DemodataUserContext userContext,
 			String userWhiteListId, int userWhiteListVersion) throws Exception{
-			
-		return userContext.getDAOGroup().getUserWhiteListDAO().disconnectFromAll(userWhiteListId, userWhiteListVersion);
-	}
-	
 
-	
+		return userWhiteListDaoOf(userContext).disconnectFromAll(userWhiteListId, userWhiteListVersion);
+	}
+
+
+
+
 	public int deleteAll(DemodataUserContext userContext, String secureCode) throws Exception
 	{
 		/*
@@ -412,24 +430,197 @@ public class UserWhiteListManagerImpl extends CustomDemodataCheckerManager imple
 		*/
 		return 0;
 	}
-	
-	
+
+
 	protected int deleteAllInternal(DemodataUserContext userContext) throws Exception{
-		return userContext.getDAOGroup().getUserWhiteListDAO().deleteAll();
+		return userWhiteListDaoOf(userContext).deleteAll();
 	}
 
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	public void onNewInstanceCreated(DemodataUserContext userContext, UserWhiteList newCreated) throws Exception{
 		ensureRelationInGraph(userContext, newCreated);
 		sendCreationEvent(userContext, newCreated);
+
+    
 	}
 
+  
+  
+
+	// -----------------------------------//  登录部分处理 \\-----------------------------------
+	// 手机号+短信验证码 登录
+	public Object loginByMobile(DemodataUserContextImpl userContext, String mobile, String verifyCode) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByMobile");
+		LoginData loginData = new LoginData();
+		loginData.setMobile(mobile);
+		loginData.setVerifyCode(verifyCode);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.MOBILE, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 账号+密码登录
+	public Object loginByPassword(DemodataUserContextImpl userContext, String loginId, Password password) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(), "loginByPassword");
+		LoginData loginData = new LoginData();
+		loginData.setLoginId(loginId);
+		loginData.setPassword(password.getClearTextPassword());
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.PASSWORD, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 微信小程序登录
+	public Object loginByWechatMiniProgram(DemodataUserContextImpl userContext, String code) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByWechatMiniProgram");
+		LoginData loginData = new LoginData();
+		loginData.setCode(code);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.WECHAT_MINIPROGRAM, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 企业微信小程序登录
+	public Object loginByWechatWorkMiniProgram(DemodataUserContextImpl userContext, String code) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByWechatWorkMiniProgram");
+		LoginData loginData = new LoginData();
+		loginData.setCode(code);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.WECHAT_WORK_MINIPROGRAM, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 调用登录处理
+	protected Object processLoginRequest(DemodataUserContextImpl userContext, LoginContext loginContext) throws Exception {
+		IamService iamService = (IamService) userContext.getBean("iamService");
+		LoginResult loginResult = iamService.doLogin(userContext, loginContext, this);
+		// 根据登录结果
+		if (!loginResult.isAuthenticated()) {
+			throw new Exception(loginResult.getMessage());
+		}
+		if (loginResult.isSuccess()) {
+			return onLoginSuccess(userContext, loginResult);
+		}
+		if (loginResult.isNewUser()) {
+			throw new Exception("请联系你的上级,先为你创建账号,然后再来登录.");
+		}
+		return new LoginForm();
+	}
+
+	@Override
+	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
+			throws IllegalAccessException {
+		DemodataUserContextImpl userContext = (DemodataUserContextImpl)baseUserContext;
+		IamService iamService = (IamService) userContext.getBean("iamService");
+		Map<String, Object> loginInfo = iamService.getCachedLoginInfo(userContext);
+
+		SecUser secUser = iamService.tryToLoadSecUser(userContext, loginInfo);
+		UserApp userApp = iamService.tryToLoadUserApp(userContext, loginInfo);
+		if (userApp != null) {
+			userApp.setSecUser(secUser);
+		}
+		afterSecUserAppLoadedWhenCheckAccess(userContext, loginInfo, secUser, userApp);
+		if (!isMethodNeedLogin(userContext, methodName, parameters)) {
+			return accessOK();
+		}
+
+		return super.checkAccess(baseUserContext, methodName, parameters);
+	}
+
+	// 判断哪些接口需要登录后才能执行. 默认除了loginBy开头的,其他都要登录
+	protected boolean isMethodNeedLogin(DemodataUserContextImpl userContext, String methodName, Object[] parameters) {
+		if (methodName.startsWith("loginBy")) {
+			return false;
+		}
+		if (methodName.startsWith("logout")) {
+			return false;
+		}
+		return true;
+	}
+
+	// 在checkAccess中加载了secUser和userApp后会调用此方法,用于定制化的用户数据加载. 默认什么也不做
+	protected void afterSecUserAppLoadedWhenCheckAccess(DemodataUserContextImpl userContext, Map<String, Object> loginInfo,
+			SecUser secUser, UserApp userApp) throws IllegalAccessException{
+	}
+
+
+
+	protected Object onLoginSuccess(DemodataUserContext userContext, LoginResult loginResult) throws Exception {
+		// by default, return the view of this object
+		UserApp userApp = loginResult.getLoginContext().getLoginTarget().getUserApp();
+		return this.view(userContext, userApp.getObjectId());
+	}
+
+	public void onAuthenticationFailed(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, failed is failed, nothing can do
+	}
+	public void onAuthenticateNewUserLogged(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, should create a account and bind with sec user, BUT, I don't know how to
+		// create new object as of generate this method. It depends on business logical. So,
+		throw new Exception("请重载函数onAuthenticateNewUserLogged()以处理新用户登录");
+	}
+	public void onAuthenticateUserLogged(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, find the correct user-app
+		SecUser secUser = loginResult.getLoginContext().getLoginTarget().getSecUser();
+		MultipleAccessKey key = new MultipleAccessKey();
+		key.put(UserApp.SEC_USER_PROPERTY, secUser.getId());
+		key.put(UserApp.OBJECT_TYPE_PROPERTY, UserWhiteList.INTERNAL_TYPE);
+		SmartList<UserApp> userApps = userContext.getDAOGroup().getUserAppDAO().findUserAppWithKey(key, EO);
+		if (userApps == null || userApps.isEmpty()) {
+			throw new Exception("您的账号未关联销售人员,请联系客服处理账号异常.");
+		}
+		UserApp userApp = userApps.first();
+		userApp.setSecUser(secUser);
+		loginResult.getLoginContext().getLoginTarget().setUserApp(userApp);
+	}
+	// -----------------------------------\\  登录部分处理 //-----------------------------------
+
+
+	// -----------------------------------// list-of-view 处理 \\-----------------------------------
+    protected void enhanceForListOfView(DemodataUserContext userContext,SmartList<UserWhiteList> list) throws Exception {
+    	if (list == null || list.isEmpty()){
+    		return;
+    	}
+		List<UserDomain> domainList = DemodataBaseUtils.collectReferencedObjectWithType(userContext, list, UserDomain.class);
+		userContext.getDAOGroup().enhanceList(domainList, UserDomain.class);
+
+
+    }
+	
+	public Object listByDomain(DemodataUserContext userContext,String domainId) throws Exception {
+		return listPageByDomain(userContext, domainId, 0, 20);
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Object listPageByDomain(DemodataUserContext userContext,String domainId, int start, int count) throws Exception {
+		SmartList<UserWhiteList> list = userWhiteListDaoOf(userContext).findUserWhiteListByDomain(domainId, start, count, new HashMap<>());
+		enhanceForListOfView(userContext, list);
+		DemodataCommonListOfViewPage page = new DemodataCommonListOfViewPage();
+		page.setClassOfList(UserWhiteList.class);
+		page.setContainerObject(UserDomain.withId(domainId));
+		page.setRequestBeanName(this.getBeanName());
+		page.setDataList((SmartList)list);
+		page.setPageTitle("用户白名单列表");
+		page.setRequestName("listByDomain");
+		page.setRequestOffset(start);
+		page.setRequestLimit(count);
+		page.setDisplayMode("auto");
+
+		page.assemblerContent(userContext, "listByDomain");
+		return page.doRender(userContext);
+	}
+  
+  // -----------------------------------\\ list-of-view 处理 //-----------------------------------
 }
 
 

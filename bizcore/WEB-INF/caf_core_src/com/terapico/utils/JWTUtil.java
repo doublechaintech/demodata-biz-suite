@@ -13,7 +13,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public class JWTUtil {
 	
 	
-	public static final String HEADER_NAME = "Authorization";
+	public static final String HEADER_NAME = "authorization";
 
 	public static DecodedJWT decodeToken(String token) {
 		if (TextUtil.isBlank(token)) {
@@ -34,17 +34,36 @@ public class JWTUtil {
 		}
 	}
 	
-	public static String getJwtToken(String userId, String userUploadHome) {
+	@Deprecated
+	/**
+	 * replaced with getJwtToken(String userId, String userUploadHome, String envType, Date now);
+	 * @param userId
+	 * @param userUploadHome
+	 * @param envType
+	 * @return
+	 */
+	public static String getJwtToken(String userId, String userUploadHome, String envType) {
+		return getJwtToken(userId, userUploadHome, envType, userId);
+	}
+	public static String getJwtToken(String userId, String userUploadHome, String envType, String tokenKey) {
+		return getJwtToken(userId, userUploadHome, envType, tokenKey, new Date());
+	}
+	public static String getJwtToken(String userId, String userUploadHome, String envType, String tokenKey, Date date) {
+		return getJwtToken(userId, userUploadHome, envType, tokenKey, date, new String[] {userId});
+	}
+	public static String getJwtToken(String userId, String userUploadHome, String envType, String tokenKey, Date date, String[] tags) {
 		try {
 			
 		    Algorithm algorithm = Algorithm.HMAC256(getSecret());
 		    String token = JWT.create()
 		        .withIssuer(getIssuer())
 		        .withKeyId(userId)
-		        .withIssuedAt(new Date())
-		        .withExpiresAt(DateTimeUtil.addMonths(new Date(), 12))
+		        .withIssuedAt(date)
+		        .withExpiresAt(DateTimeUtil.addDays(date, 7, false))
 		        .withClaim("userUploadHome", userUploadHome)
-		        .withArrayClaim("tags", new String[] {userId})
+		        .withClaim("envType", envType)
+		        .withClaim("tokenKey", tokenKey)
+		        .withArrayClaim("tags", tags)
 		        .sign(algorithm);
 		    return token;
 		} catch (JWTCreationException exception){

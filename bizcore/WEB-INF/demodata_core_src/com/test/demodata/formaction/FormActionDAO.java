@@ -3,16 +3,20 @@ package com.test.demodata.formaction;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.genericform.GenericForm;
+
 import com.test.demodata.genericform.GenericFormDAO;
 
 
-public interface FormActionDAO{
+public interface FormActionDAO extends BaseDAO{
 
-	
+	public SmartList<FormAction> loadAll();
 	public FormAction load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<FormAction> formActionList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface FormActionDAO{
 	
 	
 	public SmartList<FormAction> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<FormAction> findFormActionByForm(String genericFormId, Map<String,Object> options);
  	public int countFormActionByForm(String genericFormId, Map<String,Object> options);
@@ -50,14 +55,7 @@ public interface FormActionDAO{
  	public void analyzeFormActionByForm(SmartList<FormAction> resultList, String genericFormId, Map<String,Object> options);
 
  
- }
-
-
-
-
-
-
-
-
+ 
+}
 
 

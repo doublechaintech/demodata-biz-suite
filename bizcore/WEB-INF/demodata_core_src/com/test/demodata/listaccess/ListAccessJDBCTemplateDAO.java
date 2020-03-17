@@ -3,10 +3,12 @@ package com.test.demodata.listaccess;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.userapp.UserAppDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class ListAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implements ListAccessDAO{
+
+public class ListAccessJDBCTemplateDAO extends DemodataBaseDAOImpl implements ListAccessDAO{
  
  	
  	private  UserAppDAO  userAppDAO;
@@ -47,6 +52,11 @@ public class ListAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 		return loadInternalListAccess(accessKey, options);
 	}
 	*/
+	
+	public SmartList<ListAccess> loadAll() {
+	    return this.loadAll(getListAccessMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -425,13 +435,27 @@ public class ListAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
  	protected Object[] prepareListAccessUpdateParameters(ListAccess listAccess){
  		Object[] parameters = new Object[11];
  
+ 		
  		parameters[0] = listAccess.getName();
+ 		
+ 		
  		parameters[1] = listAccess.getInternalName();
+ 		
+ 		
  		parameters[2] = listAccess.getReadPermission();
+ 		
+ 		
  		parameters[3] = listAccess.getCreatePermission();
+ 		
+ 		
  		parameters[4] = listAccess.getDeletePermission();
+ 		
+ 		
  		parameters[5] = listAccess.getUpdatePermission();
- 		parameters[6] = listAccess.getExecutionPermission(); 	
+ 		
+ 		
+ 		parameters[6] = listAccess.getExecutionPermission();
+ 		 	
  		if(listAccess.getApp() != null){
  			parameters[7] = listAccess.getApp().getId();
  		}
@@ -448,13 +472,27 @@ public class ListAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 		listAccess.setId(newListAccessId);
 		parameters[0] =  listAccess.getId();
  
+ 		
  		parameters[1] = listAccess.getName();
+ 		
+ 		
  		parameters[2] = listAccess.getInternalName();
+ 		
+ 		
  		parameters[3] = listAccess.getReadPermission();
+ 		
+ 		
  		parameters[4] = listAccess.getCreatePermission();
+ 		
+ 		
  		parameters[5] = listAccess.getDeletePermission();
+ 		
+ 		
  		parameters[6] = listAccess.getUpdatePermission();
- 		parameters[7] = listAccess.getExecutionPermission(); 	
+ 		
+ 		
+ 		parameters[7] = listAccess.getExecutionPermission();
+ 		 	
  		if(listAccess.getApp() != null){
  			parameters[8] = listAccess.getApp().getId();
  		
@@ -522,6 +560,9 @@ public class ListAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 	public void enhanceList(List<ListAccess> listAccessList) {		
 		this.enhanceListInternal(listAccessList, this.getListAccessMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<ListAccess> listAccessList = ownerEntity.collectRefsWithType(ListAccess.INTERNAL_TYPE);
@@ -554,6 +595,13 @@ public class ListAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 	public SmartList<ListAccess> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getListAccessMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

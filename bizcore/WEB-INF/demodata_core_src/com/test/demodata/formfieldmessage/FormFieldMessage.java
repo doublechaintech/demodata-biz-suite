@@ -4,8 +4,10 @@ package com.test.demodata.formfieldmessage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -55,23 +57,25 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 	
 		
 	public 	FormFieldMessage(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static FormFieldMessage withId(String id){
+		FormFieldMessage formFieldMessage = new FormFieldMessage();
+		formFieldMessage.setId(id);
+		formFieldMessage.setVersion(Integer.MAX_VALUE);
+		return formFieldMessage;
+	}
+	public 	static FormFieldMessage refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setForm( null );
 
 		this.changed = true;
 	}
 	
-	public 	FormFieldMessage(String title, String parameterName, GenericForm form, String level)
-	{
-		setTitle(title);
-		setParameterName(parameterName);
-		setForm(form);
-		setLevel(level);
-	
-	}
 	
 	//Support for changing the property
 	
@@ -92,6 +96,7 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
     
     
 	protected void changeTitleProperty(String newValueExpr){
+	
 		String oldValue = getTitle();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -101,12 +106,13 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		updateTitle(newValue);
 		this.onChangeProperty(TITLE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeParameterNameProperty(String newValueExpr){
+	
 		String oldValue = getParameterName();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -116,12 +122,13 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		updateParameterName(newValue);
 		this.onChangeProperty(PARAMETER_NAME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeLevelProperty(String newValueExpr){
+	
 		String oldValue = getLevel();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -131,11 +138,34 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		updateLevel(newValue);
 		this.onChangeProperty(LEVEL_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(TITLE_PROPERTY.equals(property)){
+			return getTitle();
+		}
+		if(PARAMETER_NAME_PROPERTY.equals(property)){
+			return getParameterName();
+		}
+		if(FORM_PROPERTY.equals(property)){
+			return getForm();
+		}
+		if(LEVEL_PROPERTY.equals(property)){
+			return getLevel();
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -152,6 +182,9 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setTitle(String title){
@@ -164,6 +197,9 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		this.mTitle = trimString(title);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeTitle(String title){
+		if(title != null) { setTitle(title);}
 	}
 	
 	
@@ -178,6 +214,9 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		this.changed = true;
 		return this;
 	}
+	public void mergeParameterName(String parameterName){
+		if(parameterName != null) { setParameterName(parameterName);}
+	}
 	
 	
 	public void setForm(GenericForm form){
@@ -190,6 +229,9 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		this.mForm = form;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeForm(GenericForm form){
+		if(form != null) { setForm(form);}
 	}
 	
 	
@@ -209,6 +251,9 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		this.changed = true;
 		return this;
 	}
+	public void mergeLevel(String level){
+		if(level != null) { setLevel(level);}
+	}
 	
 	
 	public void setVersion(int version){
@@ -221,6 +266,9 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -282,7 +330,46 @@ public class FormFieldMessage extends BaseEntity implements  java.io.Serializabl
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof FormFieldMessage){
+		
+			
+			FormFieldMessage dest =(FormFieldMessage)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeTitle(getTitle());
+			dest.mergeParameterName(getParameterName());
+			dest.mergeForm(getForm());
+			dest.mergeLevel(getLevel());
+			dest.mergeVersion(getVersion());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof FormFieldMessage){
+		
+			
+			FormFieldMessage dest =(FormFieldMessage)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeTitle(getTitle());
+			dest.mergeParameterName(getParameterName());
+			dest.mergeLevel(getLevel());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getTitle(), getParameterName(), getForm(), getLevel(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

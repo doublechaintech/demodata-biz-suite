@@ -11,9 +11,9 @@ import com.test.demodata.userwhitelist.UserWhiteListManager;
 
 import com.test.demodata.secuser.SecUserManager;
 
-import com.test.demodata.secuserblocking.SecUserBlockingManager;
-
 import com.test.demodata.userapp.UserAppManager;
+
+import com.test.demodata.quicklink.QuickLinkManager;
 
 import com.test.demodata.listaccess.ListAccessManager;
 
@@ -31,6 +31,16 @@ import com.test.demodata.formfield.FormFieldManager;
 
 import com.test.demodata.formaction.FormActionManager;
 
+import com.test.demodata.candidatecontainer.CandidateContainerManager;
+
+import com.test.demodata.candidateelement.CandidateElementManager;
+
+import com.test.demodata.wechatworkappidentify.WechatWorkappIdentifyManager;
+
+import com.test.demodata.wechatminiappidentify.WechatMiniappIdentifyManager;
+
+import com.test.demodata.treenode.TreeNodeManager;
+
 
 public class ManagerGroup {
 
@@ -44,9 +54,9 @@ public class ManagerGroup {
 
 	protected SecUserManager secUserManager;
 
-	protected SecUserBlockingManager secUserBlockingManager;
-
 	protected UserAppManager userAppManager;
+
+	protected QuickLinkManager quickLinkManager;
 
 	protected ListAccessManager listAccessManager;
 
@@ -64,7 +74,17 @@ public class ManagerGroup {
 
 	protected FormActionManager formActionManager;
 
-	
+	protected CandidateContainerManager candidateContainerManager;
+
+	protected CandidateElementManager candidateElementManager;
+
+	protected WechatWorkappIdentifyManager wechatWorkappIdentifyManager;
+
+	protected WechatMiniappIdentifyManager wechatMiniappIdentifyManager;
+
+	protected TreeNodeManager treeNodeManager;
+
+
 
 	public PlatformManager getPlatformManager(){
 		return this.platformManager;
@@ -106,19 +126,19 @@ public class ManagerGroup {
 	}
 
 
-	public SecUserBlockingManager getSecUserBlockingManager(){
-		return this.secUserBlockingManager;
-	}
-	public void setSecUserBlockingManager(SecUserBlockingManager manager){
-		this.secUserBlockingManager = manager;
-	}
-
-
 	public UserAppManager getUserAppManager(){
 		return this.userAppManager;
 	}
 	public void setUserAppManager(UserAppManager manager){
 		this.userAppManager = manager;
+	}
+
+
+	public QuickLinkManager getQuickLinkManager(){
+		return this.quickLinkManager;
+	}
+	public void setQuickLinkManager(QuickLinkManager manager){
+		this.quickLinkManager = manager;
 	}
 
 
@@ -186,9 +206,47 @@ public class ManagerGroup {
 	}
 
 
+	public CandidateContainerManager getCandidateContainerManager(){
+		return this.candidateContainerManager;
+	}
+	public void setCandidateContainerManager(CandidateContainerManager manager){
+		this.candidateContainerManager = manager;
+	}
+
+
+	public CandidateElementManager getCandidateElementManager(){
+		return this.candidateElementManager;
+	}
+	public void setCandidateElementManager(CandidateElementManager manager){
+		this.candidateElementManager = manager;
+	}
+
+
+	public WechatWorkappIdentifyManager getWechatWorkappIdentifyManager(){
+		return this.wechatWorkappIdentifyManager;
+	}
+	public void setWechatWorkappIdentifyManager(WechatWorkappIdentifyManager manager){
+		this.wechatWorkappIdentifyManager = manager;
+	}
+
+
+	public WechatMiniappIdentifyManager getWechatMiniappIdentifyManager(){
+		return this.wechatMiniappIdentifyManager;
+	}
+	public void setWechatMiniappIdentifyManager(WechatMiniappIdentifyManager manager){
+		this.wechatMiniappIdentifyManager = manager;
+	}
+
+
+	public TreeNodeManager getTreeNodeManager(){
+		return this.treeNodeManager;
+	}
+	public void setTreeNodeManager(TreeNodeManager manager){
+		this.treeNodeManager = manager;
+	}
+
+
 }
-
-
 
 
 

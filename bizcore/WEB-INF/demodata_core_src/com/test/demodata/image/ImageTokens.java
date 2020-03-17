@@ -38,6 +38,15 @@ public class ImageTokens extends CommonTokens{
 	protected ImageTokens(){
 		//ensure not initialized outside the class
 	}
+	public  static  ImageTokens of(Map<String,Object> options){
+		//ensure not initialized outside the class
+		ImageTokens tokens = new ImageTokens(options);
+		return tokens;
+		
+	}
+	protected ImageTokens(Map<String,Object> options){
+		this.options = options;
+	}
 	
 	public ImageTokens merge(String [] tokens){
 		this.parseTokens(tokens);
@@ -81,6 +90,11 @@ public class ImageTokens extends CommonTokens{
 	}
 	public static Map <String,Object> empty(){
 		return start().done();
+	}
+	
+	public ImageTokens analyzeAllLists(){		
+		addSimpleOptions(ALL_LISTS_ANALYZE);
+		return this;
 	}
 
 	protected static final String PLATFORM = "platform";

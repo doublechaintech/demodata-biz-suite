@@ -3,16 +3,20 @@ package com.test.demodata.formfield;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.genericform.GenericForm;
+
 import com.test.demodata.genericform.GenericFormDAO;
 
 
-public interface FormFieldDAO{
+public interface FormFieldDAO extends BaseDAO{
 
-	
+	public SmartList<FormField> loadAll();
 	public FormField load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<FormField> formFieldList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface FormFieldDAO{
 	
 	
 	public SmartList<FormField> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<FormField> findFormFieldByForm(String genericFormId, Map<String,Object> options);
  	public int countFormFieldByForm(String genericFormId, Map<String,Object> options);
@@ -50,6 +55,7 @@ public interface FormFieldDAO{
  	public void analyzeFormFieldByForm(SmartList<FormField> resultList, String genericFormId, Map<String,Object> options);
 
  
- }
+ 
+}
 
 

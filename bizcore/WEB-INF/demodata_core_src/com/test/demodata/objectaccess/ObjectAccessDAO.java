@@ -3,16 +3,20 @@ package com.test.demodata.objectaccess;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.userapp.UserApp;
+
 import com.test.demodata.userapp.UserAppDAO;
 
 
-public interface ObjectAccessDAO{
+public interface ObjectAccessDAO extends BaseDAO{
 
-	
+	public SmartList<ObjectAccess> loadAll();
 	public ObjectAccess load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<ObjectAccess> objectAccessList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface ObjectAccessDAO{
 	
 	
 	public SmartList<ObjectAccess> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<ObjectAccess> findObjectAccessByApp(String userAppId, Map<String,Object> options);
  	public int countObjectAccessByApp(String userAppId, Map<String,Object> options);
@@ -50,6 +55,7 @@ public interface ObjectAccessDAO{
  	public void analyzeObjectAccessByApp(SmartList<ObjectAccess> resultList, String userAppId, Map<String,Object> options);
 
  
- }
+ 
+}
 
 

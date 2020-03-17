@@ -4,8 +4,10 @@ package com.test.demodata.image;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -55,23 +57,25 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 	
 		
 	public 	Image(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static Image withId(String id){
+		Image image = new Image();
+		image.setId(id);
+		image.setVersion(Integer.MAX_VALUE);
+		return image;
+	}
+	public 	static Image refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setPlatform( null );
 
 		this.changed = true;
 	}
 	
-	public 	Image(String name, String imagePath, DateTime createTime, Platform platform)
-	{
-		setName(name);
-		setImagePath(imagePath);
-		setCreateTime(createTime);
-		setPlatform(platform);
-	
-	}
 	
 	//Support for changing the property
 	
@@ -92,6 +96,7 @@ public class Image extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeNameProperty(String newValueExpr){
+	
 		String oldValue = getName();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -101,12 +106,13 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		updateName(newValue);
 		this.onChangeProperty(NAME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeImagePathProperty(String newValueExpr){
+	
 		String oldValue = getImagePath();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -116,12 +122,13 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		updateImagePath(newValue);
 		this.onChangeProperty(IMAGE_PATH_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeCreateTimeProperty(String newValueExpr){
+	
 		DateTime oldValue = getCreateTime();
 		DateTime newValue = parseTimestamp(newValueExpr);
 		if(equalsTimestamp(oldValue , newValue)){
@@ -131,11 +138,34 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		updateCreateTime(newValue);
 		this.onChangeProperty(CREATE_TIME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(NAME_PROPERTY.equals(property)){
+			return getName();
+		}
+		if(IMAGE_PATH_PROPERTY.equals(property)){
+			return getImagePath();
+		}
+		if(CREATE_TIME_PROPERTY.equals(property)){
+			return getCreateTime();
+		}
+		if(PLATFORM_PROPERTY.equals(property)){
+			return getPlatform();
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -152,6 +182,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setName(String name){
@@ -164,6 +197,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.mName = trimString(name);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeName(String name){
+		if(name != null) { setName(name);}
 	}
 	
 	
@@ -178,6 +214,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeImagePath(String imagePath){
+		if(imagePath != null) { setImagePath(imagePath);}
+	}
 	
 	
 	public void setCreateTime(DateTime createTime){
@@ -191,6 +230,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeCreateTime(DateTime createTime){
+		setCreateTime(createTime);
+	}
 	
 	
 	public void setPlatform(Platform platform){
@@ -203,6 +245,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.mPlatform = platform;;
 		this.changed = true;
 		return this;
+	}
+	public void mergePlatform(Platform platform){
+		if(platform != null) { setPlatform(platform);}
 	}
 	
 	
@@ -221,6 +266,9 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -282,7 +330,46 @@ public class Image extends BaseEntity implements  java.io.Serializable{
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof Image){
+		
+			
+			Image dest =(Image)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeName(getName());
+			dest.mergeImagePath(getImagePath());
+			dest.mergeCreateTime(getCreateTime());
+			dest.mergePlatform(getPlatform());
+			dest.mergeVersion(getVersion());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof Image){
+		
+			
+			Image dest =(Image)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeName(getName());
+			dest.mergeImagePath(getImagePath());
+			dest.mergeCreateTime(getCreateTime());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getName(), getImagePath(), getCreateTime(), getPlatform(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

@@ -4,8 +4,10 @@ package com.test.demodata.userapp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -13,6 +15,7 @@ import com.test.demodata.KeyValuePair;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.test.demodata.objectaccess.ObjectAccess;
 import com.test.demodata.listaccess.ListAccess;
+import com.test.demodata.quicklink.QuickLink;
 import com.test.demodata.secuser.SecUser;
 
 @JsonSerialize(using = UserAppSerializer.class)
@@ -30,6 +33,7 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 	public static final String LOCATION_PROPERTY              = "location"          ;
 	public static final String VERSION_PROPERTY               = "version"           ;
 
+	public static final String QUICK_LINK_LIST                          = "quickLinkList"     ;
 	public static final String LIST_ACCESS_LIST                         = "listAccessList"    ;
 	public static final String OBJECT_ACCESS_LIST                       = "objectAccessList"  ;
 
@@ -64,34 +68,31 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 	protected		int                 	mVersion            ;
 	
 	
+	protected		SmartList<QuickLink>	mQuickLinkList      ;
 	protected		SmartList<ListAccess>	mListAccessList     ;
 	protected		SmartList<ObjectAccess>	mObjectAccessList   ;
 	
 		
 	public 	UserApp(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static UserApp withId(String id){
+		UserApp userApp = new UserApp();
+		userApp.setId(id);
+		userApp.setVersion(Integer.MAX_VALUE);
+		return userApp;
+	}
+	public 	static UserApp refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setSecUser( null );
 
 		this.changed = true;
 	}
 	
-	public 	UserApp(String title, SecUser secUser, String appIcon, boolean fullAccess, String permission, String objectType, String objectId, String location)
-	{
-		setTitle(title);
-		setSecUser(secUser);
-		setAppIcon(appIcon);
-		setFullAccess(fullAccess);
-		setPermission(permission);
-		setObjectType(objectType);
-		setObjectId(objectId);
-		setLocation(location);
-
-		this.mListAccessList = new SmartList<ListAccess>();
-		this.mObjectAccessList = new SmartList<ObjectAccess>();	
-	}
 	
 	//Support for changing the property
 	
@@ -124,6 +125,7 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeTitleProperty(String newValueExpr){
+	
 		String oldValue = getTitle();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -133,12 +135,13 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updateTitle(newValue);
 		this.onChangeProperty(TITLE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeAppIconProperty(String newValueExpr){
+	
 		String oldValue = getAppIcon();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -148,12 +151,13 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updateAppIcon(newValue);
 		this.onChangeProperty(APP_ICON_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeFullAccessProperty(String newValueExpr){
+	
 		boolean oldValue = getFullAccess();
 		boolean newValue = parseBoolean(newValueExpr);
 		if(equalsBoolean(oldValue , newValue)){
@@ -163,12 +167,13 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updateFullAccess(newValue);
 		this.onChangeProperty(FULL_ACCESS_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changePermissionProperty(String newValueExpr){
+	
 		String oldValue = getPermission();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -178,12 +183,13 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updatePermission(newValue);
 		this.onChangeProperty(PERMISSION_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeObjectTypeProperty(String newValueExpr){
+	
 		String oldValue = getObjectType();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -193,12 +199,13 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updateObjectType(newValue);
 		this.onChangeProperty(OBJECT_TYPE_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeObjectIdProperty(String newValueExpr){
+	
 		String oldValue = getObjectId();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -208,12 +215,13 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updateObjectId(newValue);
 		this.onChangeProperty(OBJECT_ID_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeLocationProperty(String newValueExpr){
+	
 		String oldValue = getLocation();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -223,11 +231,58 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		updateLocation(newValue);
 		this.onChangeProperty(LOCATION_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(TITLE_PROPERTY.equals(property)){
+			return getTitle();
+		}
+		if(SEC_USER_PROPERTY.equals(property)){
+			return getSecUser();
+		}
+		if(APP_ICON_PROPERTY.equals(property)){
+			return getAppIcon();
+		}
+		if(FULL_ACCESS_PROPERTY.equals(property)){
+			return getFullAccess();
+		}
+		if(PERMISSION_PROPERTY.equals(property)){
+			return getPermission();
+		}
+		if(OBJECT_TYPE_PROPERTY.equals(property)){
+			return getObjectType();
+		}
+		if(OBJECT_ID_PROPERTY.equals(property)){
+			return getObjectId();
+		}
+		if(LOCATION_PROPERTY.equals(property)){
+			return getLocation();
+		}
+		if(QUICK_LINK_LIST.equals(property)){
+			List<BaseEntity> list = getQuickLinkList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+		if(LIST_ACCESS_LIST.equals(property)){
+			List<BaseEntity> list = getListAccessList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+		if(OBJECT_ACCESS_LIST.equals(property)){
+			List<BaseEntity> list = getObjectAccessList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -244,6 +299,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setTitle(String title){
@@ -257,6 +315,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeTitle(String title){
+		if(title != null) { setTitle(title);}
+	}
 	
 	
 	public void setSecUser(SecUser secUser){
@@ -269,6 +330,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.mSecUser = secUser;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeSecUser(SecUser secUser){
+		if(secUser != null) { setSecUser(secUser);}
 	}
 	
 	
@@ -288,6 +352,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeAppIcon(String appIcon){
+		if(appIcon != null) { setAppIcon(appIcon);}
+	}
 	
 	
 	public void setFullAccess(boolean fullAccess){
@@ -300,6 +367,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.mFullAccess = fullAccess;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeFullAccess(boolean fullAccess){
+		setFullAccess(fullAccess);
 	}
 	
 	
@@ -314,6 +384,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergePermission(String permission){
+		if(permission != null) { setPermission(permission);}
+	}
 	
 	
 	public void setObjectType(String objectType){
@@ -327,6 +400,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeObjectType(String objectType){
+		if(objectType != null) { setObjectType(objectType);}
+	}
 	
 	
 	public void setObjectId(String objectId){
@@ -339,6 +415,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.mObjectId = trimString(objectId);;
 		this.changed = true;
 		return this;
+	}
+	public void mergeObjectId(String objectId){
+		if(objectId != null) { setObjectId(objectId);}
 	}
 	
 	
@@ -358,6 +437,9 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeLocation(String location){
+		if(location != null) { setLocation(location);}
+	}
 	
 	
 	public void setVersion(int version){
@@ -371,8 +453,118 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeVersion(int version){
+		setVersion(version);
+	}
 	
 	
+
+	public  SmartList<QuickLink> getQuickLinkList(){
+		if(this.mQuickLinkList == null){
+			this.mQuickLinkList = new SmartList<QuickLink>();
+			this.mQuickLinkList.setListInternalName (QUICK_LINK_LIST );
+			//有名字，便于做权限控制
+		}
+		
+		return this.mQuickLinkList;	
+	}
+	public  void setQuickLinkList(SmartList<QuickLink> quickLinkList){
+		for( QuickLink quickLink:quickLinkList){
+			quickLink.setApp(this);
+		}
+
+		this.mQuickLinkList = quickLinkList;
+		this.mQuickLinkList.setListInternalName (QUICK_LINK_LIST );
+		
+	}
+	
+	public  void addQuickLink(QuickLink quickLink){
+		quickLink.setApp(this);
+		getQuickLinkList().add(quickLink);
+	}
+	public  void addQuickLinkList(SmartList<QuickLink> quickLinkList){
+		for( QuickLink quickLink:quickLinkList){
+			quickLink.setApp(this);
+		}
+		getQuickLinkList().addAll(quickLinkList);
+	}
+	public  void mergeQuickLinkList(SmartList<QuickLink> quickLinkList){
+		if(quickLinkList==null){
+			return;
+		}
+		if(quickLinkList.isEmpty()){
+			return;
+		}
+		addQuickLinkList( quickLinkList );
+		
+	}
+	public  QuickLink removeQuickLink(QuickLink quickLinkIndex){
+		
+		int index = getQuickLinkList().indexOf(quickLinkIndex);
+        if(index < 0){
+        	String message = "QuickLink("+quickLinkIndex.getId()+") with version='"+quickLinkIndex.getVersion()+"' NOT found!";
+            throw new IllegalStateException(message);
+        }
+        QuickLink quickLink = getQuickLinkList().get(index);        
+        // quickLink.clearApp(); //disconnect with App
+        quickLink.clearFromAll(); //disconnect with App
+		
+		boolean result = getQuickLinkList().planToRemove(quickLink);
+        if(!result){
+        	String message = "QuickLink("+quickLinkIndex.getId()+") with version='"+quickLinkIndex.getVersion()+"' NOT found!";
+            throw new IllegalStateException(message);
+        }
+        return quickLink;
+        
+	
+	}
+	//断舍离
+	public  void breakWithQuickLink(QuickLink quickLink){
+		
+		if(quickLink == null){
+			return;
+		}
+		quickLink.setApp(null);
+		//getQuickLinkList().remove();
+	
+	}
+	
+	public  boolean hasQuickLink(QuickLink quickLink){
+	
+		return getQuickLinkList().contains(quickLink);
+  
+	}
+	
+	public void copyQuickLinkFrom(QuickLink quickLink) {
+
+		QuickLink quickLinkInList = findTheQuickLink(quickLink);
+		QuickLink newQuickLink = new QuickLink();
+		quickLinkInList.copyTo(newQuickLink);
+		newQuickLink.setVersion(0);//will trigger copy
+		getQuickLinkList().add(newQuickLink);
+		addItemToFlexiableObject(COPIED_CHILD, newQuickLink);
+	}
+	
+	public  QuickLink findTheQuickLink(QuickLink quickLink){
+		
+		int index =  getQuickLinkList().indexOf(quickLink);
+		//The input parameter must have the same id and version number.
+		if(index < 0){
+ 			String message = "QuickLink("+quickLink.getId()+") with version='"+quickLink.getVersion()+"' NOT found!";
+			throw new IllegalStateException(message);
+		}
+		
+		return  getQuickLinkList().get(index);
+		//Performance issue when using LinkedList, but it is almost an ArrayList for sure!
+	}
+	
+	public  void cleanUpQuickLinkList(){
+		getQuickLinkList().clear();
+	}
+	
+	
+	
+
 
 	public  SmartList<ListAccess> getListAccessList(){
 		if(this.mListAccessList == null){
@@ -403,7 +595,16 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		}
 		getListAccessList().addAll(listAccessList);
 	}
-	
+	public  void mergeListAccessList(SmartList<ListAccess> listAccessList){
+		if(listAccessList==null){
+			return;
+		}
+		if(listAccessList.isEmpty()){
+			return;
+		}
+		addListAccessList( listAccessList );
+		
+	}
 	public  ListAccess removeListAccess(ListAccess listAccessIndex){
 		
 		int index = getListAccessList().indexOf(listAccessIndex);
@@ -501,7 +702,16 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		}
 		getObjectAccessList().addAll(objectAccessList);
 	}
-	
+	public  void mergeObjectAccessList(SmartList<ObjectAccess> objectAccessList){
+		if(objectAccessList==null){
+			return;
+		}
+		if(objectAccessList.isEmpty()){
+			return;
+		}
+		addObjectAccessList( objectAccessList );
+		
+	}
 	public  ObjectAccess removeObjectAccess(ObjectAccess objectAccessIndex){
 		
 		int index = getObjectAccessList().indexOf(objectAccessIndex);
@@ -580,6 +790,7 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 	public List<BaseEntity>  collectRefercencesFromLists(String internalType){
 		
 		List<BaseEntity> entityList = new ArrayList<BaseEntity>();
+		collectFromList(this, entityList, getQuickLinkList(), internalType);
 		collectFromList(this, entityList, getListAccessList(), internalType);
 		collectFromList(this, entityList, getObjectAccessList(), internalType);
 
@@ -589,6 +800,7 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 	public  List<SmartList<?>> getAllRelatedLists() {
 		List<SmartList<?>> listOfList = new ArrayList<SmartList<?>>();
 		
+		listOfList.add( getQuickLinkList());
 		listOfList.add( getListAccessList());
 		listOfList.add( getObjectAccessList());
 			
@@ -610,6 +822,11 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		appendKeyValuePair(result, OBJECT_ID_PROPERTY, getObjectId());
 		appendKeyValuePair(result, LOCATION_PROPERTY, getLocation());
 		appendKeyValuePair(result, VERSION_PROPERTY, getVersion());
+		appendKeyValuePair(result, QUICK_LINK_LIST, getQuickLinkList());
+		if(!getQuickLinkList().isEmpty()){
+			appendKeyValuePair(result, "quickLinkCount", getQuickLinkList().getTotalCount());
+			appendKeyValuePair(result, "quickLinkCurrentPageNumber", getQuickLinkList().getCurrentPageNumber());
+		}
 		appendKeyValuePair(result, LIST_ACCESS_LIST, getListAccessList());
 		if(!getListAccessList().isEmpty()){
 			appendKeyValuePair(result, "listAccessCount", getListAccessList().getTotalCount());
@@ -644,6 +861,7 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 			dest.setObjectId(getObjectId());
 			dest.setLocation(getLocation());
 			dest.setVersion(getVersion());
+			dest.setQuickLinkList(getQuickLinkList());
 			dest.setListAccessList(getListAccessList());
 			dest.setObjectAccessList(getObjectAccessList());
 
@@ -651,7 +869,57 @@ public class UserApp extends BaseEntity implements  java.io.Serializable{
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof UserApp){
+		
+			
+			UserApp dest =(UserApp)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeTitle(getTitle());
+			dest.mergeSecUser(getSecUser());
+			dest.mergeAppIcon(getAppIcon());
+			dest.mergeFullAccess(getFullAccess());
+			dest.mergePermission(getPermission());
+			dest.mergeObjectType(getObjectType());
+			dest.mergeObjectId(getObjectId());
+			dest.mergeLocation(getLocation());
+			dest.mergeVersion(getVersion());
+			dest.mergeQuickLinkList(getQuickLinkList());
+			dest.mergeListAccessList(getListAccessList());
+			dest.mergeObjectAccessList(getObjectAccessList());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof UserApp){
+		
+			
+			UserApp dest =(UserApp)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeTitle(getTitle());
+			dest.mergeAppIcon(getAppIcon());
+			dest.mergeFullAccess(getFullAccess());
+			dest.mergePermission(getPermission());
+			dest.mergeObjectType(getObjectType());
+			dest.mergeObjectId(getObjectId());
+			dest.mergeLocation(getLocation());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getTitle(), getSecUser(), getAppIcon(), getFullAccess(), getPermission(), getObjectType(), getObjectId(), getLocation(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

@@ -3,22 +3,25 @@ package com.test.demodata.objectaccess;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
-import com.test.demodata.BaseEntity;
+import com.terapico.caf.Images;
+import com.terapico.caf.Password;
 
+import com.test.demodata.*;
+import com.test.demodata.tree.*;
+import com.test.demodata.treenode.*;
+import com.test.demodata.DemodataUserContextImpl;
+import com.test.demodata.iamservice.*;
+import com.test.demodata.services.IamService;
+import com.test.demodata.secuser.SecUser;
+import com.test.demodata.userapp.UserApp;
+import com.terapico.uccaf.BaseUserContext;
 
-import com.test.demodata.Message;
-import com.test.demodata.SmartList;
-import com.test.demodata.MultipleAccessKey;
-
-import com.test.demodata.DemodataUserContext;
-//import com.test.demodata.BaseManagerImpl;
-import com.test.demodata.DemodataCheckerManager;
-import com.test.demodata.CustomDemodataCheckerManager;
 
 import com.test.demodata.userapp.UserApp;
 
@@ -30,25 +33,32 @@ import com.test.demodata.userapp.CandidateUserApp;
 
 
 
-public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implements ObjectAccessManager {
-	
+public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implements ObjectAccessManager, BusinessHandler{
+
+  
+
+
 	private static final String SERVICE_TYPE = "ObjectAccess";
-	
+	@Override
+	public ObjectAccessDAO daoOf(DemodataUserContext userContext) {
+		return objectAccessDaoOf(userContext);
+	}
+
 	@Override
 	public String serviceFor(){
 		return SERVICE_TYPE;
 	}
-	
-	
+
+
 	protected void throwExceptionWithMessage(String value) throws ObjectAccessManagerException{
-	
+
 		Message message = new Message();
 		message.setBody(value);
 		throw new ObjectAccessManagerException(message);
 
 	}
-	
-	
+
+
 
  	protected ObjectAccess saveObjectAccess(DemodataUserContext userContext, ObjectAccess objectAccess, String [] tokensExpr) throws Exception{	
  		//return getObjectAccessDAO().save(objectAccess, tokens);
@@ -66,8 +76,8 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
  	
  	public ObjectAccess loadObjectAccess(DemodataUserContext userContext, String objectAccessId, String [] tokensExpr) throws Exception{				
  
- 		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().throwExceptionIfHasErrors( ObjectAccessManagerException.class);
+ 		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).throwExceptionIfHasErrors( ObjectAccessManagerException.class);
 
  			
  		Map<String,Object>tokens = parseTokens(tokensExpr);
@@ -80,8 +90,8 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
  	
  	 public ObjectAccess searchObjectAccess(DemodataUserContext userContext, String objectAccessId, String textToSearch,String [] tokensExpr) throws Exception{				
  
- 		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().throwExceptionIfHasErrors( ObjectAccessManagerException.class);
+ 		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).throwExceptionIfHasErrors( ObjectAccessManagerException.class);
 
  		
  		Map<String,Object>tokens = tokens().allTokens().searchEntireObjectText("startsWith", textToSearch).initWithArray(tokensExpr);
@@ -99,10 +109,10 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		addActions(userContext,objectAccess,tokens);
 		
 		
-		ObjectAccess  objectAccessToPresent = userContext.getDAOGroup().getObjectAccessDAO().present(objectAccess, tokens);
+		ObjectAccess  objectAccessToPresent = objectAccessDaoOf(userContext).present(objectAccess, tokens);
 		
 		List<BaseEntity> entityListToNaming = objectAccessToPresent.collectRefercencesFromLists();
-		userContext.getDAOGroup().getObjectAccessDAO().alias(entityListToNaming);
+		objectAccessDaoOf(userContext).alias(entityListToNaming);
 		
 		return  objectAccessToPresent;
 		
@@ -123,14 +133,14 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		
  	}
  	protected ObjectAccess saveObjectAccess(DemodataUserContext userContext, ObjectAccess objectAccess, Map<String,Object>tokens) throws Exception{	
- 		return userContext.getDAOGroup().getObjectAccessDAO().save(objectAccess, tokens);
+ 		return objectAccessDaoOf(userContext).save(objectAccess, tokens);
  	}
  	protected ObjectAccess loadObjectAccess(DemodataUserContext userContext, String objectAccessId, Map<String,Object>tokens) throws Exception{	
-		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().throwExceptionIfHasErrors( ObjectAccessManagerException.class);
+		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).throwExceptionIfHasErrors( ObjectAccessManagerException.class);
 
  
- 		return userContext.getDAOGroup().getObjectAccessDAO().load(objectAccessId, tokens);
+ 		return objectAccessDaoOf(userContext).load(objectAccessId, tokens);
  	}
 
 	
@@ -160,27 +170,27 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
  	
  	
 
-
-	public ObjectAccess createObjectAccess(DemodataUserContext userContext,String name, String objectType, String list1, String list2, String list3, String list4, String list5, String list6, String list7, String list8, String list9, String appId) throws Exception
+	public ObjectAccess createObjectAccess(DemodataUserContext userContext, String name,String objectType,String list1,String list2,String list3,String list4,String list5,String list6,String list7,String list8,String list9,String appId) throws Exception
+	//public ObjectAccess createObjectAccess(DemodataUserContext userContext,String name, String objectType, String list1, String list2, String list3, String list4, String list5, String list6, String list7, String list8, String list9, String appId) throws Exception
 	{
-		
-		
 
 		
 
-		userContext.getChecker().checkNameOfObjectAccess(name);
-		userContext.getChecker().checkObjectTypeOfObjectAccess(objectType);
-		userContext.getChecker().checkList1OfObjectAccess(list1);
-		userContext.getChecker().checkList2OfObjectAccess(list2);
-		userContext.getChecker().checkList3OfObjectAccess(list3);
-		userContext.getChecker().checkList4OfObjectAccess(list4);
-		userContext.getChecker().checkList5OfObjectAccess(list5);
-		userContext.getChecker().checkList6OfObjectAccess(list6);
-		userContext.getChecker().checkList7OfObjectAccess(list7);
-		userContext.getChecker().checkList8OfObjectAccess(list8);
-		userContext.getChecker().checkList9OfObjectAccess(list9);
+		
+
+		checkerOf(userContext).checkNameOfObjectAccess(name);
+		checkerOf(userContext).checkObjectTypeOfObjectAccess(objectType);
+		checkerOf(userContext).checkList1OfObjectAccess(list1);
+		checkerOf(userContext).checkList2OfObjectAccess(list2);
+		checkerOf(userContext).checkList3OfObjectAccess(list3);
+		checkerOf(userContext).checkList4OfObjectAccess(list4);
+		checkerOf(userContext).checkList5OfObjectAccess(list5);
+		checkerOf(userContext).checkList6OfObjectAccess(list6);
+		checkerOf(userContext).checkList7OfObjectAccess(list7);
+		checkerOf(userContext).checkList8OfObjectAccess(list8);
+		checkerOf(userContext).checkList9OfObjectAccess(list9);
 	
-		userContext.getChecker().throwExceptionIfHasErrors(ObjectAccessManagerException.class);
+		checkerOf(userContext).throwExceptionIfHasErrors(ObjectAccessManagerException.class);
 
 
 		ObjectAccess objectAccess=createNewObjectAccess();	
@@ -207,107 +217,141 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		onNewInstanceCreated(userContext, objectAccess);
 		return objectAccess;
 
-		
+
 	}
-	protected ObjectAccess createNewObjectAccess() 
+	protected ObjectAccess createNewObjectAccess()
 	{
-		
-		return new ObjectAccess();		
+
+		return new ObjectAccess();
 	}
-	
+
 	protected void checkParamsForUpdatingObjectAccess(DemodataUserContext userContext,String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr)throws Exception
 	{
 		
 
 		
 		
-		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().checkVersionOfObjectAccess( objectAccessVersion);
+		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).checkVersionOfObjectAccess( objectAccessVersion);
 		
 
 		if(ObjectAccess.NAME_PROPERTY.equals(property)){
-			userContext.getChecker().checkNameOfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkNameOfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.OBJECT_TYPE_PROPERTY.equals(property)){
-			userContext.getChecker().checkObjectTypeOfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkObjectTypeOfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST1_PROPERTY.equals(property)){
-			userContext.getChecker().checkList1OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList1OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST2_PROPERTY.equals(property)){
-			userContext.getChecker().checkList2OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList2OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST3_PROPERTY.equals(property)){
-			userContext.getChecker().checkList3OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList3OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST4_PROPERTY.equals(property)){
-			userContext.getChecker().checkList4OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList4OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST5_PROPERTY.equals(property)){
-			userContext.getChecker().checkList5OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList5OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST6_PROPERTY.equals(property)){
-			userContext.getChecker().checkList6OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList6OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST7_PROPERTY.equals(property)){
-			userContext.getChecker().checkList7OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList7OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST8_PROPERTY.equals(property)){
-			userContext.getChecker().checkList8OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList8OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}
 		if(ObjectAccess.LIST9_PROPERTY.equals(property)){
-			userContext.getChecker().checkList9OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList9OfObjectAccess(parseString(newValueExpr));
+		
+			
 		}		
 
 		
 	
-		userContext.getChecker().throwExceptionIfHasErrors(ObjectAccessManagerException.class);
-	
-		
+		checkerOf(userContext).throwExceptionIfHasErrors(ObjectAccessManagerException.class);
+
+
 	}
-	
-	
-	
+
+
+
 	public ObjectAccess clone(DemodataUserContext userContext, String fromObjectAccessId) throws Exception{
-		
-		return userContext.getDAOGroup().getObjectAccessDAO().clone(fromObjectAccessId, this.allTokens());
+
+		return objectAccessDaoOf(userContext).clone(fromObjectAccessId, this.allTokens());
 	}
-	
-	public ObjectAccess internalSaveObjectAccess(DemodataUserContext userContext, ObjectAccess objectAccess) throws Exception 
+
+	public ObjectAccess internalSaveObjectAccess(DemodataUserContext userContext, ObjectAccess objectAccess) throws Exception
 	{
 		return internalSaveObjectAccess(userContext, objectAccess, allTokens());
 
 	}
-	public ObjectAccess internalSaveObjectAccess(DemodataUserContext userContext, ObjectAccess objectAccess, Map<String,Object> options) throws Exception 
+	public ObjectAccess internalSaveObjectAccess(DemodataUserContext userContext, ObjectAccess objectAccess, Map<String,Object> options) throws Exception
 	{
 		//checkParamsForUpdatingObjectAccess(userContext, objectAccessId, objectAccessVersion, property, newValueExpr, tokensExpr);
-		
-		
-		synchronized(objectAccess){ 
+
+
+		synchronized(objectAccess){
 			//will be good when the objectAccess loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to ObjectAccess.
+			if (objectAccess.isChanged()){
 			
-			
+			}
 			objectAccess = saveObjectAccess(userContext, objectAccess, options);
 			return objectAccess;
-			
+
 		}
 
 	}
-	
-	public ObjectAccess updateObjectAccess(DemodataUserContext userContext,String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception 
+
+	public ObjectAccess updateObjectAccess(DemodataUserContext userContext,String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception
 	{
 		checkParamsForUpdatingObjectAccess(userContext, objectAccessId, objectAccessVersion, property, newValueExpr, tokensExpr);
-		
-		
-		
+
+
+
 		ObjectAccess objectAccess = loadObjectAccess(userContext, objectAccessId, allTokens());
 		if(objectAccess.getVersion() != objectAccessVersion){
 			String message = "The target version("+objectAccess.getVersion()+") is not equals to version("+objectAccessVersion+") provided";
 			throwExceptionWithMessage(message);
 		}
-		synchronized(objectAccess){ 
+		synchronized(objectAccess){
 			//will be good when the objectAccess loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to ObjectAccess.
@@ -319,21 +363,21 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		}
 
 	}
-	
-	public ObjectAccess updateObjectAccessProperty(DemodataUserContext userContext,String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception 
+
+	public ObjectAccess updateObjectAccessProperty(DemodataUserContext userContext,String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception
 	{
 		checkParamsForUpdatingObjectAccess(userContext, objectAccessId, objectAccessVersion, property, newValueExpr, tokensExpr);
-		
+
 		ObjectAccess objectAccess = loadObjectAccess(userContext, objectAccessId, allTokens());
 		if(objectAccess.getVersion() != objectAccessVersion){
 			String message = "The target version("+objectAccess.getVersion()+") is not equals to version("+objectAccessVersion+") provided";
 			throwExceptionWithMessage(message);
 		}
-		synchronized(objectAccess){ 
+		synchronized(objectAccess){
 			//will be good when the objectAccess loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to ObjectAccess.
-			
+
 			objectAccess.changeProperty(property, newValueExpr);
 			
 			objectAccess = saveObjectAccess(userContext, objectAccess, tokens().done());
@@ -345,7 +389,7 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 	protected Map<String,Object> emptyOptions(){
 		return tokens().done();
 	}
-	
+
 	protected ObjectAccessTokens tokens(){
 		return ObjectAccessTokens.start();
 	}
@@ -357,7 +401,7 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 	}
 	protected Map<String,Object> viewTokens(){
 		return tokens().allTokens()
-		.done();
+		.analyzeAllLists().done();
 
 	}
 	protected Map<String,Object> mergedAllTokens(String []tokens){
@@ -366,11 +410,11 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 	
 	protected void checkParamsForTransferingAnotherApp(DemodataUserContext userContext, String objectAccessId, String anotherAppId) throws Exception
  	{
- 		
- 		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
- 		userContext.getChecker().checkIdOfUserApp(anotherAppId);//check for optional reference
- 		userContext.getChecker().throwExceptionIfHasErrors(ObjectAccessManagerException.class);
- 		
+
+ 		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+ 		checkerOf(userContext).checkIdOfUserApp(anotherAppId);//check for optional reference
+ 		checkerOf(userContext).throwExceptionIfHasErrors(ObjectAccessManagerException.class);
+
  	}
  	public ObjectAccess transferToAnotherApp(DemodataUserContext userContext, String objectAccessId, String anotherAppId) throws Exception
  	{
@@ -389,10 +433,10 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		}
 
  	}
- 	
-	 	
- 	
- 	
+
+	
+
+
 	public CandidateUserApp requestCandidateApp(DemodataUserContext userContext, String ownerClass, String id, String filterKey, int pageNo) throws Exception {
 
 		CandidateUserApp result = new CandidateUserApp();
@@ -402,51 +446,52 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		result.setPageNo(pageNo);
 		result.setValueFieldName("id");
 		result.setDisplayFieldName("title");
-		
+
 		pageNo = Math.max(1, pageNo);
 		int pageSize = 20;
 		//requestCandidateProductForSkuAsOwner
-		SmartList<UserApp> candidateList = userContext.getDAOGroup().getUserAppDAO().requestCandidateUserAppForObjectAccess(userContext,ownerClass, id, filterKey, pageNo, pageSize);
+		SmartList<UserApp> candidateList = userAppDaoOf(userContext).requestCandidateUserAppForObjectAccess(userContext,ownerClass, id, filterKey, pageNo, pageSize);
 		result.setCandidates(candidateList);
 		int totalCount = candidateList.getTotalCount();
 		result.setTotalPage(Math.max(1, (totalCount + pageSize -1)/pageSize ));
 		return result;
 	}
- 	
+
  //--------------------------------------------------------------
 	
-	 	
+
  	protected UserApp loadUserApp(DemodataUserContext userContext, String newAppId, Map<String,Object> options) throws Exception
  	{
-		
- 		return userContext.getDAOGroup().getUserAppDAO().load(newAppId, options);
+
+ 		return userAppDaoOf(userContext).load(newAppId, options);
  	}
  	
- 	
- 	
+
+
 	
 	//--------------------------------------------------------------
 
 	public void delete(DemodataUserContext userContext, String objectAccessId, int objectAccessVersion) throws Exception {
-		//deleteInternal(userContext, objectAccessId, objectAccessVersion);		
+		//deleteInternal(userContext, objectAccessId, objectAccessVersion);
 	}
 	protected void deleteInternal(DemodataUserContext userContext,
 			String objectAccessId, int objectAccessVersion) throws Exception{
-			
-		userContext.getDAOGroup().getObjectAccessDAO().delete(objectAccessId, objectAccessVersion);
+
+		objectAccessDaoOf(userContext).delete(objectAccessId, objectAccessVersion);
 	}
-	
+
 	public ObjectAccess forgetByAll(DemodataUserContext userContext, String objectAccessId, int objectAccessVersion) throws Exception {
-		return forgetByAllInternal(userContext, objectAccessId, objectAccessVersion);		
+		return forgetByAllInternal(userContext, objectAccessId, objectAccessVersion);
 	}
 	protected ObjectAccess forgetByAllInternal(DemodataUserContext userContext,
 			String objectAccessId, int objectAccessVersion) throws Exception{
-			
-		return userContext.getDAOGroup().getObjectAccessDAO().disconnectFromAll(objectAccessId, objectAccessVersion);
-	}
-	
 
-	
+		return objectAccessDaoOf(userContext).disconnectFromAll(objectAccessId, objectAccessVersion);
+	}
+
+
+
+
 	public int deleteAll(DemodataUserContext userContext, String secureCode) throws Exception
 	{
 		/*
@@ -457,24 +502,197 @@ public class ObjectAccessManagerImpl extends CustomDemodataCheckerManager implem
 		*/
 		return 0;
 	}
-	
-	
+
+
 	protected int deleteAllInternal(DemodataUserContext userContext) throws Exception{
-		return userContext.getDAOGroup().getObjectAccessDAO().deleteAll();
+		return objectAccessDaoOf(userContext).deleteAll();
 	}
 
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	public void onNewInstanceCreated(DemodataUserContext userContext, ObjectAccess newCreated) throws Exception{
 		ensureRelationInGraph(userContext, newCreated);
 		sendCreationEvent(userContext, newCreated);
+
+    
 	}
 
+  
+  
+
+	// -----------------------------------//  登录部分处理 \\-----------------------------------
+	// 手机号+短信验证码 登录
+	public Object loginByMobile(DemodataUserContextImpl userContext, String mobile, String verifyCode) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByMobile");
+		LoginData loginData = new LoginData();
+		loginData.setMobile(mobile);
+		loginData.setVerifyCode(verifyCode);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.MOBILE, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 账号+密码登录
+	public Object loginByPassword(DemodataUserContextImpl userContext, String loginId, Password password) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(), "loginByPassword");
+		LoginData loginData = new LoginData();
+		loginData.setLoginId(loginId);
+		loginData.setPassword(password.getClearTextPassword());
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.PASSWORD, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 微信小程序登录
+	public Object loginByWechatMiniProgram(DemodataUserContextImpl userContext, String code) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByWechatMiniProgram");
+		LoginData loginData = new LoginData();
+		loginData.setCode(code);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.WECHAT_MINIPROGRAM, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 企业微信小程序登录
+	public Object loginByWechatWorkMiniProgram(DemodataUserContextImpl userContext, String code) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByWechatWorkMiniProgram");
+		LoginData loginData = new LoginData();
+		loginData.setCode(code);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.WECHAT_WORK_MINIPROGRAM, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 调用登录处理
+	protected Object processLoginRequest(DemodataUserContextImpl userContext, LoginContext loginContext) throws Exception {
+		IamService iamService = (IamService) userContext.getBean("iamService");
+		LoginResult loginResult = iamService.doLogin(userContext, loginContext, this);
+		// 根据登录结果
+		if (!loginResult.isAuthenticated()) {
+			throw new Exception(loginResult.getMessage());
+		}
+		if (loginResult.isSuccess()) {
+			return onLoginSuccess(userContext, loginResult);
+		}
+		if (loginResult.isNewUser()) {
+			throw new Exception("请联系你的上级,先为你创建账号,然后再来登录.");
+		}
+		return new LoginForm();
+	}
+
+	@Override
+	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
+			throws IllegalAccessException {
+		DemodataUserContextImpl userContext = (DemodataUserContextImpl)baseUserContext;
+		IamService iamService = (IamService) userContext.getBean("iamService");
+		Map<String, Object> loginInfo = iamService.getCachedLoginInfo(userContext);
+
+		SecUser secUser = iamService.tryToLoadSecUser(userContext, loginInfo);
+		UserApp userApp = iamService.tryToLoadUserApp(userContext, loginInfo);
+		if (userApp != null) {
+			userApp.setSecUser(secUser);
+		}
+		afterSecUserAppLoadedWhenCheckAccess(userContext, loginInfo, secUser, userApp);
+		if (!isMethodNeedLogin(userContext, methodName, parameters)) {
+			return accessOK();
+		}
+
+		return super.checkAccess(baseUserContext, methodName, parameters);
+	}
+
+	// 判断哪些接口需要登录后才能执行. 默认除了loginBy开头的,其他都要登录
+	protected boolean isMethodNeedLogin(DemodataUserContextImpl userContext, String methodName, Object[] parameters) {
+		if (methodName.startsWith("loginBy")) {
+			return false;
+		}
+		if (methodName.startsWith("logout")) {
+			return false;
+		}
+		return true;
+	}
+
+	// 在checkAccess中加载了secUser和userApp后会调用此方法,用于定制化的用户数据加载. 默认什么也不做
+	protected void afterSecUserAppLoadedWhenCheckAccess(DemodataUserContextImpl userContext, Map<String, Object> loginInfo,
+			SecUser secUser, UserApp userApp) throws IllegalAccessException{
+	}
+
+
+
+	protected Object onLoginSuccess(DemodataUserContext userContext, LoginResult loginResult) throws Exception {
+		// by default, return the view of this object
+		UserApp userApp = loginResult.getLoginContext().getLoginTarget().getUserApp();
+		return this.view(userContext, userApp.getObjectId());
+	}
+
+	public void onAuthenticationFailed(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, failed is failed, nothing can do
+	}
+	public void onAuthenticateNewUserLogged(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, should create a account and bind with sec user, BUT, I don't know how to
+		// create new object as of generate this method. It depends on business logical. So,
+		throw new Exception("请重载函数onAuthenticateNewUserLogged()以处理新用户登录");
+	}
+	public void onAuthenticateUserLogged(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, find the correct user-app
+		SecUser secUser = loginResult.getLoginContext().getLoginTarget().getSecUser();
+		MultipleAccessKey key = new MultipleAccessKey();
+		key.put(UserApp.SEC_USER_PROPERTY, secUser.getId());
+		key.put(UserApp.OBJECT_TYPE_PROPERTY, ObjectAccess.INTERNAL_TYPE);
+		SmartList<UserApp> userApps = userContext.getDAOGroup().getUserAppDAO().findUserAppWithKey(key, EO);
+		if (userApps == null || userApps.isEmpty()) {
+			throw new Exception("您的账号未关联销售人员,请联系客服处理账号异常.");
+		}
+		UserApp userApp = userApps.first();
+		userApp.setSecUser(secUser);
+		loginResult.getLoginContext().getLoginTarget().setUserApp(userApp);
+	}
+	// -----------------------------------\\  登录部分处理 //-----------------------------------
+
+
+	// -----------------------------------// list-of-view 处理 \\-----------------------------------
+    protected void enhanceForListOfView(DemodataUserContext userContext,SmartList<ObjectAccess> list) throws Exception {
+    	if (list == null || list.isEmpty()){
+    		return;
+    	}
+		List<UserApp> appList = DemodataBaseUtils.collectReferencedObjectWithType(userContext, list, UserApp.class);
+		userContext.getDAOGroup().enhanceList(appList, UserApp.class);
+
+
+    }
+	
+	public Object listByApp(DemodataUserContext userContext,String appId) throws Exception {
+		return listPageByApp(userContext, appId, 0, 20);
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Object listPageByApp(DemodataUserContext userContext,String appId, int start, int count) throws Exception {
+		SmartList<ObjectAccess> list = objectAccessDaoOf(userContext).findObjectAccessByApp(appId, start, count, new HashMap<>());
+		enhanceForListOfView(userContext, list);
+		DemodataCommonListOfViewPage page = new DemodataCommonListOfViewPage();
+		page.setClassOfList(ObjectAccess.class);
+		page.setContainerObject(UserApp.withId(appId));
+		page.setRequestBeanName(this.getBeanName());
+		page.setDataList((SmartList)list);
+		page.setPageTitle("对象访问列表");
+		page.setRequestName("listByApp");
+		page.setRequestOffset(start);
+		page.setRequestLimit(count);
+		page.setDisplayMode("auto");
+
+		page.assemblerContent(userContext, "listByApp");
+		return page.doRender(userContext);
+	}
+  
+  // -----------------------------------\\ list-of-view 处理 //-----------------------------------
 }
 
 

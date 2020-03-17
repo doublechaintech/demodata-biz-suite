@@ -3,16 +3,20 @@ package com.test.demodata.loginhistory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.secuser.SecUser;
+
 import com.test.demodata.secuser.SecUserDAO;
 
 
-public interface LoginHistoryDAO{
+public interface LoginHistoryDAO extends BaseDAO{
 
-	
+	public SmartList<LoginHistory> loadAll();
 	public LoginHistory load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<LoginHistory> loginHistoryList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface LoginHistoryDAO{
 	
 	
 	public SmartList<LoginHistory> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<LoginHistory> findLoginHistoryBySecUser(String secUserId, Map<String,Object> options);
  	public int countLoginHistoryBySecUser(String secUserId, Map<String,Object> options);
@@ -50,6 +55,7 @@ public interface LoginHistoryDAO{
  	public void analyzeLoginHistoryBySecUser(SmartList<LoginHistory> resultList, String secUserId, Map<String,Object> options);
 
  
- }
+ 
+}
 
 

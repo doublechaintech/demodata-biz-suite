@@ -6,7 +6,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-	<bean id="checker" class="com.test.demodata.DemodataChecker" scope="prototype"></bean>
+	<bean id="checker" class="com.test.demodata.DemodataObjectChecker" scope="prototype"></bean>
 
 	<bean id="platformManagerBase" class="com.test.demodata.platform.PlatformManagerImpl"/>
 	<bean id="platformManager" class="com.test.demodata.platform.PlatformCustomManagerImpl" parent="platformManagerBase" ></bean>
@@ -23,11 +23,11 @@
 	<bean id="secUserManagerBase" class="com.test.demodata.secuser.SecUserManagerImpl"/>
 	<bean id="secUserManager" class="com.test.demodata.secuser.SecUserCustomManagerImpl" parent="secUserManagerBase" ></bean>
 	
-	<bean id="secUserBlockingManagerBase" class="com.test.demodata.secuserblocking.SecUserBlockingManagerImpl"/>
-	<bean id="secUserBlockingManager" class="com.test.demodata.secuserblocking.SecUserBlockingCustomManagerImpl" parent="secUserBlockingManagerBase" ></bean>
-	
 	<bean id="userAppManagerBase" class="com.test.demodata.userapp.UserAppManagerImpl"/>
 	<bean id="userAppManager" class="com.test.demodata.userapp.UserAppCustomManagerImpl" parent="userAppManagerBase" ></bean>
+	
+	<bean id="quickLinkManagerBase" class="com.test.demodata.quicklink.QuickLinkManagerImpl"/>
+	<bean id="quickLinkManager" class="com.test.demodata.quicklink.QuickLinkManagerImpl" parent="quickLinkManagerBase" ></bean>
 	
 	<bean id="listAccessManagerBase" class="com.test.demodata.listaccess.ListAccessManagerImpl"/>
 	<bean id="listAccessManager" class="com.test.demodata.listaccess.ListAccessManagerImpl" parent="listAccessManagerBase" ></bean>
@@ -53,6 +53,21 @@
 	<bean id="formActionManagerBase" class="com.test.demodata.formaction.FormActionManagerImpl"/>
 	<bean id="formActionManager" class="com.test.demodata.formaction.FormActionManagerImpl" parent="formActionManagerBase" ></bean>
 	
+	<bean id="candidateContainerManagerBase" class="com.test.demodata.candidatecontainer.CandidateContainerManagerImpl"/>
+	<bean id="candidateContainerManager" class="com.test.demodata.candidatecontainer.CandidateContainerManagerImpl" parent="candidateContainerManagerBase" ></bean>
+	
+	<bean id="candidateElementManagerBase" class="com.test.demodata.candidateelement.CandidateElementManagerImpl"/>
+	<bean id="candidateElementManager" class="com.test.demodata.candidateelement.CandidateElementManagerImpl" parent="candidateElementManagerBase" ></bean>
+	
+	<bean id="wechatWorkappIdentifyManagerBase" class="com.test.demodata.wechatworkappidentify.WechatWorkappIdentifyManagerImpl"/>
+	<bean id="wechatWorkappIdentifyManager" class="com.test.demodata.wechatworkappidentify.WechatWorkappIdentifyManagerImpl" parent="wechatWorkappIdentifyManagerBase" ></bean>
+	
+	<bean id="wechatMiniappIdentifyManagerBase" class="com.test.demodata.wechatminiappidentify.WechatMiniappIdentifyManagerImpl"/>
+	<bean id="wechatMiniappIdentifyManager" class="com.test.demodata.wechatminiappidentify.WechatMiniappIdentifyManagerImpl" parent="wechatMiniappIdentifyManagerBase" ></bean>
+	
+	<bean id="treeNodeManagerBase" class="com.test.demodata.treenode.TreeNodeManagerImpl"/>
+	<bean id="treeNodeManager" class="com.test.demodata.treenode.TreeNodeCustomManagerImpl" parent="treeNodeManagerBase" ></bean>
+	
 
 	<bean id="managerGroupBase" class="com.test.demodata.ManagerGroup">
 		<property name="platformManager" ref="platformManager"/>
@@ -60,8 +75,8 @@
 		<property name="userDomainManager" ref="userDomainManager"/>
 		<property name="userWhiteListManager" ref="userWhiteListManager"/>
 		<property name="secUserManager" ref="secUserManager"/>
-		<property name="secUserBlockingManager" ref="secUserBlockingManager"/>
 		<property name="userAppManager" ref="userAppManager"/>
+		<property name="quickLinkManager" ref="quickLinkManager"/>
 		<property name="listAccessManager" ref="listAccessManager"/>
 		<property name="objectAccessManager" ref="objectAccessManager"/>
 		<property name="loginHistoryManager" ref="loginHistoryManager"/>
@@ -70,14 +85,17 @@
 		<property name="formFieldMessageManager" ref="formFieldMessageManager"/>
 		<property name="formFieldManager" ref="formFieldManager"/>
 		<property name="formActionManager" ref="formActionManager"/>
+		<property name="candidateContainerManager" ref="candidateContainerManager"/>
+		<property name="candidateElementManager" ref="candidateElementManager"/>
+		<property name="wechatWorkappIdentifyManager" ref="wechatWorkappIdentifyManager"/>
+		<property name="wechatMiniappIdentifyManager" ref="wechatMiniappIdentifyManager"/>
+		<property name="treeNodeManager" ref="treeNodeManager"/>
 	</bean>
 	<bean id="managerGroup" parent="managerGroupBase"></bean>
 	
 
 
 </beans>
-
-
 
 
 

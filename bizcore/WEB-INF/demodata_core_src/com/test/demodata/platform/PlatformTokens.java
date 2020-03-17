@@ -38,6 +38,15 @@ public class PlatformTokens extends CommonTokens{
 	protected PlatformTokens(){
 		//ensure not initialized outside the class
 	}
+	public  static  PlatformTokens of(Map<String,Object> options){
+		//ensure not initialized outside the class
+		PlatformTokens tokens = new PlatformTokens(options);
+		return tokens;
+		
+	}
+	protected PlatformTokens(Map<String,Object> options){
+		this.options = options;
+	}
 	
 	public PlatformTokens merge(String [] tokens){
 		this.parseTokens(tokens);
@@ -81,6 +90,11 @@ public class PlatformTokens extends CommonTokens{
 	public static Map <String,Object> empty(){
 		return start().done();
 	}
+	
+	public PlatformTokens analyzeAllLists(){		
+		addSimpleOptions(ALL_LISTS_ANALYZE);
+		return this;
+	}
 
 	protected static final String IMAGE_LIST = "imageList";
 	public String getImageList(){
@@ -96,7 +110,11 @@ public class PlatformTokens extends CommonTokens{
 	}
 	public boolean analyzeImageListEnabled(){		
 		
-		return checkOptions(this.options(), IMAGE_LIST+".anaylze");
+		if(checkOptions(this.options(), IMAGE_LIST+".anaylze")){
+			return true; //most of the case, should call here
+		}
+		//if not true, then query for global setting
+		return checkOptions(this.options(), ALL_LISTS_ANALYZE);
 	}
 	public PlatformTokens extractMoreFromImageList(String idsSeperatedWithComma){		
 		addSimpleOptions(IMAGE_LIST+".extractIds", idsSeperatedWithComma);
@@ -113,9 +131,13 @@ public class PlatformTokens extends CommonTokens{
 	}
 	private int imageListSearchCounter = 0;
 	public PlatformTokens searchImageListWith(String field, String verb, String value){		
+		
+		withImageList();
 		addSearchMoreOptions(IMAGE_LIST,imageListSearchCounter++, field, verb, value);
 		return this;
 	}
+	
+	
 	
 	public PlatformTokens searchAllTextOfImageList(String verb, String value){	
 		String field = "id|name";

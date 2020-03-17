@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimpleInvocationServlet extends HttpServlet {
 	/**
@@ -14,21 +16,50 @@ public class SimpleInvocationServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	protected void doPut2(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException 
+	{
+		String str=null;
+		StringBuilder resultString =new StringBuilder();
+		
+		while ((str = request.getReader().readLine()) != null) {
+			resultString.append(str);
+		}
+		response.getWriter().print(resultString.toString());
+	}
+	
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException 
+	{
+		this.doTheJob(request, response);
+	}
+	protected void doTheJob(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException{
 		long start = System.currentTimeMillis();
 		InvocationResult result = getResult(request, response);
 		long javaCallInterval = System.currentTimeMillis();
 		render(request, response, result);
 		long renderCallInterval = System.currentTimeMillis();
-
-		logInfo("#########################################The call took: "
-
-				+ (renderCallInterval - start) + "ms/" + (javaCallInterval - start) + "ms/"
-				+ (renderCallInterval - javaCallInterval) + "ms for TOTAL/BACKEND/RENDERING");
+		String logContent  = String.format(
+				"#########################################Took: %d/%d/%d of TOTAL/BACKEND/RENDERING for '%s' in millisecodns",
+				
+				 (renderCallInterval - start) ,
+				 (javaCallInterval - start),
+				 (renderCallInterval - javaCallInterval),request.getRequestURL().toString()
+				);
+		
+				
+		logInfo(logContent);
+		
 	}
-
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		this.doTheJob(request, response);
+	}
+	
 	@Override
 	protected void doOptions(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -40,7 +71,7 @@ public class SimpleInvocationServlet extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 		// Access-Control-Expose-Headers
 		String reqedHeaders = request.getHeader("Access-Control-Request-Headers");
-		response.addHeader("Access-Control-Allow-Headers", reqedHeaders);
+		response.addHeader("Access-Control-Allow-Headers", reqedHeaders+", X-Redirect, X-Env-Type, X-Env-Name");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
 		return;
 
@@ -49,6 +80,10 @@ public class SimpleInvocationServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		this.doTheJob(request, response);
+		
+		/*
 		long start = System.currentTimeMillis();
 		InvocationResult result = getResult(request, response);
 		long javaCallInterval = System.currentTimeMillis();
@@ -58,6 +93,7 @@ public class SimpleInvocationServlet extends HttpServlet {
 
 				+ (renderCallInterval - start) + "ms/" + (javaCallInterval - start) + "ms/"
 				+ (renderCallInterval - javaCallInterval) + "ms for TOTAL/BACKEND/RENDERING");
+		*/		
 	}
 
 	protected void render(HttpServletRequest request, HttpServletResponse response, InvocationResult result)
@@ -128,14 +164,16 @@ public class SimpleInvocationServlet extends HttpServlet {
 		}
 
 	}
-
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(SimpleInvocationServlet.class);
+	
 	private void logInfo(String message) {
-		// TODO Auto-generated method stub
-		String logMessage = timeExpr() + "  " + message;
-		System.out.println(logMessage);
-
+		
+		logger.info(message);
+		
 	}
-
+	
 	ServletInvocationContextFactory factory;
 
 	protected InvocationContext createInvocationContext(HttpServletRequest request) throws InvocationException {

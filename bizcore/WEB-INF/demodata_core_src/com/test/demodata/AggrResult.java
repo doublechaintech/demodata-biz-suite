@@ -36,5 +36,3 @@ public class AggrResult extends Object {
 
 
 
-
-

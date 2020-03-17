@@ -1,7 +1,6 @@
 package com.test.demodata;
 
 
-
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -18,11 +17,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
+import com.terapico.caf.RemoteInitiable;
 import com.terapico.utils.TextUtil;
 
-public class BaseEntity implements Serializable{
+public class BaseEntity implements Serializable, RemoteInitiable{
+	
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getVersion()};
+	}
+	
+	private String internalType = null; // 禁止直接操作这个成员
+	public static BaseEntity pretendToBe(String classShortName, String id) {
+		BaseEntity result = new BaseEntity();
+		result.internalType = classShortName;
+		result.setId(id);
+		result.setDisplayName(id);
+		return result;
+	}
 	public  void ensureAccess(Map<String,Object> accessTokens) {
 		
 		List<SmartList<?>> allLists = this.getAllRelatedLists();
@@ -45,17 +60,27 @@ public class BaseEntity implements Serializable{
 		
 	}
 	
+	protected List<Action> filterActionList(){
+		if(this.getActionList()==null) {
+			return null;
+		}
+		List<Action> filteredActionList = this.getActionList()
+				.stream()
+				.filter(action->this.isOneOf(action.getActionGroup(), action.specialActionTypes()))
+				.collect(Collectors.toList());
+		
+		return filteredActionList;
+		
+	}
+	
 	public List<KeyValuePair> keyValuePairOf(){
 		
 		List<KeyValuePair> result = new ArrayList<KeyValuePair>();
-		
-		this.appendKeyValuePair(result, "actionList", this.getActionList());
+		this.appendKeyValuePair(result, "actionList", filterActionList() );
 		this.appendKeyValuePair(result, "messageList", this.getErrorMessageList());
-		
-		
-		
 		return result;
 	}
+	
 	protected void appendKeyValuePair(List<KeyValuePair> list, String key, Object value) {
 		
 		
@@ -80,6 +105,9 @@ public class BaseEntity implements Serializable{
 		return null;
 	}
 	public String getInternalType(){
+		if (internalType != null){
+			return internalType;
+		}
 		return this.getClass().getSimpleName();
 	}
 	boolean endsWithOneOf(String value, String candiates[]){
@@ -100,6 +128,7 @@ public class BaseEntity implements Serializable{
    }
 	
 	public String maskChinaMobileNumber(String chinaMobileNumber){
+	
 		if(chinaMobileNumber == null){
 			return null;
 		}
@@ -108,7 +137,7 @@ public class BaseEntity implements Serializable{
 		}
 		
 		return chinaMobileNumber.substring(0,3)+"****"+chinaMobileNumber.substring(7);
-        
+    
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -127,14 +156,21 @@ public class BaseEntity implements Serializable{
 		this.displayName = displayName;
 	}
 	
-	public Object propertyOf(String propertyName) throws Exception{
-		String methodName="get"+propertyName.substring(0,1).toUpperCase()+propertyName.substring(1);
-		Method method = this.getClass().getDeclaredMethod(methodName, new Class[]{});
-		//field.setAccessible(true);
-		Object value = method.invoke(this, new Object[]{});
-		return value;
+	public Object propertyOf(String propertyName) {
 		
+		String methodNames[]={"get", propertyName.substring(0,1).toUpperCase() ,propertyName.substring(1)};
+		String methodName=String.join("", methodNames);
+		Method method;
+		try {
+			method = this.getClass().getDeclaredMethod(methodName, new Class[]{});
+			Object value = method.invoke(this, new Object[]{});
+			return value;
+		} catch (Exception e) {
+			String args[]={"the property", propertyName ,"is not found for this object."};
+			throw new IllegalArgumentException(String.join(" ",args));
+		}
 	}
+	
 	public void setPropertyOf(String propertyName, Object value) throws Exception{
         String methodName="set"+propertyName.substring(0,1).toUpperCase()+propertyName.substring(1);
         Method method = this.getClass().getMethod(methodName, new Class[]{value.getClass()});
@@ -367,6 +403,9 @@ public class BaseEntity implements Serializable{
 	public Map<String, Object> getValueMap() {
 		return valueMap;
 	}
+	public void setValueMap(Map<String, Object> valueMap) {
+		this.valueMap = valueMap;
+	}
 	public <T> void  addItemToValueMap(String key, T item){
 		ensureValueMap();
 		valueMap.put(key, item);
@@ -557,6 +596,9 @@ public class BaseEntity implements Serializable{
 	protected Integer parseInt(String intExpr){		
 		return Integer.parseInt(intExpr);
 	}
+	protected Long parseLong(String longExpr){		
+		return Long.parseLong(longExpr);
+	}
 	protected Boolean parseBoolean(String booleanExpr){		
 		return Boolean.parseBoolean(booleanExpr);
 	}
@@ -582,7 +624,9 @@ public class BaseEntity implements Serializable{
 	protected String parseString(String stringExpr){		
 		return stringExpr;
 	}
-	
+	protected Images parseImages(String stringExpr){		
+		return Images.fromString(stringExpr);
+	}
 	
 	protected boolean equalsInt(int a, int b){
 		return a==b;
@@ -601,7 +645,7 @@ public class BaseEntity implements Serializable{
 		return a.equals(b);
 	}
 	
-	private boolean equalsObject(Object a, Object b){
+	protected boolean equalsObject(Object a, Object b){
 		if(a==b){
 			return true;//they can be both null, or exact the same object, this is much faster than equals function
 		}
@@ -738,7 +782,7 @@ public class BaseEntity implements Serializable{
 		return this.getId();
 	}
 	protected boolean equalsTimestamp(Date oldValue, Date newValue) {
-		// TODO Auto-generated method stub
+		
 		return equalsDate(oldValue,newValue);
 	}
 
@@ -806,7 +850,7 @@ public class BaseEntity implements Serializable{
 	
 	protected void collectFromList(BaseEntity owner, List<BaseEntity> entityList,
 			SmartList<? extends BaseEntity> targetEntityList, String internalType) {
-		// TODO Auto-generated method stub
+		
 		if(targetEntityList==null){
 			return;
 		}
@@ -862,8 +906,6 @@ public class BaseEntity implements Serializable{
 		return this.isValidFieldChar(fieldChar);
 	}
 }
-
-
 
 
 

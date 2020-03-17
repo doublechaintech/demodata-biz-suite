@@ -3,7 +3,7 @@ Platform|平台
 Id|ID
 Name|名称
 Version|版本
-Image|图像
+Image|图片
 Id|ID
 Name|名称
 Image Path|图片路径
@@ -26,19 +26,13 @@ Login|登录
 Mobile|手机号码
 Email|电子邮件
 Pwd|密码
+Weixin Openid|微信openid
+Weixin Appid|微信Appid
+Access Token|访问令牌
 Verification Code|验证码
 Verification Code Expire|验证码过期
 Last Login Time|最后登录时间
 Domain|域
-Blocking|屏蔽
-Block|屏蔽
-Current Status|当前状态
-Version|版本
-Sec User Blocking|用户屏蔽
-Id|ID
-Who|谁
-Block Time|块时间
-Comments|评论
 Version|版本
 User App|用户应用程序
 Id|ID
@@ -51,6 +45,15 @@ Object Type|访问对象类型
 Object Id|对象ID
 Location|位置
 Version|版本
+Quick Link|快速链接
+Id|ID
+Name|名称
+Icon|图标
+Image Path|图片路径
+Link Target|链接的目标
+Create Time|创建时间
+App|应用程序
+Version|版本
 List Access|访问列表
 Id|ID
 Name|名称
@@ -58,7 +61,7 @@ Internal Name|内部名称
 Read Permission|读权限
 Create Permission|创建权限
 Delete Permission|删除权限
-Update Permission|更新许可
+Update Permission|更新权限
 Execution Permission|执行权限
 App|应用程序
 Version|版本
@@ -116,7 +119,7 @@ Field Group|字段组
 Minimum Value|最小值
 Maximum Value|最大值
 Required|要求
-Disabled|禁用
+Disabled|是否冻结
 Custom Rendering|自定义渲染
 Candidate Values|候选人的价值观
 Suggest Values|建议值
@@ -130,19 +133,53 @@ Level|水平
 Url|url
 Form|形式
 Version|版本
-Transfer to Another Platform|转到另一个平台
-Transfer to Another Image|转移到另一个图像
-Transfer to Another User Domain|转移到另一个用户域
-Transfer to Another User White List|转移到另一个用户白名单
-Transfer to Another Sec User|转移到另一个SEC用户
-Transfer to Another Sec User Blocking|转移到另一个SEC用户阻塞
-Transfer to Another User App|转移到另一个用户应用程序
-Transfer to Another List Access|转移到另一个列表访问
-Transfer to Another Object Access|转移到另一个对象访问
-Transfer to Another Login History|转移到另一个登录历史
-Transfer to Another Generic Form|转移到另一个通用表单
-Transfer to Another Form Message|转到另一个表单消息
-Transfer to Another Form Field Message|转到另一个表单字段消息
-Transfer to Another Form Field|转到另一个表单字段
-Transfer to Another Form Action|转移到另一个表单动作
+Candidate Container|候选人容器
+Id|ID
+Name|名称
+Version|版本
+Candidate Element|候选人元素
+Id|ID
+Name|名称
+Type|类型
+Image|图片
+Container|容器
+Version|版本
+Wechat Workapp Identify|微信Workapp识别
+Id|ID
+Corp Id|公司标识
+User Id|用户Id
+Sec User|安全用户
+Create Time|创建时间
+Last Login Time|最后登录时间
+Version|版本
+Wechat Miniapp Identify|微信Miniapp识别
+Id|ID
+Open Id|开放Id
+App Id|应用程序Id
+Sec User|安全用户
+Create Time|创建时间
+Last Login Time|最后登录时间
+Version|版本
+Tree Node|树节点
+Id|ID
+Node Id|节点Id
+Node Type|节点类型
+Left Value|左值
+Right Value|正确的价值
+Version|版本
+Transfer to Another Platform|转到平台
+Transfer to Another Domain|转移到域
+Transfer to Another Domain|转移到域
+Transfer to Another Sec User|传输给Sec用户
+Transfer to Another App|转移到应用程序
+Transfer to Another App|转移到应用程序
+Transfer to Another App|转移到应用程序
+Transfer to Another Sec User|传输给Sec用户
+Transfer to Another Form|转移到形式
+Transfer to Another Form|转移到形式
+Transfer to Another Form|转移到形式
+Transfer to Another Form|转移到形式
+Transfer to Another Container|转移到容器
+Transfer to Another Sec User|传输给Sec用户
+Transfer to Another Sec User|传输给Sec用户
 

@@ -3,25 +3,29 @@ package com.test.demodata.userapp;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
-import com.test.demodata.BaseEntity;
+import com.terapico.caf.Images;
+import com.terapico.caf.Password;
 
+import com.test.demodata.*;
+import com.test.demodata.tree.*;
+import com.test.demodata.treenode.*;
+import com.test.demodata.DemodataUserContextImpl;
+import com.test.demodata.iamservice.*;
+import com.test.demodata.services.IamService;
+import com.test.demodata.secuser.SecUser;
+import com.test.demodata.userapp.UserApp;
+import com.terapico.uccaf.BaseUserContext;
 
-import com.test.demodata.Message;
-import com.test.demodata.SmartList;
-import com.test.demodata.MultipleAccessKey;
-
-import com.test.demodata.DemodataUserContext;
-//import com.test.demodata.BaseManagerImpl;
-import com.test.demodata.DemodataCheckerManager;
-import com.test.demodata.CustomDemodataCheckerManager;
 
 import com.test.demodata.objectaccess.ObjectAccess;
 import com.test.demodata.listaccess.ListAccess;
+import com.test.demodata.quicklink.QuickLink;
 import com.test.demodata.secuser.SecUser;
 
 import com.test.demodata.secuser.CandidateSecUser;
@@ -33,25 +37,32 @@ import com.test.demodata.userapp.UserApp;
 
 
 
-public class UserAppManagerImpl extends CustomDemodataCheckerManager implements UserAppManager {
-	
+public class UserAppManagerImpl extends CustomDemodataCheckerManager implements UserAppManager, BusinessHandler{
+
+  
+
+
 	private static final String SERVICE_TYPE = "UserApp";
-	
+	@Override
+	public UserAppDAO daoOf(DemodataUserContext userContext) {
+		return userAppDaoOf(userContext);
+	}
+
 	@Override
 	public String serviceFor(){
 		return SERVICE_TYPE;
 	}
-	
-	
+
+
 	protected void throwExceptionWithMessage(String value) throws UserAppManagerException{
-	
+
 		Message message = new Message();
 		message.setBody(value);
 		throw new UserAppManagerException(message);
 
 	}
-	
-	
+
+
 
  	protected UserApp saveUserApp(DemodataUserContext userContext, UserApp userApp, String [] tokensExpr) throws Exception{	
  		//return getUserAppDAO().save(userApp, tokens);
@@ -69,8 +80,8 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
  	
  	public UserApp loadUserApp(DemodataUserContext userContext, String userAppId, String [] tokensExpr) throws Exception{				
  
- 		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().throwExceptionIfHasErrors( UserAppManagerException.class);
+ 		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).throwExceptionIfHasErrors( UserAppManagerException.class);
 
  			
  		Map<String,Object>tokens = parseTokens(tokensExpr);
@@ -83,8 +94,8 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
  	
  	 public UserApp searchUserApp(DemodataUserContext userContext, String userAppId, String textToSearch,String [] tokensExpr) throws Exception{				
  
- 		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().throwExceptionIfHasErrors( UserAppManagerException.class);
+ 		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).throwExceptionIfHasErrors( UserAppManagerException.class);
 
  		
  		Map<String,Object>tokens = tokens().allTokens().searchEntireObjectText("startsWith", textToSearch).initWithArray(tokensExpr);
@@ -102,10 +113,10 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		addActions(userContext,userApp,tokens);
 		
 		
-		UserApp  userAppToPresent = userContext.getDAOGroup().getUserAppDAO().present(userApp, tokens);
+		UserApp  userAppToPresent = userAppDaoOf(userContext).present(userApp, tokens);
 		
 		List<BaseEntity> entityListToNaming = userAppToPresent.collectRefercencesFromLists();
-		userContext.getDAOGroup().getUserAppDAO().alias(entityListToNaming);
+		userAppDaoOf(userContext).alias(entityListToNaming);
 		
 		return  userAppToPresent;
 		
@@ -126,14 +137,14 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		
  	}
  	protected UserApp saveUserApp(DemodataUserContext userContext, UserApp userApp, Map<String,Object>tokens) throws Exception{	
- 		return userContext.getDAOGroup().getUserAppDAO().save(userApp, tokens);
+ 		return userAppDaoOf(userContext).save(userApp, tokens);
  	}
  	protected UserApp loadUserApp(DemodataUserContext userContext, String userAppId, Map<String,Object>tokens) throws Exception{	
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().throwExceptionIfHasErrors( UserAppManagerException.class);
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).throwExceptionIfHasErrors( UserAppManagerException.class);
 
  
- 		return userContext.getDAOGroup().getUserAppDAO().load(userAppId, tokens);
+ 		return userAppDaoOf(userContext).load(userAppId, tokens);
  	}
 
 	
@@ -152,6 +163,10 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		addAction(userContext, userApp, tokens,"@copy","cloneUserApp","cloneUserApp/"+userApp.getId()+"/","main","primary");
 		
 		addAction(userContext, userApp, tokens,"user_app.transfer_to_sec_user","transferToAnotherSecUser","transferToAnotherSecUser/"+userApp.getId()+"/","main","primary");
+		addAction(userContext, userApp, tokens,"user_app.addQuickLink","addQuickLink","addQuickLink/"+userApp.getId()+"/","quickLinkList","primary");
+		addAction(userContext, userApp, tokens,"user_app.removeQuickLink","removeQuickLink","removeQuickLink/"+userApp.getId()+"/","quickLinkList","primary");
+		addAction(userContext, userApp, tokens,"user_app.updateQuickLink","updateQuickLink","updateQuickLink/"+userApp.getId()+"/","quickLinkList","primary");
+		addAction(userContext, userApp, tokens,"user_app.copyQuickLinkFrom","copyQuickLinkFrom","copyQuickLinkFrom/"+userApp.getId()+"/","quickLinkList","primary");
 		addAction(userContext, userApp, tokens,"user_app.addListAccess","addListAccess","addListAccess/"+userApp.getId()+"/","listAccessList","primary");
 		addAction(userContext, userApp, tokens,"user_app.removeListAccess","removeListAccess","removeListAccess/"+userApp.getId()+"/","listAccessList","primary");
 		addAction(userContext, userApp, tokens,"user_app.updateListAccess","updateListAccess","updateListAccess/"+userApp.getId()+"/","listAccessList","primary");
@@ -171,23 +186,23 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
  	
  	
 
-
-	public UserApp createUserApp(DemodataUserContext userContext,String title, String secUserId, String appIcon, boolean fullAccess, String permission, String objectType, String objectId, String location) throws Exception
+	public UserApp createUserApp(DemodataUserContext userContext, String title,String secUserId,String appIcon,boolean fullAccess,String permission,String objectType,String objectId,String location) throws Exception
+	//public UserApp createUserApp(DemodataUserContext userContext,String title, String secUserId, String appIcon, boolean fullAccess, String permission, String objectType, String objectId, String location) throws Exception
 	{
-		
-		
 
 		
 
-		userContext.getChecker().checkTitleOfUserApp(title);
-		userContext.getChecker().checkAppIconOfUserApp(appIcon);
-		userContext.getChecker().checkFullAccessOfUserApp(fullAccess);
-		userContext.getChecker().checkPermissionOfUserApp(permission);
-		userContext.getChecker().checkObjectTypeOfUserApp(objectType);
-		userContext.getChecker().checkObjectIdOfUserApp(objectId);
-		userContext.getChecker().checkLocationOfUserApp(location);
+		
+
+		checkerOf(userContext).checkTitleOfUserApp(title);
+		checkerOf(userContext).checkAppIconOfUserApp(appIcon);
+		checkerOf(userContext).checkFullAccessOfUserApp(fullAccess);
+		checkerOf(userContext).checkPermissionOfUserApp(permission);
+		checkerOf(userContext).checkObjectTypeOfUserApp(objectType);
+		checkerOf(userContext).checkObjectIdOfUserApp(objectId);
+		checkerOf(userContext).checkLocationOfUserApp(location);
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
 
 
 		UserApp userApp=createNewUserApp();	
@@ -210,95 +225,117 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		onNewInstanceCreated(userContext, userApp);
 		return userApp;
 
-		
+
 	}
-	protected UserApp createNewUserApp() 
+	protected UserApp createNewUserApp()
 	{
-		
-		return new UserApp();		
+
+		return new UserApp();
 	}
-	
+
 	protected void checkParamsForUpdatingUserApp(DemodataUserContext userContext,String userAppId, int userAppVersion, String property, String newValueExpr,String [] tokensExpr)throws Exception
 	{
 		
 
 		
 		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().checkVersionOfUserApp( userAppVersion);
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkVersionOfUserApp( userAppVersion);
 		
 
 		if(UserApp.TITLE_PROPERTY.equals(property)){
-			userContext.getChecker().checkTitleOfUserApp(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkTitleOfUserApp(parseString(newValueExpr));
+		
+			
 		}		
 
 		
 		if(UserApp.APP_ICON_PROPERTY.equals(property)){
-			userContext.getChecker().checkAppIconOfUserApp(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkAppIconOfUserApp(parseString(newValueExpr));
+		
+			
 		}
 		if(UserApp.FULL_ACCESS_PROPERTY.equals(property)){
-			userContext.getChecker().checkFullAccessOfUserApp(parseBoolean(newValueExpr));
+		
+			checkerOf(userContext).checkFullAccessOfUserApp(parseBoolean(newValueExpr));
+		
+			
 		}
 		if(UserApp.PERMISSION_PROPERTY.equals(property)){
-			userContext.getChecker().checkPermissionOfUserApp(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkPermissionOfUserApp(parseString(newValueExpr));
+		
+			
 		}
 		if(UserApp.OBJECT_TYPE_PROPERTY.equals(property)){
-			userContext.getChecker().checkObjectTypeOfUserApp(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkObjectTypeOfUserApp(parseString(newValueExpr));
+		
+			
 		}
 		if(UserApp.OBJECT_ID_PROPERTY.equals(property)){
-			userContext.getChecker().checkObjectIdOfUserApp(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkObjectIdOfUserApp(parseString(newValueExpr));
+		
+			
 		}
 		if(UserApp.LOCATION_PROPERTY.equals(property)){
-			userContext.getChecker().checkLocationOfUserApp(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkLocationOfUserApp(parseString(newValueExpr));
+		
+			
 		}
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
-		
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+
 	}
-	
-	
-	
+
+
+
 	public UserApp clone(DemodataUserContext userContext, String fromUserAppId) throws Exception{
-		
-		return userContext.getDAOGroup().getUserAppDAO().clone(fromUserAppId, this.allTokens());
+
+		return userAppDaoOf(userContext).clone(fromUserAppId, this.allTokens());
 	}
-	
-	public UserApp internalSaveUserApp(DemodataUserContext userContext, UserApp userApp) throws Exception 
+
+	public UserApp internalSaveUserApp(DemodataUserContext userContext, UserApp userApp) throws Exception
 	{
 		return internalSaveUserApp(userContext, userApp, allTokens());
 
 	}
-	public UserApp internalSaveUserApp(DemodataUserContext userContext, UserApp userApp, Map<String,Object> options) throws Exception 
+	public UserApp internalSaveUserApp(DemodataUserContext userContext, UserApp userApp, Map<String,Object> options) throws Exception
 	{
 		//checkParamsForUpdatingUserApp(userContext, userAppId, userAppVersion, property, newValueExpr, tokensExpr);
-		
-		
-		synchronized(userApp){ 
+
+
+		synchronized(userApp){
 			//will be good when the userApp loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to UserApp.
+			if (userApp.isChanged()){
 			
-			
+			}
 			userApp = saveUserApp(userContext, userApp, options);
 			return userApp;
-			
+
 		}
 
 	}
-	
-	public UserApp updateUserApp(DemodataUserContext userContext,String userAppId, int userAppVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception 
+
+	public UserApp updateUserApp(DemodataUserContext userContext,String userAppId, int userAppVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception
 	{
 		checkParamsForUpdatingUserApp(userContext, userAppId, userAppVersion, property, newValueExpr, tokensExpr);
-		
-		
-		
+
+
+
 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
 		if(userApp.getVersion() != userAppVersion){
 			String message = "The target version("+userApp.getVersion()+") is not equals to version("+userAppVersion+") provided";
 			throwExceptionWithMessage(message);
 		}
-		synchronized(userApp){ 
+		synchronized(userApp){
 			//will be good when the userApp loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to UserApp.
@@ -310,21 +347,21 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		}
 
 	}
-	
-	public UserApp updateUserAppProperty(DemodataUserContext userContext,String userAppId, int userAppVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception 
+
+	public UserApp updateUserAppProperty(DemodataUserContext userContext,String userAppId, int userAppVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception
 	{
 		checkParamsForUpdatingUserApp(userContext, userAppId, userAppVersion, property, newValueExpr, tokensExpr);
-		
+
 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
 		if(userApp.getVersion() != userAppVersion){
 			String message = "The target version("+userApp.getVersion()+") is not equals to version("+userAppVersion+") provided";
 			throwExceptionWithMessage(message);
 		}
-		synchronized(userApp){ 
+		synchronized(userApp){
 			//will be good when the userApp loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
 			//make changes to UserApp.
-			
+
 			userApp.changeProperty(property, newValueExpr);
 			
 			userApp = saveUserApp(userContext, userApp, tokens().done());
@@ -336,7 +373,7 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	protected Map<String,Object> emptyOptions(){
 		return tokens().done();
 	}
-	
+
 	protected UserAppTokens tokens(){
 		return UserAppTokens.start();
 	}
@@ -348,9 +385,10 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	}
 	protected Map<String,Object> viewTokens(){
 		return tokens().allTokens()
+		.sortQuickLinkListWith("id","desc")
 		.sortListAccessListWith("id","desc")
 		.sortObjectAccessListWith("id","desc")
-		.done();
+		.analyzeAllLists().done();
 
 	}
 	protected Map<String,Object> mergedAllTokens(String []tokens){
@@ -359,11 +397,11 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	
 	protected void checkParamsForTransferingAnotherSecUser(DemodataUserContext userContext, String userAppId, String anotherSecUserId) throws Exception
  	{
- 		
- 		userContext.getChecker().checkIdOfUserApp(userAppId);
- 		userContext.getChecker().checkIdOfSecUser(anotherSecUserId);//check for optional reference
- 		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
- 		
+
+ 		checkerOf(userContext).checkIdOfUserApp(userAppId);
+ 		checkerOf(userContext).checkIdOfSecUser(anotherSecUserId);//check for optional reference
+ 		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
  	}
  	public UserApp transferToAnotherSecUser(DemodataUserContext userContext, String userAppId, String anotherSecUserId) throws Exception
  	{
@@ -382,91 +420,91 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		}
 
  	}
- 	
+
 	
 
 	protected void checkParamsForTransferingAnotherSecUserWithLogin(DemodataUserContext userContext, String userAppId, String anotherLogin) throws Exception
  	{
- 		
- 		userContext.getChecker().checkIdOfUserApp(userAppId);
- 		userContext.getChecker().checkLoginOfSecUser( anotherLogin);
- 		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
- 		
+
+ 		checkerOf(userContext).checkIdOfUserApp(userAppId);
+ 		checkerOf(userContext).checkLoginOfSecUser( anotherLogin);
+ 		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
  	}
 
  	public UserApp transferToAnotherSecUserWithLogin(DemodataUserContext userContext, String userAppId, String anotherLogin) throws Exception
  	{
  		checkParamsForTransferingAnotherSecUserWithLogin(userContext, userAppId,anotherLogin);
- 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());	
+ 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
 		synchronized(userApp){
 			//will be good when the userApp loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
-			SecUser secUser = loadSecUserWithLogin(userContext, anotherLogin, emptyOptions());		
-			userApp.updateSecUser(secUser);		
+			SecUser secUser = loadSecUserWithLogin(userContext, anotherLogin, emptyOptions());
+			userApp.updateSecUser(secUser);
 			userApp = saveUserApp(userContext, userApp, emptyOptions());
-			
+
 			return present(userContext,userApp, allTokens());
-			
+
 		}
- 	}	
+ 	}
 
 	 
 
 	protected void checkParamsForTransferingAnotherSecUserWithEmail(DemodataUserContext userContext, String userAppId, String anotherEmail) throws Exception
  	{
- 		
- 		userContext.getChecker().checkIdOfUserApp(userAppId);
- 		userContext.getChecker().checkEmailOfSecUser( anotherEmail);
- 		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
- 		
+
+ 		checkerOf(userContext).checkIdOfUserApp(userAppId);
+ 		checkerOf(userContext).checkEmailOfSecUser( anotherEmail);
+ 		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
  	}
 
  	public UserApp transferToAnotherSecUserWithEmail(DemodataUserContext userContext, String userAppId, String anotherEmail) throws Exception
  	{
  		checkParamsForTransferingAnotherSecUserWithEmail(userContext, userAppId,anotherEmail);
- 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());	
+ 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
 		synchronized(userApp){
 			//will be good when the userApp loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
-			SecUser secUser = loadSecUserWithEmail(userContext, anotherEmail, emptyOptions());		
-			userApp.updateSecUser(secUser);		
+			SecUser secUser = loadSecUserWithEmail(userContext, anotherEmail, emptyOptions());
+			userApp.updateSecUser(secUser);
 			userApp = saveUserApp(userContext, userApp, emptyOptions());
-			
+
 			return present(userContext,userApp, allTokens());
-			
+
 		}
- 	}	
+ 	}
 
 	 
 
 	protected void checkParamsForTransferingAnotherSecUserWithMobile(DemodataUserContext userContext, String userAppId, String anotherMobile) throws Exception
  	{
- 		
- 		userContext.getChecker().checkIdOfUserApp(userAppId);
- 		userContext.getChecker().checkMobileOfSecUser( anotherMobile);
- 		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
- 		
+
+ 		checkerOf(userContext).checkIdOfUserApp(userAppId);
+ 		checkerOf(userContext).checkMobileOfSecUser( anotherMobile);
+ 		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
  	}
 
  	public UserApp transferToAnotherSecUserWithMobile(DemodataUserContext userContext, String userAppId, String anotherMobile) throws Exception
  	{
  		checkParamsForTransferingAnotherSecUserWithMobile(userContext, userAppId,anotherMobile);
- 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());	
+ 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
 		synchronized(userApp){
 			//will be good when the userApp loaded from this JVM process cache.
 			//also good when there is a ram based DAO implementation
-			SecUser secUser = loadSecUserWithMobile(userContext, anotherMobile, emptyOptions());		
-			userApp.updateSecUser(secUser);		
+			SecUser secUser = loadSecUserWithMobile(userContext, anotherMobile, emptyOptions());
+			userApp.updateSecUser(secUser);
 			userApp = saveUserApp(userContext, userApp, emptyOptions());
-			
-			return present(userContext,userApp, allTokens());
-			
-		}
- 	}	
 
-	  	
- 	
- 	
+			return present(userContext,userApp, allTokens());
+
+		}
+ 	}
+
+	 
+
+
 	public CandidateSecUser requestCandidateSecUser(DemodataUserContext userContext, String ownerClass, String id, String filterKey, int pageNo) throws Exception {
 
 		CandidateSecUser result = new CandidateSecUser();
@@ -476,72 +514,73 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		result.setPageNo(pageNo);
 		result.setValueFieldName("id");
 		result.setDisplayFieldName("login");
-		
+
 		pageNo = Math.max(1, pageNo);
 		int pageSize = 20;
 		//requestCandidateProductForSkuAsOwner
-		SmartList<SecUser> candidateList = userContext.getDAOGroup().getSecUserDAO().requestCandidateSecUserForUserApp(userContext,ownerClass, id, filterKey, pageNo, pageSize);
+		SmartList<SecUser> candidateList = secUserDaoOf(userContext).requestCandidateSecUserForUserApp(userContext,ownerClass, id, filterKey, pageNo, pageSize);
 		result.setCandidates(candidateList);
 		int totalCount = candidateList.getTotalCount();
 		result.setTotalPage(Math.max(1, (totalCount + pageSize -1)/pageSize ));
 		return result;
 	}
- 	
+
  //--------------------------------------------------------------
 	
-	 	
+
  	protected SecUser loadSecUser(DemodataUserContext userContext, String newSecUserId, Map<String,Object> options) throws Exception
  	{
-		
- 		return userContext.getDAOGroup().getSecUserDAO().load(newSecUserId, options);
+
+ 		return secUserDaoOf(userContext).load(newSecUserId, options);
  	}
  	
  	protected SecUser loadSecUserWithLogin(DemodataUserContext userContext, String newLogin, Map<String,Object> options) throws Exception
  	{
-		
- 		return userContext.getDAOGroup().getSecUserDAO().loadByLogin(newLogin, options);
+
+ 		return secUserDaoOf(userContext).loadByLogin(newLogin, options);
  	}
- 	
+
  	
  	protected SecUser loadSecUserWithEmail(DemodataUserContext userContext, String newEmail, Map<String,Object> options) throws Exception
  	{
-		
- 		return userContext.getDAOGroup().getSecUserDAO().loadByEmail(newEmail, options);
+
+ 		return secUserDaoOf(userContext).loadByEmail(newEmail, options);
  	}
- 	
+
  	
  	protected SecUser loadSecUserWithMobile(DemodataUserContext userContext, String newMobile, Map<String,Object> options) throws Exception
  	{
-		
- 		return userContext.getDAOGroup().getSecUserDAO().loadByMobile(newMobile, options);
+
+ 		return secUserDaoOf(userContext).loadByMobile(newMobile, options);
  	}
+
  	
- 	
- 	
- 	
+
+
 	
 	//--------------------------------------------------------------
 
 	public void delete(DemodataUserContext userContext, String userAppId, int userAppVersion) throws Exception {
-		//deleteInternal(userContext, userAppId, userAppVersion);		
+		//deleteInternal(userContext, userAppId, userAppVersion);
 	}
 	protected void deleteInternal(DemodataUserContext userContext,
 			String userAppId, int userAppVersion) throws Exception{
-			
-		userContext.getDAOGroup().getUserAppDAO().delete(userAppId, userAppVersion);
+
+		userAppDaoOf(userContext).delete(userAppId, userAppVersion);
 	}
-	
+
 	public UserApp forgetByAll(DemodataUserContext userContext, String userAppId, int userAppVersion) throws Exception {
-		return forgetByAllInternal(userContext, userAppId, userAppVersion);		
+		return forgetByAllInternal(userContext, userAppId, userAppVersion);
 	}
 	protected UserApp forgetByAllInternal(DemodataUserContext userContext,
 			String userAppId, int userAppVersion) throws Exception{
-			
-		return userContext.getDAOGroup().getUserAppDAO().disconnectFromAll(userAppId, userAppVersion);
-	}
-	
 
-	
+		return userAppDaoOf(userContext).disconnectFromAll(userAppId, userAppVersion);
+	}
+
+
+
+
 	public int deleteAll(DemodataUserContext userContext, String secureCode) throws Exception
 	{
 		/*
@@ -552,58 +591,320 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		*/
 		return 0;
 	}
-	
-	
+
+
 	protected int deleteAllInternal(DemodataUserContext userContext) throws Exception{
-		return userContext.getDAOGroup().getUserAppDAO().deleteAll();
+		return userAppDaoOf(userContext).deleteAll();
 	}
 
 
-	
-	
-	
-	
-	
 
-	protected void checkParamsForAddingListAccess(DemodataUserContext userContext, String userAppId, String name, String internalName, boolean readPermission, boolean createPermission, boolean deletePermission, boolean updatePermission, boolean executionPermission,String [] tokensExpr) throws Exception{
-		
-		
 
-		
-		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
+
+
+
+
+	protected void checkParamsForAddingQuickLink(DemodataUserContext userContext, String userAppId, String name, String icon, String imagePath, String linkTarget,String [] tokensExpr) throws Exception{
+
+				checkerOf(userContext).checkIdOfUserApp(userAppId);
 
 		
-		userContext.getChecker().checkNameOfListAccess(name);
+		checkerOf(userContext).checkNameOfQuickLink(name);
 		
-		userContext.getChecker().checkInternalNameOfListAccess(internalName);
+		checkerOf(userContext).checkIconOfQuickLink(icon);
 		
-		userContext.getChecker().checkReadPermissionOfListAccess(readPermission);
+		checkerOf(userContext).checkImagePathOfQuickLink(imagePath);
 		
-		userContext.getChecker().checkCreatePermissionOfListAccess(createPermission);
-		
-		userContext.getChecker().checkDeletePermissionOfListAccess(deletePermission);
-		
-		userContext.getChecker().checkUpdatePermissionOfListAccess(updatePermission);
-		
-		userContext.getChecker().checkExecutionPermissionOfListAccess(executionPermission);
+		checkerOf(userContext).checkLinkTargetOfQuickLink(linkTarget);
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
 
-	
+
 	}
-	public  UserApp addListAccess(DemodataUserContext userContext, String userAppId, String name, String internalName, boolean readPermission, boolean createPermission, boolean deletePermission, boolean updatePermission, boolean executionPermission, String [] tokensExpr) throws Exception
-	{	
-		
-		checkParamsForAddingListAccess(userContext,userAppId,name, internalName, readPermission, createPermission, deletePermission, updatePermission, executionPermission,tokensExpr);
-		
-		ListAccess listAccess = createListAccess(userContext,name, internalName, readPermission, createPermission, deletePermission, updatePermission, executionPermission);
-		
-		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-		synchronized(userApp){ 
+	public  UserApp addQuickLink(DemodataUserContext userContext, String userAppId, String name, String icon, String imagePath, String linkTarget, String [] tokensExpr) throws Exception
+	{
+
+		checkParamsForAddingQuickLink(userContext,userAppId,name, icon, imagePath, linkTarget,tokensExpr);
+
+		QuickLink quickLink = createQuickLink(userContext,name, icon, imagePath, linkTarget);
+
+		UserApp userApp = loadUserApp(userContext, userAppId, emptyOptions());
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
-			userApp.addListAccess( listAccess );		
+			userApp.addQuickLink( quickLink );
+			userApp = saveUserApp(userContext, userApp, tokens().withQuickLinkList().done());
+			
+			userContext.getManagerGroup().getQuickLinkManager().onNewInstanceCreated(userContext, quickLink);
+			return present(userContext,userApp, mergedAllTokens(tokensExpr));
+		}
+	}
+	protected void checkParamsForUpdatingQuickLinkProperties(DemodataUserContext userContext, String userAppId,String id,String name,String icon,String imagePath,String linkTarget,String [] tokensExpr) throws Exception {
+
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkIdOfQuickLink(id);
+
+		checkerOf(userContext).checkNameOfQuickLink( name);
+		checkerOf(userContext).checkIconOfQuickLink( icon);
+		checkerOf(userContext).checkImagePathOfQuickLink( imagePath);
+		checkerOf(userContext).checkLinkTargetOfQuickLink( linkTarget);
+
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+	}
+	public  UserApp updateQuickLinkProperties(DemodataUserContext userContext, String userAppId, String id,String name,String icon,String imagePath,String linkTarget, String [] tokensExpr) throws Exception
+	{
+		checkParamsForUpdatingQuickLinkProperties(userContext,userAppId,id,name,icon,imagePath,linkTarget,tokensExpr);
+
+		Map<String, Object> options = tokens()
+				.allTokens()
+				//.withQuickLinkListList()
+				.searchQuickLinkListWith(QuickLink.ID_PROPERTY, "is", id).done();
+
+		UserApp userAppToUpdate = loadUserApp(userContext, userAppId, options);
+
+		if(userAppToUpdate.getQuickLinkList().isEmpty()){
+			throw new UserAppManagerException("QuickLink is NOT FOUND with id: '"+id+"'");
+		}
+
+		QuickLink item = userAppToUpdate.getQuickLinkList().first();
+
+		item.updateName( name );
+		item.updateIcon( icon );
+		item.updateImagePath( imagePath );
+		item.updateLinkTarget( linkTarget );
+
+
+		//checkParamsForAddingQuickLink(userContext,userAppId,name, code, used,tokensExpr);
+		UserApp userApp = saveUserApp(userContext, userAppToUpdate, tokens().withQuickLinkList().done());
+		synchronized(userApp){
+			return present(userContext,userApp, mergedAllTokens(tokensExpr));
+		}
+	}
+
+
+	protected QuickLink createQuickLink(DemodataUserContext userContext, String name, String icon, String imagePath, String linkTarget) throws Exception{
+
+		QuickLink quickLink = new QuickLink();
+		
+		
+		quickLink.setName(name);		
+		quickLink.setIcon(icon);		
+		quickLink.setImagePath(imagePath);		
+		quickLink.setLinkTarget(linkTarget);		
+		quickLink.setCreateTime(userContext.now());
+	
+		
+		return quickLink;
+
+
+	}
+
+	protected QuickLink createIndexedQuickLink(String id, int version){
+
+		QuickLink quickLink = new QuickLink();
+		quickLink.setId(id);
+		quickLink.setVersion(version);
+		return quickLink;
+
+	}
+
+	protected void checkParamsForRemovingQuickLinkList(DemodataUserContext userContext, String userAppId,
+			String quickLinkIds[],String [] tokensExpr) throws Exception {
+
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		for(String quickLinkIdItem: quickLinkIds){
+			checkerOf(userContext).checkIdOfQuickLink(quickLinkIdItem);
+		}
+
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+	}
+	public  UserApp removeQuickLinkList(DemodataUserContext userContext, String userAppId,
+			String quickLinkIds[],String [] tokensExpr) throws Exception{
+
+			checkParamsForRemovingQuickLinkList(userContext, userAppId,  quickLinkIds, tokensExpr);
+
+
+			UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
+			synchronized(userApp){
+				//Will be good when the userApp loaded from this JVM process cache.
+				//Also good when there is a RAM based DAO implementation
+				userAppDaoOf(userContext).planToRemoveQuickLinkList(userApp, quickLinkIds, allTokens());
+				userApp = saveUserApp(userContext, userApp, tokens().withQuickLinkList().done());
+				deleteRelationListInGraph(userContext, userApp.getQuickLinkList());
+				return present(userContext,userApp, mergedAllTokens(tokensExpr));
+			}
+	}
+
+	protected void checkParamsForRemovingQuickLink(DemodataUserContext userContext, String userAppId,
+		String quickLinkId, int quickLinkVersion,String [] tokensExpr) throws Exception{
+		
+		checkerOf(userContext).checkIdOfUserApp( userAppId);
+		checkerOf(userContext).checkIdOfQuickLink(quickLinkId);
+		checkerOf(userContext).checkVersionOfQuickLink(quickLinkVersion);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+	}
+	public  UserApp removeQuickLink(DemodataUserContext userContext, String userAppId,
+		String quickLinkId, int quickLinkVersion,String [] tokensExpr) throws Exception{
+
+		checkParamsForRemovingQuickLink(userContext,userAppId, quickLinkId, quickLinkVersion,tokensExpr);
+
+		QuickLink quickLink = createIndexedQuickLink(quickLinkId, quickLinkVersion);
+		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
+		synchronized(userApp){
+			//Will be good when the userApp loaded from this JVM process cache.
+			//Also good when there is a RAM based DAO implementation
+			userApp.removeQuickLink( quickLink );
+			userApp = saveUserApp(userContext, userApp, tokens().withQuickLinkList().done());
+			deleteRelationInGraph(userContext, quickLink);
+			return present(userContext,userApp, mergedAllTokens(tokensExpr));
+		}
+
+
+	}
+	protected void checkParamsForCopyingQuickLink(DemodataUserContext userContext, String userAppId,
+		String quickLinkId, int quickLinkVersion,String [] tokensExpr) throws Exception{
+		
+		checkerOf(userContext).checkIdOfUserApp( userAppId);
+		checkerOf(userContext).checkIdOfQuickLink(quickLinkId);
+		checkerOf(userContext).checkVersionOfQuickLink(quickLinkVersion);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+	}
+	public  UserApp copyQuickLinkFrom(DemodataUserContext userContext, String userAppId,
+		String quickLinkId, int quickLinkVersion,String [] tokensExpr) throws Exception{
+
+		checkParamsForCopyingQuickLink(userContext,userAppId, quickLinkId, quickLinkVersion,tokensExpr);
+
+		QuickLink quickLink = createIndexedQuickLink(quickLinkId, quickLinkVersion);
+		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
+		synchronized(userApp){
+			//Will be good when the userApp loaded from this JVM process cache.
+			//Also good when there is a RAM based DAO implementation
+
+			
+
+			userApp.copyQuickLinkFrom( quickLink );
+			userApp = saveUserApp(userContext, userApp, tokens().withQuickLinkList().done());
+			
+			userContext.getManagerGroup().getQuickLinkManager().onNewInstanceCreated(userContext, (QuickLink)userApp.getFlexiableObjects().get(BaseEntity.COPIED_CHILD));
+			return present(userContext,userApp, mergedAllTokens(tokensExpr));
+		}
+
+	}
+
+	protected void checkParamsForUpdatingQuickLink(DemodataUserContext userContext, String userAppId, String quickLinkId, int quickLinkVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception{
+		
+
+		
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkIdOfQuickLink(quickLinkId);
+		checkerOf(userContext).checkVersionOfQuickLink(quickLinkVersion);
+		
+
+		if(QuickLink.NAME_PROPERTY.equals(property)){
+		
+			checkerOf(userContext).checkNameOfQuickLink(parseString(newValueExpr));
+		
+		}
+		
+		if(QuickLink.ICON_PROPERTY.equals(property)){
+		
+			checkerOf(userContext).checkIconOfQuickLink(parseString(newValueExpr));
+		
+		}
+		
+		if(QuickLink.IMAGE_PATH_PROPERTY.equals(property)){
+		
+			checkerOf(userContext).checkImagePathOfQuickLink(parseString(newValueExpr));
+		
+		}
+		
+		if(QuickLink.LINK_TARGET_PROPERTY.equals(property)){
+		
+			checkerOf(userContext).checkLinkTargetOfQuickLink(parseString(newValueExpr));
+		
+		}
+		
+	
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+	}
+
+	public  UserApp updateQuickLink(DemodataUserContext userContext, String userAppId, String quickLinkId, int quickLinkVersion, String property, String newValueExpr,String [] tokensExpr)
+			throws Exception{
+
+		checkParamsForUpdatingQuickLink(userContext, userAppId, quickLinkId, quickLinkVersion, property, newValueExpr,  tokensExpr);
+
+		Map<String,Object> loadTokens = this.tokens().withQuickLinkList().searchQuickLinkListWith(QuickLink.ID_PROPERTY, "eq", quickLinkId).done();
+
+
+
+		UserApp userApp = loadUserApp(userContext, userAppId, loadTokens);
+
+		synchronized(userApp){
+			//Will be good when the userApp loaded from this JVM process cache.
+			//Also good when there is a RAM based DAO implementation
+			//userApp.removeQuickLink( quickLink );
+			//make changes to AcceleraterAccount.
+			QuickLink quickLinkIndex = createIndexedQuickLink(quickLinkId, quickLinkVersion);
+
+			QuickLink quickLink = userApp.findTheQuickLink(quickLinkIndex);
+			if(quickLink == null){
+				throw new UserAppManagerException(quickLink+" is NOT FOUND" );
+			}
+
+			quickLink.changeProperty(property, newValueExpr);
+			
+			userApp = saveUserApp(userContext, userApp, tokens().withQuickLinkList().done());
+			return present(userContext,userApp, mergedAllTokens(tokensExpr));
+		}
+
+	}
+	/*
+
+	*/
+
+
+
+
+	protected void checkParamsForAddingListAccess(DemodataUserContext userContext, String userAppId, String name, String internalName, boolean readPermission, boolean createPermission, boolean deletePermission, boolean updatePermission, boolean executionPermission,String [] tokensExpr) throws Exception{
+
+				checkerOf(userContext).checkIdOfUserApp(userAppId);
+
+		
+		checkerOf(userContext).checkNameOfListAccess(name);
+		
+		checkerOf(userContext).checkInternalNameOfListAccess(internalName);
+		
+		checkerOf(userContext).checkReadPermissionOfListAccess(readPermission);
+		
+		checkerOf(userContext).checkCreatePermissionOfListAccess(createPermission);
+		
+		checkerOf(userContext).checkDeletePermissionOfListAccess(deletePermission);
+		
+		checkerOf(userContext).checkUpdatePermissionOfListAccess(updatePermission);
+		
+		checkerOf(userContext).checkExecutionPermissionOfListAccess(executionPermission);
+	
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
+
+	}
+	public  UserApp addListAccess(DemodataUserContext userContext, String userAppId, String name, String internalName, boolean readPermission, boolean createPermission, boolean deletePermission, boolean updatePermission, boolean executionPermission, String [] tokensExpr) throws Exception
+	{
+
+		checkParamsForAddingListAccess(userContext,userAppId,name, internalName, readPermission, createPermission, deletePermission, updatePermission, executionPermission,tokensExpr);
+
+		ListAccess listAccess = createListAccess(userContext,name, internalName, readPermission, createPermission, deletePermission, updatePermission, executionPermission);
+
+		UserApp userApp = loadUserApp(userContext, userAppId, emptyOptions());
+		synchronized(userApp){
+			//Will be good when the userApp loaded from this JVM process cache.
+			//Also good when there is a RAM based DAO implementation
+			userApp.addListAccess( listAccess );
 			userApp = saveUserApp(userContext, userApp, tokens().withListAccessList().done());
 			
 			userContext.getManagerGroup().getListAccessManager().onNewInstanceCreated(userContext, listAccess);
@@ -611,38 +912,38 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		}
 	}
 	protected void checkParamsForUpdatingListAccessProperties(DemodataUserContext userContext, String userAppId,String id,String name,String internalName,boolean readPermission,boolean createPermission,boolean deletePermission,boolean updatePermission,boolean executionPermission,String [] tokensExpr) throws Exception {
-		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().checkIdOfListAccess(id);
-		
-		userContext.getChecker().checkNameOfListAccess( name);
-		userContext.getChecker().checkInternalNameOfListAccess( internalName);
-		userContext.getChecker().checkReadPermissionOfListAccess( readPermission);
-		userContext.getChecker().checkCreatePermissionOfListAccess( createPermission);
-		userContext.getChecker().checkDeletePermissionOfListAccess( deletePermission);
-		userContext.getChecker().checkUpdatePermissionOfListAccess( updatePermission);
-		userContext.getChecker().checkExecutionPermissionOfListAccess( executionPermission);
 
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-		
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkIdOfListAccess(id);
+
+		checkerOf(userContext).checkNameOfListAccess( name);
+		checkerOf(userContext).checkInternalNameOfListAccess( internalName);
+		checkerOf(userContext).checkReadPermissionOfListAccess( readPermission);
+		checkerOf(userContext).checkCreatePermissionOfListAccess( createPermission);
+		checkerOf(userContext).checkDeletePermissionOfListAccess( deletePermission);
+		checkerOf(userContext).checkUpdatePermissionOfListAccess( updatePermission);
+		checkerOf(userContext).checkExecutionPermissionOfListAccess( executionPermission);
+
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
 	public  UserApp updateListAccessProperties(DemodataUserContext userContext, String userAppId, String id,String name,String internalName,boolean readPermission,boolean createPermission,boolean deletePermission,boolean updatePermission,boolean executionPermission, String [] tokensExpr) throws Exception
-	{	
+	{
 		checkParamsForUpdatingListAccessProperties(userContext,userAppId,id,name,internalName,readPermission,createPermission,deletePermission,updatePermission,executionPermission,tokensExpr);
 
 		Map<String, Object> options = tokens()
 				.allTokens()
 				//.withListAccessListList()
 				.searchListAccessListWith(ListAccess.ID_PROPERTY, "is", id).done();
-		
+
 		UserApp userAppToUpdate = loadUserApp(userContext, userAppId, options);
-		
+
 		if(userAppToUpdate.getListAccessList().isEmpty()){
 			throw new UserAppManagerException("ListAccess is NOT FOUND with id: '"+id+"'");
 		}
-		
+
 		ListAccess item = userAppToUpdate.getListAccessList().first();
-		
+
 		item.updateName( name );
 		item.updateInternalName( internalName );
 		item.updateReadPermission( readPermission );
@@ -651,15 +952,15 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		item.updateUpdatePermission( updatePermission );
 		item.updateExecutionPermission( executionPermission );
 
-		
+
 		//checkParamsForAddingListAccess(userContext,userAppId,name, code, used,tokensExpr);
 		UserApp userApp = saveUserApp(userContext, userAppToUpdate, tokens().withListAccessList().done());
-		synchronized(userApp){ 
+		synchronized(userApp){
 			return present(userContext,userApp, mergedAllTokens(tokensExpr));
 		}
 	}
-	
-	
+
+
 	protected ListAccess createListAccess(DemodataUserContext userContext, String name, String internalName, boolean readPermission, boolean createPermission, boolean deletePermission, boolean updatePermission, boolean executionPermission) throws Exception{
 
 		ListAccess listAccess = new ListAccess();
@@ -675,170 +976,184 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	
 		
 		return listAccess;
-	
-		
+
+
 	}
-	
+
 	protected ListAccess createIndexedListAccess(String id, int version){
 
 		ListAccess listAccess = new ListAccess();
 		listAccess.setId(id);
 		listAccess.setVersion(version);
-		return listAccess;			
-		
+		return listAccess;
+
 	}
-	
-	protected void checkParamsForRemovingListAccessList(DemodataUserContext userContext, String userAppId, 
+
+	protected void checkParamsForRemovingListAccessList(DemodataUserContext userContext, String userAppId,
 			String listAccessIds[],String [] tokensExpr) throws Exception {
-		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		for(String listAccessId: listAccessIds){
-			userContext.getChecker().checkIdOfListAccess(listAccessId);
+
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		for(String listAccessIdItem: listAccessIds){
+			checkerOf(userContext).checkIdOfListAccess(listAccessIdItem);
 		}
-		
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-		
+
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	public  UserApp removeListAccessList(DemodataUserContext userContext, String userAppId, 
+	public  UserApp removeListAccessList(DemodataUserContext userContext, String userAppId,
 			String listAccessIds[],String [] tokensExpr) throws Exception{
-			
+
 			checkParamsForRemovingListAccessList(userContext, userAppId,  listAccessIds, tokensExpr);
-			
-			
+
+
 			UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-			synchronized(userApp){ 
+			synchronized(userApp){
 				//Will be good when the userApp loaded from this JVM process cache.
 				//Also good when there is a RAM based DAO implementation
-				userContext.getDAOGroup().getUserAppDAO().planToRemoveListAccessList(userApp, listAccessIds, allTokens());
+				userAppDaoOf(userContext).planToRemoveListAccessList(userApp, listAccessIds, allTokens());
 				userApp = saveUserApp(userContext, userApp, tokens().withListAccessList().done());
 				deleteRelationListInGraph(userContext, userApp.getListAccessList());
 				return present(userContext,userApp, mergedAllTokens(tokensExpr));
 			}
 	}
-	
-	protected void checkParamsForRemovingListAccess(DemodataUserContext userContext, String userAppId, 
+
+	protected void checkParamsForRemovingListAccess(DemodataUserContext userContext, String userAppId,
 		String listAccessId, int listAccessVersion,String [] tokensExpr) throws Exception{
 		
-		userContext.getChecker().checkIdOfUserApp( userAppId);
-		userContext.getChecker().checkIdOfListAccess(listAccessId);
-		userContext.getChecker().checkVersionOfListAccess(listAccessVersion);
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
+		checkerOf(userContext).checkIdOfUserApp( userAppId);
+		checkerOf(userContext).checkIdOfListAccess(listAccessId);
+		checkerOf(userContext).checkVersionOfListAccess(listAccessVersion);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	public  UserApp removeListAccess(DemodataUserContext userContext, String userAppId, 
+	public  UserApp removeListAccess(DemodataUserContext userContext, String userAppId,
 		String listAccessId, int listAccessVersion,String [] tokensExpr) throws Exception{
-		
+
 		checkParamsForRemovingListAccess(userContext,userAppId, listAccessId, listAccessVersion,tokensExpr);
-		
+
 		ListAccess listAccess = createIndexedListAccess(listAccessId, listAccessVersion);
 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-		synchronized(userApp){ 
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
-			userApp.removeListAccess( listAccess );		
+			userApp.removeListAccess( listAccess );
 			userApp = saveUserApp(userContext, userApp, tokens().withListAccessList().done());
 			deleteRelationInGraph(userContext, listAccess);
 			return present(userContext,userApp, mergedAllTokens(tokensExpr));
 		}
-		
-		
+
+
 	}
-	protected void checkParamsForCopyingListAccess(DemodataUserContext userContext, String userAppId, 
+	protected void checkParamsForCopyingListAccess(DemodataUserContext userContext, String userAppId,
 		String listAccessId, int listAccessVersion,String [] tokensExpr) throws Exception{
 		
-		userContext.getChecker().checkIdOfUserApp( userAppId);
-		userContext.getChecker().checkIdOfListAccess(listAccessId);
-		userContext.getChecker().checkVersionOfListAccess(listAccessVersion);
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
+		checkerOf(userContext).checkIdOfUserApp( userAppId);
+		checkerOf(userContext).checkIdOfListAccess(listAccessId);
+		checkerOf(userContext).checkVersionOfListAccess(listAccessVersion);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	public  UserApp copyListAccessFrom(DemodataUserContext userContext, String userAppId, 
+	public  UserApp copyListAccessFrom(DemodataUserContext userContext, String userAppId,
 		String listAccessId, int listAccessVersion,String [] tokensExpr) throws Exception{
-		
+
 		checkParamsForCopyingListAccess(userContext,userAppId, listAccessId, listAccessVersion,tokensExpr);
-		
+
 		ListAccess listAccess = createIndexedListAccess(listAccessId, listAccessVersion);
 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-		synchronized(userApp){ 
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
+
 			
-			
-			
-			userApp.copyListAccessFrom( listAccess );		
+
+			userApp.copyListAccessFrom( listAccess );
 			userApp = saveUserApp(userContext, userApp, tokens().withListAccessList().done());
 			
 			userContext.getManagerGroup().getListAccessManager().onNewInstanceCreated(userContext, (ListAccess)userApp.getFlexiableObjects().get(BaseEntity.COPIED_CHILD));
 			return present(userContext,userApp, mergedAllTokens(tokensExpr));
 		}
-		
+
 	}
-	
+
 	protected void checkParamsForUpdatingListAccess(DemodataUserContext userContext, String userAppId, String listAccessId, int listAccessVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception{
 		
 
 		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().checkIdOfListAccess(listAccessId);
-		userContext.getChecker().checkVersionOfListAccess(listAccessVersion);
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkIdOfListAccess(listAccessId);
+		checkerOf(userContext).checkVersionOfListAccess(listAccessVersion);
 		
 
 		if(ListAccess.NAME_PROPERTY.equals(property)){
-			userContext.getChecker().checkNameOfListAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkNameOfListAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ListAccess.INTERNAL_NAME_PROPERTY.equals(property)){
-			userContext.getChecker().checkInternalNameOfListAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkInternalNameOfListAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ListAccess.READ_PERMISSION_PROPERTY.equals(property)){
-			userContext.getChecker().checkReadPermissionOfListAccess(parseBoolean(newValueExpr));
+		
+			checkerOf(userContext).checkReadPermissionOfListAccess(parseBoolean(newValueExpr));
+		
 		}
 		
 		if(ListAccess.CREATE_PERMISSION_PROPERTY.equals(property)){
-			userContext.getChecker().checkCreatePermissionOfListAccess(parseBoolean(newValueExpr));
+		
+			checkerOf(userContext).checkCreatePermissionOfListAccess(parseBoolean(newValueExpr));
+		
 		}
 		
 		if(ListAccess.DELETE_PERMISSION_PROPERTY.equals(property)){
-			userContext.getChecker().checkDeletePermissionOfListAccess(parseBoolean(newValueExpr));
+		
+			checkerOf(userContext).checkDeletePermissionOfListAccess(parseBoolean(newValueExpr));
+		
 		}
 		
 		if(ListAccess.UPDATE_PERMISSION_PROPERTY.equals(property)){
-			userContext.getChecker().checkUpdatePermissionOfListAccess(parseBoolean(newValueExpr));
+		
+			checkerOf(userContext).checkUpdatePermissionOfListAccess(parseBoolean(newValueExpr));
+		
 		}
 		
 		if(ListAccess.EXECUTION_PERMISSION_PROPERTY.equals(property)){
-			userContext.getChecker().checkExecutionPermissionOfListAccess(parseBoolean(newValueExpr));
+		
+			checkerOf(userContext).checkExecutionPermissionOfListAccess(parseBoolean(newValueExpr));
+		
 		}
 		
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	
+
 	public  UserApp updateListAccess(DemodataUserContext userContext, String userAppId, String listAccessId, int listAccessVersion, String property, String newValueExpr,String [] tokensExpr)
 			throws Exception{
-		
+
 		checkParamsForUpdatingListAccess(userContext, userAppId, listAccessId, listAccessVersion, property, newValueExpr,  tokensExpr);
-		
+
 		Map<String,Object> loadTokens = this.tokens().withListAccessList().searchListAccessListWith(ListAccess.ID_PROPERTY, "eq", listAccessId).done();
-		
-		
-		
+
+
+
 		UserApp userApp = loadUserApp(userContext, userAppId, loadTokens);
-		
-		synchronized(userApp){ 
+
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
-			//userApp.removeListAccess( listAccess );	
+			//userApp.removeListAccess( listAccess );
 			//make changes to AcceleraterAccount.
 			ListAccess listAccessIndex = createIndexedListAccess(listAccessId, listAccessVersion);
-		
+
 			ListAccess listAccess = userApp.findTheListAccess(listAccessIndex);
 			if(listAccess == null){
 				throw new UserAppManagerException(listAccess+" is NOT FOUND" );
 			}
-			
+
 			listAccess.changeProperty(property, newValueExpr);
 			
 			userApp = saveUserApp(userContext, userApp, tokens().withListAccessList().done());
@@ -849,57 +1164,53 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	/*
 
 	*/
-	
+
 
 
 
 	protected void checkParamsForAddingObjectAccess(DemodataUserContext userContext, String userAppId, String name, String objectType, String list1, String list2, String list3, String list4, String list5, String list6, String list7, String list8, String list9,String [] tokensExpr) throws Exception{
-		
-		
+
+				checkerOf(userContext).checkIdOfUserApp(userAppId);
 
 		
+		checkerOf(userContext).checkNameOfObjectAccess(name);
 		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-
+		checkerOf(userContext).checkObjectTypeOfObjectAccess(objectType);
 		
-		userContext.getChecker().checkNameOfObjectAccess(name);
+		checkerOf(userContext).checkList1OfObjectAccess(list1);
 		
-		userContext.getChecker().checkObjectTypeOfObjectAccess(objectType);
+		checkerOf(userContext).checkList2OfObjectAccess(list2);
 		
-		userContext.getChecker().checkList1OfObjectAccess(list1);
+		checkerOf(userContext).checkList3OfObjectAccess(list3);
 		
-		userContext.getChecker().checkList2OfObjectAccess(list2);
+		checkerOf(userContext).checkList4OfObjectAccess(list4);
 		
-		userContext.getChecker().checkList3OfObjectAccess(list3);
+		checkerOf(userContext).checkList5OfObjectAccess(list5);
 		
-		userContext.getChecker().checkList4OfObjectAccess(list4);
+		checkerOf(userContext).checkList6OfObjectAccess(list6);
 		
-		userContext.getChecker().checkList5OfObjectAccess(list5);
+		checkerOf(userContext).checkList7OfObjectAccess(list7);
 		
-		userContext.getChecker().checkList6OfObjectAccess(list6);
+		checkerOf(userContext).checkList8OfObjectAccess(list8);
 		
-		userContext.getChecker().checkList7OfObjectAccess(list7);
-		
-		userContext.getChecker().checkList8OfObjectAccess(list8);
-		
-		userContext.getChecker().checkList9OfObjectAccess(list9);
+		checkerOf(userContext).checkList9OfObjectAccess(list9);
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
 
-	
+
 	}
 	public  UserApp addObjectAccess(DemodataUserContext userContext, String userAppId, String name, String objectType, String list1, String list2, String list3, String list4, String list5, String list6, String list7, String list8, String list9, String [] tokensExpr) throws Exception
-	{	
-		
+	{
+
 		checkParamsForAddingObjectAccess(userContext,userAppId,name, objectType, list1, list2, list3, list4, list5, list6, list7, list8, list9,tokensExpr);
-		
+
 		ObjectAccess objectAccess = createObjectAccess(userContext,name, objectType, list1, list2, list3, list4, list5, list6, list7, list8, list9);
-		
-		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-		synchronized(userApp){ 
+
+		UserApp userApp = loadUserApp(userContext, userAppId, emptyOptions());
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
-			userApp.addObjectAccess( objectAccess );		
+			userApp.addObjectAccess( objectAccess );
 			userApp = saveUserApp(userContext, userApp, tokens().withObjectAccessList().done());
 			
 			userContext.getManagerGroup().getObjectAccessManager().onNewInstanceCreated(userContext, objectAccess);
@@ -907,42 +1218,42 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		}
 	}
 	protected void checkParamsForUpdatingObjectAccessProperties(DemodataUserContext userContext, String userAppId,String id,String name,String objectType,String list1,String list2,String list3,String list4,String list5,String list6,String list7,String list8,String list9,String [] tokensExpr) throws Exception {
-		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().checkIdOfObjectAccess(id);
-		
-		userContext.getChecker().checkNameOfObjectAccess( name);
-		userContext.getChecker().checkObjectTypeOfObjectAccess( objectType);
-		userContext.getChecker().checkList1OfObjectAccess( list1);
-		userContext.getChecker().checkList2OfObjectAccess( list2);
-		userContext.getChecker().checkList3OfObjectAccess( list3);
-		userContext.getChecker().checkList4OfObjectAccess( list4);
-		userContext.getChecker().checkList5OfObjectAccess( list5);
-		userContext.getChecker().checkList6OfObjectAccess( list6);
-		userContext.getChecker().checkList7OfObjectAccess( list7);
-		userContext.getChecker().checkList8OfObjectAccess( list8);
-		userContext.getChecker().checkList9OfObjectAccess( list9);
 
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-		
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkIdOfObjectAccess(id);
+
+		checkerOf(userContext).checkNameOfObjectAccess( name);
+		checkerOf(userContext).checkObjectTypeOfObjectAccess( objectType);
+		checkerOf(userContext).checkList1OfObjectAccess( list1);
+		checkerOf(userContext).checkList2OfObjectAccess( list2);
+		checkerOf(userContext).checkList3OfObjectAccess( list3);
+		checkerOf(userContext).checkList4OfObjectAccess( list4);
+		checkerOf(userContext).checkList5OfObjectAccess( list5);
+		checkerOf(userContext).checkList6OfObjectAccess( list6);
+		checkerOf(userContext).checkList7OfObjectAccess( list7);
+		checkerOf(userContext).checkList8OfObjectAccess( list8);
+		checkerOf(userContext).checkList9OfObjectAccess( list9);
+
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
 	public  UserApp updateObjectAccessProperties(DemodataUserContext userContext, String userAppId, String id,String name,String objectType,String list1,String list2,String list3,String list4,String list5,String list6,String list7,String list8,String list9, String [] tokensExpr) throws Exception
-	{	
+	{
 		checkParamsForUpdatingObjectAccessProperties(userContext,userAppId,id,name,objectType,list1,list2,list3,list4,list5,list6,list7,list8,list9,tokensExpr);
 
 		Map<String, Object> options = tokens()
 				.allTokens()
 				//.withObjectAccessListList()
 				.searchObjectAccessListWith(ObjectAccess.ID_PROPERTY, "is", id).done();
-		
+
 		UserApp userAppToUpdate = loadUserApp(userContext, userAppId, options);
-		
+
 		if(userAppToUpdate.getObjectAccessList().isEmpty()){
 			throw new UserAppManagerException("ObjectAccess is NOT FOUND with id: '"+id+"'");
 		}
-		
+
 		ObjectAccess item = userAppToUpdate.getObjectAccessList().first();
-		
+
 		item.updateName( name );
 		item.updateObjectType( objectType );
 		item.updateList1( list1 );
@@ -955,15 +1266,15 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 		item.updateList8( list8 );
 		item.updateList9( list9 );
 
-		
+
 		//checkParamsForAddingObjectAccess(userContext,userAppId,name, code, used,tokensExpr);
 		UserApp userApp = saveUserApp(userContext, userAppToUpdate, tokens().withObjectAccessList().done());
-		synchronized(userApp){ 
+		synchronized(userApp){
 			return present(userContext,userApp, mergedAllTokens(tokensExpr));
 		}
 	}
-	
-	
+
+
 	protected ObjectAccess createObjectAccess(DemodataUserContext userContext, String name, String objectType, String list1, String list2, String list3, String list4, String list5, String list6, String list7, String list8, String list9) throws Exception{
 
 		ObjectAccess objectAccess = new ObjectAccess();
@@ -983,186 +1294,208 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	
 		
 		return objectAccess;
-	
-		
+
+
 	}
-	
+
 	protected ObjectAccess createIndexedObjectAccess(String id, int version){
 
 		ObjectAccess objectAccess = new ObjectAccess();
 		objectAccess.setId(id);
 		objectAccess.setVersion(version);
-		return objectAccess;			
-		
+		return objectAccess;
+
 	}
-	
-	protected void checkParamsForRemovingObjectAccessList(DemodataUserContext userContext, String userAppId, 
+
+	protected void checkParamsForRemovingObjectAccessList(DemodataUserContext userContext, String userAppId,
 			String objectAccessIds[],String [] tokensExpr) throws Exception {
-		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		for(String objectAccessId: objectAccessIds){
-			userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
+
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		for(String objectAccessIdItem: objectAccessIds){
+			checkerOf(userContext).checkIdOfObjectAccess(objectAccessIdItem);
 		}
-		
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-		
+
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	public  UserApp removeObjectAccessList(DemodataUserContext userContext, String userAppId, 
+	public  UserApp removeObjectAccessList(DemodataUserContext userContext, String userAppId,
 			String objectAccessIds[],String [] tokensExpr) throws Exception{
-			
+
 			checkParamsForRemovingObjectAccessList(userContext, userAppId,  objectAccessIds, tokensExpr);
-			
-			
+
+
 			UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-			synchronized(userApp){ 
+			synchronized(userApp){
 				//Will be good when the userApp loaded from this JVM process cache.
 				//Also good when there is a RAM based DAO implementation
-				userContext.getDAOGroup().getUserAppDAO().planToRemoveObjectAccessList(userApp, objectAccessIds, allTokens());
+				userAppDaoOf(userContext).planToRemoveObjectAccessList(userApp, objectAccessIds, allTokens());
 				userApp = saveUserApp(userContext, userApp, tokens().withObjectAccessList().done());
 				deleteRelationListInGraph(userContext, userApp.getObjectAccessList());
 				return present(userContext,userApp, mergedAllTokens(tokensExpr));
 			}
 	}
-	
-	protected void checkParamsForRemovingObjectAccess(DemodataUserContext userContext, String userAppId, 
+
+	protected void checkParamsForRemovingObjectAccess(DemodataUserContext userContext, String userAppId,
 		String objectAccessId, int objectAccessVersion,String [] tokensExpr) throws Exception{
 		
-		userContext.getChecker().checkIdOfUserApp( userAppId);
-		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().checkVersionOfObjectAccess(objectAccessVersion);
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
+		checkerOf(userContext).checkIdOfUserApp( userAppId);
+		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).checkVersionOfObjectAccess(objectAccessVersion);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	public  UserApp removeObjectAccess(DemodataUserContext userContext, String userAppId, 
+	public  UserApp removeObjectAccess(DemodataUserContext userContext, String userAppId,
 		String objectAccessId, int objectAccessVersion,String [] tokensExpr) throws Exception{
-		
+
 		checkParamsForRemovingObjectAccess(userContext,userAppId, objectAccessId, objectAccessVersion,tokensExpr);
-		
+
 		ObjectAccess objectAccess = createIndexedObjectAccess(objectAccessId, objectAccessVersion);
 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-		synchronized(userApp){ 
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
-			userApp.removeObjectAccess( objectAccess );		
+			userApp.removeObjectAccess( objectAccess );
 			userApp = saveUserApp(userContext, userApp, tokens().withObjectAccessList().done());
 			deleteRelationInGraph(userContext, objectAccess);
 			return present(userContext,userApp, mergedAllTokens(tokensExpr));
 		}
-		
-		
+
+
 	}
-	protected void checkParamsForCopyingObjectAccess(DemodataUserContext userContext, String userAppId, 
+	protected void checkParamsForCopyingObjectAccess(DemodataUserContext userContext, String userAppId,
 		String objectAccessId, int objectAccessVersion,String [] tokensExpr) throws Exception{
 		
-		userContext.getChecker().checkIdOfUserApp( userAppId);
-		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().checkVersionOfObjectAccess(objectAccessVersion);
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
+		checkerOf(userContext).checkIdOfUserApp( userAppId);
+		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).checkVersionOfObjectAccess(objectAccessVersion);
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	public  UserApp copyObjectAccessFrom(DemodataUserContext userContext, String userAppId, 
+	public  UserApp copyObjectAccessFrom(DemodataUserContext userContext, String userAppId,
 		String objectAccessId, int objectAccessVersion,String [] tokensExpr) throws Exception{
-		
+
 		checkParamsForCopyingObjectAccess(userContext,userAppId, objectAccessId, objectAccessVersion,tokensExpr);
-		
+
 		ObjectAccess objectAccess = createIndexedObjectAccess(objectAccessId, objectAccessVersion);
 		UserApp userApp = loadUserApp(userContext, userAppId, allTokens());
-		synchronized(userApp){ 
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
+
 			
-			
-			
-			userApp.copyObjectAccessFrom( objectAccess );		
+
+			userApp.copyObjectAccessFrom( objectAccess );
 			userApp = saveUserApp(userContext, userApp, tokens().withObjectAccessList().done());
 			
 			userContext.getManagerGroup().getObjectAccessManager().onNewInstanceCreated(userContext, (ObjectAccess)userApp.getFlexiableObjects().get(BaseEntity.COPIED_CHILD));
 			return present(userContext,userApp, mergedAllTokens(tokensExpr));
 		}
-		
+
 	}
-	
+
 	protected void checkParamsForUpdatingObjectAccess(DemodataUserContext userContext, String userAppId, String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception{
 		
 
 		
-		userContext.getChecker().checkIdOfUserApp(userAppId);
-		userContext.getChecker().checkIdOfObjectAccess(objectAccessId);
-		userContext.getChecker().checkVersionOfObjectAccess(objectAccessVersion);
+		checkerOf(userContext).checkIdOfUserApp(userAppId);
+		checkerOf(userContext).checkIdOfObjectAccess(objectAccessId);
+		checkerOf(userContext).checkVersionOfObjectAccess(objectAccessVersion);
 		
 
 		if(ObjectAccess.NAME_PROPERTY.equals(property)){
-			userContext.getChecker().checkNameOfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkNameOfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.OBJECT_TYPE_PROPERTY.equals(property)){
-			userContext.getChecker().checkObjectTypeOfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkObjectTypeOfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST1_PROPERTY.equals(property)){
-			userContext.getChecker().checkList1OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList1OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST2_PROPERTY.equals(property)){
-			userContext.getChecker().checkList2OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList2OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST3_PROPERTY.equals(property)){
-			userContext.getChecker().checkList3OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList3OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST4_PROPERTY.equals(property)){
-			userContext.getChecker().checkList4OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList4OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST5_PROPERTY.equals(property)){
-			userContext.getChecker().checkList5OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList5OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST6_PROPERTY.equals(property)){
-			userContext.getChecker().checkList6OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList6OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST7_PROPERTY.equals(property)){
-			userContext.getChecker().checkList7OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList7OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST8_PROPERTY.equals(property)){
-			userContext.getChecker().checkList8OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList8OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 		if(ObjectAccess.LIST9_PROPERTY.equals(property)){
-			userContext.getChecker().checkList9OfObjectAccess(parseString(newValueExpr));
+		
+			checkerOf(userContext).checkList9OfObjectAccess(parseString(newValueExpr));
+		
 		}
 		
 	
-		userContext.getChecker().throwExceptionIfHasErrors(UserAppManagerException.class);
-	
+		checkerOf(userContext).throwExceptionIfHasErrors(UserAppManagerException.class);
+
 	}
-	
+
 	public  UserApp updateObjectAccess(DemodataUserContext userContext, String userAppId, String objectAccessId, int objectAccessVersion, String property, String newValueExpr,String [] tokensExpr)
 			throws Exception{
-		
+
 		checkParamsForUpdatingObjectAccess(userContext, userAppId, objectAccessId, objectAccessVersion, property, newValueExpr,  tokensExpr);
-		
+
 		Map<String,Object> loadTokens = this.tokens().withObjectAccessList().searchObjectAccessListWith(ObjectAccess.ID_PROPERTY, "eq", objectAccessId).done();
-		
-		
-		
+
+
+
 		UserApp userApp = loadUserApp(userContext, userAppId, loadTokens);
-		
-		synchronized(userApp){ 
+
+		synchronized(userApp){
 			//Will be good when the userApp loaded from this JVM process cache.
 			//Also good when there is a RAM based DAO implementation
-			//userApp.removeObjectAccess( objectAccess );	
+			//userApp.removeObjectAccess( objectAccess );
 			//make changes to AcceleraterAccount.
 			ObjectAccess objectAccessIndex = createIndexedObjectAccess(objectAccessId, objectAccessVersion);
-		
+
 			ObjectAccess objectAccess = userApp.findTheObjectAccess(objectAccessIndex);
 			if(objectAccess == null){
 				throw new UserAppManagerException(objectAccess+" is NOT FOUND" );
 			}
-			
+
 			objectAccess.changeProperty(property, newValueExpr);
 			
 			userApp = saveUserApp(userContext, userApp, tokens().withObjectAccessList().done());
@@ -1173,15 +1506,188 @@ public class UserAppManagerImpl extends CustomDemodataCheckerManager implements 
 	/*
 
 	*/
-	
+
 
 
 
 	public void onNewInstanceCreated(DemodataUserContext userContext, UserApp newCreated) throws Exception{
 		ensureRelationInGraph(userContext, newCreated);
 		sendCreationEvent(userContext, newCreated);
+
+    
 	}
 
+  
+  
+
+	// -----------------------------------//  登录部分处理 \\-----------------------------------
+	// 手机号+短信验证码 登录
+	public Object loginByMobile(DemodataUserContextImpl userContext, String mobile, String verifyCode) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByMobile");
+		LoginData loginData = new LoginData();
+		loginData.setMobile(mobile);
+		loginData.setVerifyCode(verifyCode);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.MOBILE, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 账号+密码登录
+	public Object loginByPassword(DemodataUserContextImpl userContext, String loginId, Password password) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(), "loginByPassword");
+		LoginData loginData = new LoginData();
+		loginData.setLoginId(loginId);
+		loginData.setPassword(password.getClearTextPassword());
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.PASSWORD, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 微信小程序登录
+	public Object loginByWechatMiniProgram(DemodataUserContextImpl userContext, String code) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByWechatMiniProgram");
+		LoginData loginData = new LoginData();
+		loginData.setCode(code);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.WECHAT_MINIPROGRAM, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 企业微信小程序登录
+	public Object loginByWechatWorkMiniProgram(DemodataUserContextImpl userContext, String code) throws Exception {
+		LoginChannel loginChannel = LoginChannel.of(DemodataBaseUtils.getRequestAppType(userContext), this.getBeanName(),
+				"loginByWechatWorkMiniProgram");
+		LoginData loginData = new LoginData();
+		loginData.setCode(code);
+
+		LoginContext loginContext = LoginContext.of(LoginMethod.WECHAT_WORK_MINIPROGRAM, loginChannel, loginData);
+		return processLoginRequest(userContext, loginContext);
+	}
+	// 调用登录处理
+	protected Object processLoginRequest(DemodataUserContextImpl userContext, LoginContext loginContext) throws Exception {
+		IamService iamService = (IamService) userContext.getBean("iamService");
+		LoginResult loginResult = iamService.doLogin(userContext, loginContext, this);
+		// 根据登录结果
+		if (!loginResult.isAuthenticated()) {
+			throw new Exception(loginResult.getMessage());
+		}
+		if (loginResult.isSuccess()) {
+			return onLoginSuccess(userContext, loginResult);
+		}
+		if (loginResult.isNewUser()) {
+			throw new Exception("请联系你的上级,先为你创建账号,然后再来登录.");
+		}
+		return new LoginForm();
+	}
+
+	@Override
+	public Object checkAccess(BaseUserContext baseUserContext, String methodName, Object[] parameters)
+			throws IllegalAccessException {
+		DemodataUserContextImpl userContext = (DemodataUserContextImpl)baseUserContext;
+		IamService iamService = (IamService) userContext.getBean("iamService");
+		Map<String, Object> loginInfo = iamService.getCachedLoginInfo(userContext);
+
+		SecUser secUser = iamService.tryToLoadSecUser(userContext, loginInfo);
+		UserApp userApp = iamService.tryToLoadUserApp(userContext, loginInfo);
+		if (userApp != null) {
+			userApp.setSecUser(secUser);
+		}
+		afterSecUserAppLoadedWhenCheckAccess(userContext, loginInfo, secUser, userApp);
+		if (!isMethodNeedLogin(userContext, methodName, parameters)) {
+			return accessOK();
+		}
+
+		return super.checkAccess(baseUserContext, methodName, parameters);
+	}
+
+	// 判断哪些接口需要登录后才能执行. 默认除了loginBy开头的,其他都要登录
+	protected boolean isMethodNeedLogin(DemodataUserContextImpl userContext, String methodName, Object[] parameters) {
+		if (methodName.startsWith("loginBy")) {
+			return false;
+		}
+		if (methodName.startsWith("logout")) {
+			return false;
+		}
+		return true;
+	}
+
+	// 在checkAccess中加载了secUser和userApp后会调用此方法,用于定制化的用户数据加载. 默认什么也不做
+	protected void afterSecUserAppLoadedWhenCheckAccess(DemodataUserContextImpl userContext, Map<String, Object> loginInfo,
+			SecUser secUser, UserApp userApp) throws IllegalAccessException{
+	}
+
+
+
+	protected Object onLoginSuccess(DemodataUserContext userContext, LoginResult loginResult) throws Exception {
+		// by default, return the view of this object
+		UserApp userApp = loginResult.getLoginContext().getLoginTarget().getUserApp();
+		return this.view(userContext, userApp.getObjectId());
+	}
+
+	public void onAuthenticationFailed(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, failed is failed, nothing can do
+	}
+	public void onAuthenticateNewUserLogged(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, should create a account and bind with sec user, BUT, I don't know how to
+		// create new object as of generate this method. It depends on business logical. So,
+		throw new Exception("请重载函数onAuthenticateNewUserLogged()以处理新用户登录");
+	}
+	public void onAuthenticateUserLogged(DemodataUserContext userContext, LoginContext loginContext,
+			LoginResult loginResult, IdentificationHandler idHandler, BusinessHandler bizHandler)
+			throws Exception {
+		// by default, find the correct user-app
+		SecUser secUser = loginResult.getLoginContext().getLoginTarget().getSecUser();
+		MultipleAccessKey key = new MultipleAccessKey();
+		key.put(UserApp.SEC_USER_PROPERTY, secUser.getId());
+		key.put(UserApp.OBJECT_TYPE_PROPERTY, UserApp.INTERNAL_TYPE);
+		SmartList<UserApp> userApps = userContext.getDAOGroup().getUserAppDAO().findUserAppWithKey(key, EO);
+		if (userApps == null || userApps.isEmpty()) {
+			throw new Exception("您的账号未关联销售人员,请联系客服处理账号异常.");
+		}
+		UserApp userApp = userApps.first();
+		userApp.setSecUser(secUser);
+		loginResult.getLoginContext().getLoginTarget().setUserApp(userApp);
+	}
+	// -----------------------------------\\  登录部分处理 //-----------------------------------
+
+
+	// -----------------------------------// list-of-view 处理 \\-----------------------------------
+    protected void enhanceForListOfView(DemodataUserContext userContext,SmartList<UserApp> list) throws Exception {
+    	if (list == null || list.isEmpty()){
+    		return;
+    	}
+		List<SecUser> secUserList = DemodataBaseUtils.collectReferencedObjectWithType(userContext, list, SecUser.class);
+		userContext.getDAOGroup().enhanceList(secUserList, SecUser.class);
+
+
+    }
+	
+	public Object listBySecUser(DemodataUserContext userContext,String secUserId) throws Exception {
+		return listPageBySecUser(userContext, secUserId, 0, 20);
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Object listPageBySecUser(DemodataUserContext userContext,String secUserId, int start, int count) throws Exception {
+		SmartList<UserApp> list = userAppDaoOf(userContext).findUserAppBySecUser(secUserId, start, count, new HashMap<>());
+		enhanceForListOfView(userContext, list);
+		DemodataCommonListOfViewPage page = new DemodataCommonListOfViewPage();
+		page.setClassOfList(UserApp.class);
+		page.setContainerObject(SecUser.withId(secUserId));
+		page.setRequestBeanName(this.getBeanName());
+		page.setDataList((SmartList)list);
+		page.setPageTitle("用户应用程序列表");
+		page.setRequestName("listBySecUser");
+		page.setRequestOffset(start);
+		page.setRequestLimit(count);
+		page.setDisplayMode("auto");
+
+		page.assemblerContent(userContext, "listBySecUser");
+		return page.doRender(userContext);
+	}
+  
+  // -----------------------------------\\ list-of-view 处理 //-----------------------------------
 }
 
 

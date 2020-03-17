@@ -3,10 +3,12 @@ package com.test.demodata.formmessage;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.genericform.GenericFormDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class FormMessageJDBCTemplateDAO extends DemodataNamingServiceDAO implements FormMessageDAO{
+
+public class FormMessageJDBCTemplateDAO extends DemodataBaseDAOImpl implements FormMessageDAO{
  
  	
  	private  GenericFormDAO  genericFormDAO;
@@ -47,6 +52,11 @@ public class FormMessageJDBCTemplateDAO extends DemodataNamingServiceDAO impleme
 		return loadInternalFormMessage(accessKey, options);
 	}
 	*/
+	
+	public SmartList<FormMessage> loadAll() {
+	    return this.loadAll(getFormMessageMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -425,12 +435,16 @@ public class FormMessageJDBCTemplateDAO extends DemodataNamingServiceDAO impleme
  	protected Object[] prepareFormMessageUpdateParameters(FormMessage formMessage){
  		Object[] parameters = new Object[6];
  
- 		parameters[0] = formMessage.getTitle(); 	
+ 		
+ 		parameters[0] = formMessage.getTitle();
+ 		 	
  		if(formMessage.getForm() != null){
  			parameters[1] = formMessage.getForm().getId();
  		}
  
- 		parameters[2] = formMessage.getLevel();		
+ 		
+ 		parameters[2] = formMessage.getLevel();
+ 				
  		parameters[3] = formMessage.nextVersion();
  		parameters[4] = formMessage.getId();
  		parameters[5] = formMessage.getVersion();
@@ -443,13 +457,17 @@ public class FormMessageJDBCTemplateDAO extends DemodataNamingServiceDAO impleme
 		formMessage.setId(newFormMessageId);
 		parameters[0] =  formMessage.getId();
  
- 		parameters[1] = formMessage.getTitle(); 	
+ 		
+ 		parameters[1] = formMessage.getTitle();
+ 		 	
  		if(formMessage.getForm() != null){
  			parameters[2] = formMessage.getForm().getId();
  		
  		}
  		
- 		parameters[3] = formMessage.getLevel();		
+ 		
+ 		parameters[3] = formMessage.getLevel();
+ 				
  				
  		return parameters;
  	}
@@ -512,6 +530,9 @@ public class FormMessageJDBCTemplateDAO extends DemodataNamingServiceDAO impleme
 	public void enhanceList(List<FormMessage> formMessageList) {		
 		this.enhanceListInternal(formMessageList, this.getFormMessageMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<FormMessage> formMessageList = ownerEntity.collectRefsWithType(FormMessage.INTERNAL_TYPE);
@@ -544,6 +565,13 @@ public class FormMessageJDBCTemplateDAO extends DemodataNamingServiceDAO impleme
 	public SmartList<FormMessage> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getFormMessageMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

@@ -1,5 +1,6 @@
 package com.terapico.caf;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -12,6 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
@@ -33,11 +39,31 @@ public class ReflectionTool {
 	}
 	
 	
-	
+	public static void appendBytes(StringBuilder stringBuilder, byte[] parameter, int maxToShow) {
+		
+		byte []objects = parameter;
+		stringBuilder.append("[");
+		for(int i=0;i<objects.length;i++){
+			if(i>0){
+				stringBuilder.append(" ");
+			}
+			byte object = objects[i];
+			stringBuilder.append(String.format("%02X", object));
+			if((i+1)>maxToShow) {//only print 31 bytes
+				stringBuilder.append(" ... ");
+				stringBuilder.append(objects.length);
+				stringBuilder.append(" bytes...");
+				break;
+			}
+		}
+		stringBuilder.append("]");
+		
+		
+	}
 	
 	
 
-	protected boolean isArrayType(Type type) {
+	protected static boolean isArrayType(Type type) {
 		
 		
 		Class typeClazz = (Class) type;
@@ -58,7 +84,95 @@ public class ReflectionTool {
 		}
 		return false;
 	}
+	public static boolean hasRemoteInitiableInterface(Type parameterType) {
+		
+		return RemoteInitiable.class.isAssignableFrom((Class) parameterType);
+		
+	}
+	
+	private static ObjectMapper mapper ;
+	static {
+		mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+	}
+	public static boolean isByteType(Type type) {
+		Class clazz = (Class)type;
+		if (clazz == byte.class) {
+			return true;
+		}
+		return false;
+	}
+	protected static boolean isArrayOfBytesType(Type type) {
+		Class typeClazz = (Class) type;
+		if (!typeClazz.isArray()) {
+			return false;
+		}
+		Class clazz = typeClazz.getComponentType();
+		if (isByteType(clazz)) {
+			return true;
+		}
+		return false;
+	}
+	public static boolean isFirstParameterByteArray(Type[] types) {
+		int length = types.length;
+		
+		if(length == 0) {
+			throw new IllegalArgumentException("Only one type allowed here, but the length of the length is: "+length);
+			
+		}
+		Type firstParameterType = types[0];
+		return isArrayOfBytesType(firstParameterType);
 
+	}
+	public static Object convertOnlyOneParameter(Type[] types, String value) {
+		int length = types.length;
+		
+		if(length == 0) {
+			throw new IllegalArgumentException("Only one type allowed here, but the length of the length is: "+length);
+			
+		}
+		Type firstParameterType = types[0]; //it is safe here, there is ONE param when code runs to here
+		
+		//String type supported
+		if(firstParameterType == java.lang.String.class) {
+			return value;
+		}
+		
+		
+		
+		//otherwise this should be a json object with a class
+		if(!hasRemoteInitiableInterface(firstParameterType)) {
+			throw new IllegalArgumentException("The type should implement a RemoteInitiable interface, but the class is: " + firstParameterType.getTypeName());
+		}
+		//parse to a json object and return
+		
+		 
+		
+		try {
+			Object responseObj = mapper.copy().readValue(value, (Class)firstParameterType);
+			return responseObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
+
+	}
+	
+	
+	protected boolean isPrimaryTypeOrOneStringConstructor(Class clazz) {
+		if(isPrimaryType(clazz)) {
+			return true;
+		}
+		Constructor constructor = getOneStringConstructor(clazz);
+		if(constructor != null) {
+			return true;
+		}
+		return false;
+		
+	}
+	
+	
 	protected Constructor getOneStringConstructor(Class clazz) {
 		Constructor constructors[] = clazz.getDeclaredConstructors();
 
@@ -77,7 +191,7 @@ public class ReflectionTool {
 
 	}
 
-	protected boolean isPrimaryType(Class clazz) {
+	public static boolean isPrimaryType(Class clazz) {
 
 		if (clazz.isPrimitive()) {
 			return true;

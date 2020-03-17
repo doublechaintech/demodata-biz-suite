@@ -3,10 +3,12 @@ package com.test.demodata.image;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -20,20 +22,23 @@ import com.test.demodata.DemodataUserContext;
 
 import com.test.demodata.platform.Platform;
 
-import com.test.demodata.platform.PlatformCustom2DAO;
+import com.test.demodata.platform.PlatformDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements ImageDAO{
+
+public class ImageJDBCTemplateDAO extends DemodataBaseDAOImpl implements ImageDAO{
  
  	
- 	private  PlatformCustom2DAO  platformDAO;
- 	public void setPlatformDAO(PlatformCustom2DAO platformDAO){
+ 	private  PlatformDAO  platformDAO;
+ 	public void setPlatformDAO(PlatformDAO platformDAO){
 	 	this.platformDAO = platformDAO;
  	}
- 	public PlatformCustom2DAO getPlatformDAO(){
+ 	public PlatformDAO getPlatformDAO(){
 	 	return this.platformDAO;
  	}
 
@@ -47,6 +52,11 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
 		return loadInternalImage(accessKey, options);
 	}
 	*/
+	
+	public SmartList<Image> loadAll() {
+	    return this.loadAll(getImageMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -277,7 +287,7 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
  
 		StatsItem createTimeStatsItem = new StatsItem();
 		//Image.CREATE_TIME_PROPERTY
-		createTimeStatsItem.setDisplayName("Image");
+		createTimeStatsItem.setDisplayName("图片");
 		createTimeStatsItem.setInternalName(formatKeyForDateLine(Image.CREATE_TIME_PROPERTY));
 		createTimeStatsItem.setResult(statsWithGroup(DateKey.class,wrapWithDate(Image.CREATE_TIME_PROPERTY),filterKey,emptyOptions));
 		info.addItem(createTimeStatsItem);
@@ -441,9 +451,15 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
  	protected Object[] prepareImageUpdateParameters(Image image){
  		Object[] parameters = new Object[7];
  
+ 		
  		parameters[0] = image.getName();
+ 		
+ 		
  		parameters[1] = image.getImagePath();
- 		parameters[2] = image.getCreateTime(); 	
+ 		
+ 		
+ 		parameters[2] = image.getCreateTime();
+ 		 	
  		if(image.getPlatform() != null){
  			parameters[3] = image.getPlatform().getId();
  		}
@@ -460,9 +476,15 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
 		image.setId(newImageId);
 		parameters[0] =  image.getId();
  
+ 		
  		parameters[1] = image.getName();
+ 		
+ 		
  		parameters[2] = image.getImagePath();
- 		parameters[3] = image.getCreateTime(); 	
+ 		
+ 		
+ 		parameters[3] = image.getCreateTime();
+ 		 	
  		if(image.getPlatform() != null){
  			parameters[4] = image.getPlatform().getId();
  		
@@ -530,6 +552,9 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
 	public void enhanceList(List<Image> imageList) {		
 		this.enhanceListInternal(imageList, this.getImageMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<Image> imageList = ownerEntity.collectRefsWithType(Image.INTERNAL_TYPE);
@@ -562,6 +587,13 @@ public class ImageJDBCTemplateDAO extends DemodataNamingServiceDAO implements Im
 	public SmartList<Image> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getImageMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

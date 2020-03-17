@@ -3,17 +3,22 @@ package com.test.demodata.userdomain;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.secuser.SecUser;
+import com.test.demodata.userwhitelist.UserWhiteList;
+
 import com.test.demodata.userwhitelist.UserWhiteListDAO;
 import com.test.demodata.secuser.SecUserDAO;
 
 
-public interface UserDomainDAO{
+public interface UserDomainDAO extends BaseDAO{
 
-	
+	public SmartList<UserDomain> loadAll();
 	public UserDomain load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<UserDomain> userDomainList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -57,6 +62,14 @@ public interface UserDomainDAO{
 
 	
 	public SmartList<UserDomain> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
+
+	// 需要一个加载引用我的对象的enhance方法:UserWhiteList的domain的UserWhiteListList
+	public SmartList<UserWhiteList> loadOurUserWhiteListList(DemodataUserContext userContext, List<UserDomain> us, Map<String,Object> options) throws Exception;
+	
+	// 需要一个加载引用我的对象的enhance方法:SecUser的domain的SecUserList
+	public SmartList<SecUser> loadOurSecUserList(DemodataUserContext userContext, List<UserDomain> us, Map<String,Object> options) throws Exception;
+	
 }
 
 

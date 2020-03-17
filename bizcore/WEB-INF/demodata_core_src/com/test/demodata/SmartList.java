@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 /*
  * 
@@ -26,7 +28,11 @@ facetList，动态过滤器列表
  * */
 public class SmartList<E  extends BaseEntity> extends BaseEntity implements List<E> {
 
-
+	public void forEach(Consumer<? super E> action) {
+		ensureSmartList();
+		smartList.forEach(action);
+	}
+	
 	public StatsInfo getStatsInfo() {
 		return statsInfo;
 	}
@@ -124,11 +130,19 @@ public class SmartList<E  extends BaseEntity> extends BaseEntity implements List
 		super();
 		
 	}
+	public SmartList(Collection<E> datas){
+		super();
+		ensureSmartList();
+		smartList.addAll(datas);
+	}
 	public int size() {
 		ensureSmartList();
 		return smartList.size();
 	}
-
+	public Stream<E> stream() {
+		ensureSmartList();
+		return smartList.stream();
+	}
 	public boolean isEmpty() {
 		ensureSmartList();
 		return smartList.isEmpty();

@@ -3,10 +3,12 @@ package com.test.demodata.userwhitelist;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.userdomain.UserDomainDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class UserWhiteListJDBCTemplateDAO extends DemodataNamingServiceDAO implements UserWhiteListDAO{
+
+public class UserWhiteListJDBCTemplateDAO extends DemodataBaseDAOImpl implements UserWhiteListDAO{
  
  	
  	private  UserDomainDAO  userDomainDAO;
@@ -47,6 +52,11 @@ public class UserWhiteListJDBCTemplateDAO extends DemodataNamingServiceDAO imple
 		return loadInternalUserWhiteList(accessKey, options);
 	}
 	*/
+	
+	public SmartList<UserWhiteList> loadAll() {
+	    return this.loadAll(getUserWhiteListMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -425,8 +435,12 @@ public class UserWhiteListJDBCTemplateDAO extends DemodataNamingServiceDAO imple
  	protected Object[] prepareUserWhiteListUpdateParameters(UserWhiteList userWhiteList){
  		Object[] parameters = new Object[6];
  
+ 		
  		parameters[0] = userWhiteList.getUserIdentity();
- 		parameters[1] = userWhiteList.getUserSpecialFunctions(); 	
+ 		
+ 		
+ 		parameters[1] = userWhiteList.getUserSpecialFunctions();
+ 		 	
  		if(userWhiteList.getDomain() != null){
  			parameters[2] = userWhiteList.getDomain().getId();
  		}
@@ -443,8 +457,12 @@ public class UserWhiteListJDBCTemplateDAO extends DemodataNamingServiceDAO imple
 		userWhiteList.setId(newUserWhiteListId);
 		parameters[0] =  userWhiteList.getId();
  
+ 		
  		parameters[1] = userWhiteList.getUserIdentity();
- 		parameters[2] = userWhiteList.getUserSpecialFunctions(); 	
+ 		
+ 		
+ 		parameters[2] = userWhiteList.getUserSpecialFunctions();
+ 		 	
  		if(userWhiteList.getDomain() != null){
  			parameters[3] = userWhiteList.getDomain().getId();
  		
@@ -512,6 +530,9 @@ public class UserWhiteListJDBCTemplateDAO extends DemodataNamingServiceDAO imple
 	public void enhanceList(List<UserWhiteList> userWhiteListList) {		
 		this.enhanceListInternal(userWhiteListList, this.getUserWhiteListMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<UserWhiteList> userWhiteListList = ownerEntity.collectRefsWithType(UserWhiteList.INTERNAL_TYPE);
@@ -544,6 +565,13 @@ public class UserWhiteListJDBCTemplateDAO extends DemodataNamingServiceDAO imple
 	public SmartList<UserWhiteList> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getUserWhiteListMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

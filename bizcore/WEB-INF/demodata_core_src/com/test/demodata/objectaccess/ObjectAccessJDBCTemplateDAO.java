@@ -3,10 +3,12 @@ package com.test.demodata.objectaccess;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.userapp.UserAppDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class ObjectAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implements ObjectAccessDAO{
+
+public class ObjectAccessJDBCTemplateDAO extends DemodataBaseDAOImpl implements ObjectAccessDAO{
  
  	
  	private  UserAppDAO  userAppDAO;
@@ -47,6 +52,11 @@ public class ObjectAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 		return loadInternalObjectAccess(accessKey, options);
 	}
 	*/
+	
+	public SmartList<ObjectAccess> loadAll() {
+	    return this.loadAll(getObjectAccessMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -425,17 +435,39 @@ public class ObjectAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implem
  	protected Object[] prepareObjectAccessUpdateParameters(ObjectAccess objectAccess){
  		Object[] parameters = new Object[15];
  
+ 		
  		parameters[0] = objectAccess.getName();
+ 		
+ 		
  		parameters[1] = objectAccess.getObjectType();
+ 		
+ 		
  		parameters[2] = objectAccess.getList1();
+ 		
+ 		
  		parameters[3] = objectAccess.getList2();
+ 		
+ 		
  		parameters[4] = objectAccess.getList3();
+ 		
+ 		
  		parameters[5] = objectAccess.getList4();
+ 		
+ 		
  		parameters[6] = objectAccess.getList5();
+ 		
+ 		
  		parameters[7] = objectAccess.getList6();
+ 		
+ 		
  		parameters[8] = objectAccess.getList7();
+ 		
+ 		
  		parameters[9] = objectAccess.getList8();
- 		parameters[10] = objectAccess.getList9(); 	
+ 		
+ 		
+ 		parameters[10] = objectAccess.getList9();
+ 		 	
  		if(objectAccess.getApp() != null){
  			parameters[11] = objectAccess.getApp().getId();
  		}
@@ -452,17 +484,39 @@ public class ObjectAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 		objectAccess.setId(newObjectAccessId);
 		parameters[0] =  objectAccess.getId();
  
+ 		
  		parameters[1] = objectAccess.getName();
+ 		
+ 		
  		parameters[2] = objectAccess.getObjectType();
+ 		
+ 		
  		parameters[3] = objectAccess.getList1();
+ 		
+ 		
  		parameters[4] = objectAccess.getList2();
+ 		
+ 		
  		parameters[5] = objectAccess.getList3();
+ 		
+ 		
  		parameters[6] = objectAccess.getList4();
+ 		
+ 		
  		parameters[7] = objectAccess.getList5();
+ 		
+ 		
  		parameters[8] = objectAccess.getList6();
+ 		
+ 		
  		parameters[9] = objectAccess.getList7();
+ 		
+ 		
  		parameters[10] = objectAccess.getList8();
- 		parameters[11] = objectAccess.getList9(); 	
+ 		
+ 		
+ 		parameters[11] = objectAccess.getList9();
+ 		 	
  		if(objectAccess.getApp() != null){
  			parameters[12] = objectAccess.getApp().getId();
  		
@@ -530,6 +584,9 @@ public class ObjectAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 	public void enhanceList(List<ObjectAccess> objectAccessList) {		
 		this.enhanceListInternal(objectAccessList, this.getObjectAccessMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<ObjectAccess> objectAccessList = ownerEntity.collectRefsWithType(ObjectAccess.INTERNAL_TYPE);
@@ -562,6 +619,13 @@ public class ObjectAccessJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 	public SmartList<ObjectAccess> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getObjectAccessMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

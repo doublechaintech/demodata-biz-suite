@@ -3,16 +3,20 @@ package com.test.demodata.platform;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.image.Image;
+
 import com.test.demodata.image.ImageDAO;
 
 
-public interface PlatformDAO{
+public interface PlatformDAO extends BaseDAO{
 
-	
+	public SmartList<Platform> loadAll();
 	public Platform load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<Platform> platformList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -49,6 +53,11 @@ public interface PlatformDAO{
 
 	
 	public SmartList<Platform> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
+
+	// 需要一个加载引用我的对象的enhance方法:Image的platform的ImageList
+	public SmartList<Image> loadOurImageList(DemodataUserContext userContext, List<Platform> us, Map<String,Object> options) throws Exception;
+	
 }
 
 

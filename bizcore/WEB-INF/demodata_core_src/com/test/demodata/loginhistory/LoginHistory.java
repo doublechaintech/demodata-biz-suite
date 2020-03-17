@@ -4,8 +4,10 @@ package com.test.demodata.loginhistory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -55,23 +57,25 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 	
 		
 	public 	LoginHistory(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static LoginHistory withId(String id){
+		LoginHistory loginHistory = new LoginHistory();
+		loginHistory.setId(id);
+		loginHistory.setVersion(Integer.MAX_VALUE);
+		return loginHistory;
+	}
+	public 	static LoginHistory refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 		setSecUser( null );
 
 		this.changed = true;
 	}
 	
-	public 	LoginHistory(DateTime loginTime, String fromIp, String description, SecUser secUser)
-	{
-		setLoginTime(loginTime);
-		setFromIp(fromIp);
-		setDescription(description);
-		setSecUser(secUser);
-	
-	}
 	
 	//Support for changing the property
 	
@@ -92,6 +96,7 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeLoginTimeProperty(String newValueExpr){
+	
 		DateTime oldValue = getLoginTime();
 		DateTime newValue = parseTimestamp(newValueExpr);
 		if(equalsTimestamp(oldValue , newValue)){
@@ -101,12 +106,13 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		updateLoginTime(newValue);
 		this.onChangeProperty(LOGIN_TIME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeFromIpProperty(String newValueExpr){
+	
 		String oldValue = getFromIp();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -116,12 +122,13 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		updateFromIp(newValue);
 		this.onChangeProperty(FROM_IP_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
 	protected void changeDescriptionProperty(String newValueExpr){
+	
 		String oldValue = getDescription();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -131,11 +138,34 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		updateDescription(newValue);
 		this.onChangeProperty(DESCRIPTION_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(LOGIN_TIME_PROPERTY.equals(property)){
+			return getLoginTime();
+		}
+		if(FROM_IP_PROPERTY.equals(property)){
+			return getFromIp();
+		}
+		if(DESCRIPTION_PROPERTY.equals(property)){
+			return getDescription();
+		}
+		if(SEC_USER_PROPERTY.equals(property)){
+			return getSecUser();
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -152,6 +182,9 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setLoginTime(DateTime loginTime){
@@ -164,6 +197,9 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		this.mLoginTime = loginTime;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeLoginTime(DateTime loginTime){
+		setLoginTime(loginTime);
 	}
 	
 	
@@ -178,6 +214,9 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeFromIp(String fromIp){
+		if(fromIp != null) { setFromIp(fromIp);}
+	}
 	
 	
 	public void setDescription(String description){
@@ -191,6 +230,9 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeDescription(String description){
+		if(description != null) { setDescription(description);}
+	}
 	
 	
 	public void setSecUser(SecUser secUser){
@@ -203,6 +245,9 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		this.mSecUser = secUser;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeSecUser(SecUser secUser){
+		if(secUser != null) { setSecUser(secUser);}
 	}
 	
 	
@@ -221,6 +266,9 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -282,7 +330,46 @@ public class LoginHistory extends BaseEntity implements  java.io.Serializable{
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof LoginHistory){
+		
+			
+			LoginHistory dest =(LoginHistory)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeLoginTime(getLoginTime());
+			dest.mergeFromIp(getFromIp());
+			dest.mergeDescription(getDescription());
+			dest.mergeSecUser(getSecUser());
+			dest.mergeVersion(getVersion());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof LoginHistory){
+		
+			
+			LoginHistory dest =(LoginHistory)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeLoginTime(getLoginTime());
+			dest.mergeFromIp(getFromIp());
+			dest.mergeDescription(getDescription());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getLoginTime(), getFromIp(), getDescription(), getSecUser(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

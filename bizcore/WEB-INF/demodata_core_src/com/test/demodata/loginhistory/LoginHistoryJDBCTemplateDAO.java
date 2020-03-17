@@ -3,10 +3,12 @@ package com.test.demodata.loginhistory;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.secuser.SecUserDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implements LoginHistoryDAO{
+
+public class LoginHistoryJDBCTemplateDAO extends DemodataBaseDAOImpl implements LoginHistoryDAO{
  
  	
  	private  SecUserDAO  secUserDAO;
@@ -47,6 +52,11 @@ public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 		return loadInternalLoginHistory(accessKey, options);
 	}
 	*/
+	
+	public SmartList<LoginHistory> loadAll() {
+	    return this.loadAll(getLoginHistoryMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -277,7 +287,7 @@ public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implem
  
 		StatsItem loginTimeStatsItem = new StatsItem();
 		//LoginHistory.LOGIN_TIME_PROPERTY
-		loginTimeStatsItem.setDisplayName("Login History");
+		loginTimeStatsItem.setDisplayName("登录历史");
 		loginTimeStatsItem.setInternalName(formatKeyForDateLine(LoginHistory.LOGIN_TIME_PROPERTY));
 		loginTimeStatsItem.setResult(statsWithGroup(DateKey.class,wrapWithDate(LoginHistory.LOGIN_TIME_PROPERTY),filterKey,emptyOptions));
 		info.addItem(loginTimeStatsItem);
@@ -441,9 +451,15 @@ public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implem
  	protected Object[] prepareLoginHistoryUpdateParameters(LoginHistory loginHistory){
  		Object[] parameters = new Object[7];
  
+ 		
  		parameters[0] = loginHistory.getLoginTime();
+ 		
+ 		
  		parameters[1] = loginHistory.getFromIp();
- 		parameters[2] = loginHistory.getDescription(); 	
+ 		
+ 		
+ 		parameters[2] = loginHistory.getDescription();
+ 		 	
  		if(loginHistory.getSecUser() != null){
  			parameters[3] = loginHistory.getSecUser().getId();
  		}
@@ -460,9 +476,15 @@ public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 		loginHistory.setId(newLoginHistoryId);
 		parameters[0] =  loginHistory.getId();
  
+ 		
  		parameters[1] = loginHistory.getLoginTime();
+ 		
+ 		
  		parameters[2] = loginHistory.getFromIp();
- 		parameters[3] = loginHistory.getDescription(); 	
+ 		
+ 		
+ 		parameters[3] = loginHistory.getDescription();
+ 		 	
  		if(loginHistory.getSecUser() != null){
  			parameters[4] = loginHistory.getSecUser().getId();
  		
@@ -530,6 +552,9 @@ public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 	public void enhanceList(List<LoginHistory> loginHistoryList) {		
 		this.enhanceListInternal(loginHistoryList, this.getLoginHistoryMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<LoginHistory> loginHistoryList = ownerEntity.collectRefsWithType(LoginHistory.INTERNAL_TYPE);
@@ -562,6 +587,13 @@ public class LoginHistoryJDBCTemplateDAO extends DemodataNamingServiceDAO implem
 	public SmartList<LoginHistory> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getLoginHistoryMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
 
 

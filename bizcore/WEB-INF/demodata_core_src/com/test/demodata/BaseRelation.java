@@ -121,6 +121,9 @@ public class BaseRelation{
 		String [] userAppRelatedObjectNames = {"sec_user:SecUser"};
 		addRelationIndex("UserApp",userAppRelatedObjectNames);
 
+		String [] quickLinkRelatedObjectNames = {"app:UserApp"};
+		addRelationIndex("QuickLink",quickLinkRelatedObjectNames);
+
 		String [] listAccessRelatedObjectNames = {"app:UserApp"};
 		addRelationIndex("ListAccess",listAccessRelatedObjectNames);
 
@@ -141,6 +144,15 @@ public class BaseRelation{
 
 		String [] formActionRelatedObjectNames = {"form:GenericForm"};
 		addRelationIndex("FormAction",formActionRelatedObjectNames);
+
+		String [] candidateElementRelatedObjectNames = {"container:CandidateContainer"};
+		addRelationIndex("CandidateElement",candidateElementRelatedObjectNames);
+
+		String [] wechatWorkappIdentifyRelatedObjectNames = {"sec_user:SecUser"};
+		addRelationIndex("WechatWorkappIdentify",wechatWorkappIdentifyRelatedObjectNames);
+
+		String [] wechatMiniappIdentifyRelatedObjectNames = {"sec_user:SecUser"};
+		addRelationIndex("WechatMiniappIdentify",wechatMiniappIdentifyRelatedObjectNames);
 
 	
 	
@@ -166,6 +178,7 @@ public class BaseRelation{
 		addGenericRelation("UserWhiteList"                         ,TRUST_CHAIN_READ,"domain");
 		addGenericRelation("SecUser"                               ,TRUST_CHAIN_READ,"domain");
 		addGenericRelation("UserApp"                               ,TRUST_CHAIN_READ,"secUser");
+		addGenericRelation("QuickLink"                             ,TRUST_CHAIN_READ,"app");
 		addGenericRelation("ListAccess"                            ,TRUST_CHAIN_READ,"app");
 		addGenericRelation("ObjectAccess"                          ,TRUST_CHAIN_READ,"app");
 		addGenericRelation("LoginHistory"                          ,TRUST_CHAIN_READ,"secUser");
@@ -173,6 +186,9 @@ public class BaseRelation{
 		addGenericRelation("FormFieldMessage"                      ,TRUST_CHAIN_READ,"form");
 		addGenericRelation("FormField"                             ,TRUST_CHAIN_READ,"form");
 		addGenericRelation("FormAction"                            ,TRUST_CHAIN_READ,"form");
+		addGenericRelation("CandidateElement"                      ,TRUST_CHAIN_READ,"container");
+		addGenericRelation("WechatWorkappIdentify"                 ,TRUST_CHAIN_READ,"secUser");
+		addGenericRelation("WechatMiniappIdentify"                 ,TRUST_CHAIN_READ,"secUser");
 	
 	}
 

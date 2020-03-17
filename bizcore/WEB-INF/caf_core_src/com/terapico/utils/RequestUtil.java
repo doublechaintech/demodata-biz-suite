@@ -49,13 +49,24 @@ public class RequestUtil {
         if (value == null) {
             return defaultValue;
         }
-        return String.valueOf(value);
+        return String.valueOf(value).trim();
     }
 
     public static Date getDateInput(Map<String, Object> requestParameters, String fieldName, Date defaultValue) {
         Object value = getSingleByName(requestParameters, fieldName);
         if (value == null) {
             return defaultValue;
+        }
+        if (value instanceof Number) {
+        	return new Date(((Number) value).longValue());
+        }
+        if (value instanceof String && ((String)value).matches("\\d{0,14}")) {
+        	try {
+        		long tsMs = Long.parseLong((String) value);
+        		return new Date(tsMs);
+        	}catch (Exception e) {
+        		// 不行就算了
+        	}
         }
         Date date = DateTimeUtil.parseInputDateTime(String.valueOf(value));
         if (date == null) {
@@ -78,6 +89,9 @@ public class RequestUtil {
         } catch (Exception e) {
             if (defaultValue == null) {
                 return null;
+            }
+            if (defaultValue instanceof BigDecimal) {
+            	return (BigDecimal) defaultValue;
             }
             return new BigDecimal(defaultValue.toString());
         }
@@ -115,6 +129,11 @@ public class RequestUtil {
         }
         try {
             return Integer.parseInt(String.valueOf(value));
+        } catch (Exception e) {
+            // return defaultValue;
+        }
+        try {
+            return (int) Double.parseDouble(String.valueOf(value));
         } catch (Exception e) {
             return defaultValue;
         }

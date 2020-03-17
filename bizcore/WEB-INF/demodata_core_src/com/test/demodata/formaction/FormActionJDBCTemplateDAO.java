@@ -3,10 +3,12 @@ package com.test.demodata.formaction;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigDecimal;
-import com.test.demodata.DemodataNamingServiceDAO;
+import com.test.demodata.DemodataBaseDAOImpl;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.AccessKey;
@@ -24,9 +26,12 @@ import com.test.demodata.genericform.GenericFormDAO;
 
 
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
-public class FormActionJDBCTemplateDAO extends DemodataNamingServiceDAO implements FormActionDAO{
+
+public class FormActionJDBCTemplateDAO extends DemodataBaseDAOImpl implements FormActionDAO{
  
  	
  	private  GenericFormDAO  genericFormDAO;
@@ -47,6 +52,11 @@ public class FormActionJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 		return loadInternalFormAction(accessKey, options);
 	}
 	*/
+	
+	public SmartList<FormAction> loadAll() {
+	    return this.loadAll(getFormActionMapper());
+	}
+	
 	
 	protected String getIdFormat()
 	{
@@ -425,11 +435,21 @@ public class FormActionJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
  	protected Object[] prepareFormActionUpdateParameters(FormAction formAction){
  		Object[] parameters = new Object[9];
  
+ 		
  		parameters[0] = formAction.getLabel();
+ 		
+ 		
  		parameters[1] = formAction.getLocaleKey();
+ 		
+ 		
  		parameters[2] = formAction.getActionKey();
+ 		
+ 		
  		parameters[3] = formAction.getLevel();
- 		parameters[4] = formAction.getUrl(); 	
+ 		
+ 		
+ 		parameters[4] = formAction.getUrl();
+ 		 	
  		if(formAction.getForm() != null){
  			parameters[5] = formAction.getForm().getId();
  		}
@@ -446,11 +466,21 @@ public class FormActionJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 		formAction.setId(newFormActionId);
 		parameters[0] =  formAction.getId();
  
+ 		
  		parameters[1] = formAction.getLabel();
+ 		
+ 		
  		parameters[2] = formAction.getLocaleKey();
+ 		
+ 		
  		parameters[3] = formAction.getActionKey();
+ 		
+ 		
  		parameters[4] = formAction.getLevel();
- 		parameters[5] = formAction.getUrl(); 	
+ 		
+ 		
+ 		parameters[5] = formAction.getUrl();
+ 		 	
  		if(formAction.getForm() != null){
  			parameters[6] = formAction.getForm().getId();
  		
@@ -518,6 +548,9 @@ public class FormActionJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 	public void enhanceList(List<FormAction> formActionList) {		
 		this.enhanceListInternal(formActionList, this.getFormActionMapper());
 	}
+	
+	
+	
 	@Override
 	public void collectAndEnhance(BaseEntity ownerEntity) {
 		List<FormAction> formActionList = ownerEntity.collectRefsWithType(FormAction.INTERNAL_TYPE);
@@ -550,18 +583,13 @@ public class FormActionJDBCTemplateDAO extends DemodataNamingServiceDAO implemen
 	public SmartList<FormAction> queryList(String sql, Object... parameters) {
 	    return this.queryForList(sql, parameters, this.getFormActionMapper());
 	}
+	@Override
+	public int count(String sql, Object... parameters) {
+	    return queryInt(sql, parameters);
+	}
+	
+	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 

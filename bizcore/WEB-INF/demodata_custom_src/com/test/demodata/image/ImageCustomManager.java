@@ -29,7 +29,48 @@ public class ImageCustomManager extends ImageMiddleManager {
 	
 	
 	
+	SemanticImageFetcher fetcher;
 	
+	protected SemanticImageFetcher fetcherOf() {
+		
+		if(fetcher!=null) {
+			return fetcher;
+		}
+		fetcher = new SemanticImageFetcher();
+		return fetcher;
+	}
+	
+	
+	
+	public ImageList listOf(DemodataUserContext userContext,String key) throws IOException {
+		
+		String [] files = fetcherOf().getFileCandidates(key);
+		
+		ImageList ret = new  ImageList();
+		ret.setImageList(files);
+		return ret;
+	}
+	
+	public ImageList listOf2(DemodataUserContext userContext,String key) throws IOException {
+		
+		
+		
+		
+		String [] files = fetcherOf().getFileCandidates(key);
+		
+		String [] finalFiles = new String[files.length];
+		
+		for(int i=0;i<finalFiles.length;i++) {
+			
+			finalFiles[i]=String.format("/demodata/imageManager/loadImage/%s%04d/400/300/red/", key,i);
+			
+		}
+		
+		
+		ImageList ret = new  ImageList();
+		ret.setImageList(finalFiles);
+		return ret;
+	}
 	
 	
 	protected int outOfThen(int value, int min, int max, int defaultValue) {
@@ -43,8 +84,34 @@ public class ImageCustomManager extends ImageMiddleManager {
 		
 		return value;
 	}
-	public BlobObject genImage(String note, int width, int height,String backgroundColor) throws IOException {
 	
+	
+	public BlobObject loadImage(DemodataUserContext userContext,String note, int width, int height,String backgroundColor) throws IOException {
+		
+		String key = fetcherOf().keyOf(note);
+		int index = fetcherOf().indexOf(note);
+		
+		String [] files = fetcherOf().getFileCandidates(key);
+		
+		String filePath = files[index%files.length];
+		
+		
+		userContext.log("loading from " + filePath +" via "+ key +" and "+index);
+		
+		BlobObject blob = new BlobObject();
+		blob.setData(fetcherOf().fileContentOf(filePath));
+		blob.setMimeType(BlobObject.TYPE_JPEG);
+		
+		return blob;
+		
+	}
+	
+	public BlobObject genImage(DemodataUserContext userContext,String note, int width, int height,String backgroundColor) throws IOException {
+		
+		
+		
+		
+		
 		return this.helloImage2(note, width, height, backgroundColor);
 	
 	}
@@ -190,6 +257,9 @@ public class ImageCustomManager extends ImageMiddleManager {
 	}
 	
 	public BlobObject helloImage2(String note, int width, int height,String backgroundColor) throws IOException {
+		
+		
+		
 		
 		int internalWidth = outOfThen(width,10,2400,600);
 		int internalHeight = outOfThen(height,10,2400,400);

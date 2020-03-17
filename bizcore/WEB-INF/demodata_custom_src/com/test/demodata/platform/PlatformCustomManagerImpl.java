@@ -15,29 +15,11 @@ package com.test.demodata.platform;
 import java.util.Date;
 import java.util.Map;
 
-import com.test.demodata.DemodataUserContext;
-import com.test.demodata.image.Image;
 
 public class PlatformCustomManagerImpl extends PlatformManagerImpl{
 
 
-	public Platform searchImage(DemodataUserContext userContext,String platformId, Date uploadTime) {
-		
-		PlatformMyDAO pmd=(PlatformMyDAO)userContext.getDAOGroup().getPlatformDAO();
-		
-		
-		Map<String,Object> tokens=this.tokens()
-				.searchImageListWith(Image.ID_PROPERTY, "oneof", "1|2|3")
-				.searchImageListWith(Image.CREATE_TIME_PROPERTY, "lt", "2019-03-11~2019-0")
-				.searchAllTextOfImageList("contains", "http").done();
-				
-		
-		
-		return null;
-		
-		
-		
-	}
+	
 
 
 }

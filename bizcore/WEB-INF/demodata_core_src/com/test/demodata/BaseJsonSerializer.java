@@ -316,5 +316,3 @@ public abstract class BaseJsonSerializer<T extends BaseEntity> extends JsonSeria
 
 
 
-
-

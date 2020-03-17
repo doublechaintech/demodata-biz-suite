@@ -24,8 +24,8 @@ public class DemodataNamingServiceDAO extends CommonJDBCTemplateDAO {
 		namingTableMap.put("UserDomain", new String[]{"user_domain_data","name"});
 		namingTableMap.put("UserWhiteList", new String[]{"user_white_list_data","user_identity"});
 		namingTableMap.put("SecUser", new String[]{"sec_user_data","login"});
-		namingTableMap.put("SecUserBlocking", new String[]{"sec_user_blocking_data","who"});
 		namingTableMap.put("UserApp", new String[]{"user_app_data","title"});
+		namingTableMap.put("QuickLink", new String[]{"quick_link_data","name"});
 		namingTableMap.put("ListAccess", new String[]{"list_access_data","name"});
 		namingTableMap.put("ObjectAccess", new String[]{"object_access_data","name"});
 		namingTableMap.put("LoginHistory", new String[]{"login_history_data","from_ip"});
@@ -34,6 +34,11 @@ public class DemodataNamingServiceDAO extends CommonJDBCTemplateDAO {
 		namingTableMap.put("FormFieldMessage", new String[]{"form_field_message_data","title"});
 		namingTableMap.put("FormField", new String[]{"form_field_data","label"});
 		namingTableMap.put("FormAction", new String[]{"form_action_data","label"});
+		namingTableMap.put("CandidateContainer", new String[]{"candidate_container_data","name"});
+		namingTableMap.put("CandidateElement", new String[]{"candidate_element_data","name"});
+		namingTableMap.put("WechatWorkappIdentify", new String[]{"wechat_workapp_identify_data","corp_id"});
+		namingTableMap.put("WechatMiniappIdentify", new String[]{"wechat_miniapp_identify_data","open_id"});
+		namingTableMap.put("TreeNode", new String[]{"tree_node_data","node_id"});
 		
 
 		
@@ -130,6 +135,16 @@ public class DemodataNamingServiceDAO extends CommonJDBCTemplateDAO {
 		return resultMap.get(key);
 	}
 
+	protected String trimString(String valueToTrim) {
+		if(valueToTrim==null) {
+			return null;
+		}
+		if(valueToTrim.isEmpty()) {
+			return "";
+		}
+		return valueToTrim.trim();
+		
+	}
 	protected Map<String, String> getResultMap(String unionedSQL,
 			Object[] parameters) {
 		
@@ -145,10 +160,11 @@ public class DemodataNamingServiceDAO extends CommonJDBCTemplateDAO {
 				
 				Map<String,String> internalMap = new HashMap<String,String>();
 				while(resultSet.next()){ 
-					String key = resultSet.getString(1)+":"+resultSet.getString(2);
+					String key = trimString(resultSet.getString(1))+":"+trimString(resultSet.getString(2));
+					// Fixed the issue for Informix and Gbase 8t/s data base, it appends values for the class column
 					String value = resultSet.getString(3);
 					
-					//System.out.printf("%s: %s\r\n",key, value);
+					// System.out.printf("%s = %s\r\n",key, value);
 					
 					internalMap.put(key, value);
 					
@@ -279,10 +295,69 @@ public class DemodataNamingServiceDAO extends CommonJDBCTemplateDAO {
 		
 	}*/
 	
+    public SmartList<BaseEntity> requestCandidateValuesForSearch(String ownerMemberName, String ownerId, String resultMemberName, String resutlClassName, String targetClassName, String filterKey, int pageNo){
+    	this.checkFieldName(resultMemberName);
+    	this.checkFieldName(resutlClassName);
+    	this.checkFieldName(ownerMemberName);
+    	this.checkFieldName(targetClassName);
+    	
+    	List<Object> params = new ArrayList<>();
+    	params.add(ownerId);
+    	
+    	String filterClause = " ";
+    	String joinClause = " ";
+    	if (filterKey != null && !filterKey.trim().isEmpty() ) {
+    		String[] sqlInfo=namingTableMap.get(targetClassName);
+    		if(sqlInfo==null){
+    			throw new IllegalArgumentException("sqlOf(String currentClassName): Not able to find sql info for filter class: "+targetClassName);
+    		}
+    		if(sqlInfo.length<2){
+    			throw new IllegalArgumentException("sqlOf(String currentClassName): sqlInfo.length should equals 2 for filter class: "+targetClassName);
+    			
+    		}
+    		String displayExpr = sqlInfo[1];
+    		joinClause = String.format(" left join %s_data T2 on T1.%s=T2.id ", mapToInternalColumn(targetClassName), mapToInternalColumn(resultMemberName));
+    		filterClause = String.format(" and T2.%s like ? ", displayExpr);
+    		params.add("%"+filterKey.trim()+"%");
+    	}
+    	String sql = String.format("select distinct T1.%s from %s_data T1%swhere T1.%s = ?%sorder by cast(%s as CHAR CHARACTER SET GBK) asc", 
+    			mapToInternalColumn(resultMemberName), mapToInternalColumn(resutlClassName), 
+    			joinClause,
+    			mapToInternalColumn(ownerMemberName), 
+    			filterClause,
+    			mapToInternalColumn(resultMemberName));
+    	// System.out.println(sql +" executed with " + params);
+    	List<String> keyList = getJdbcTemplateObject().queryForList(sql, params.toArray(), String.class);
+    	SmartList<BaseEntity> resultList = new SmartList<>();
+    	if (keyList == null) {
+    		return resultList;
+    	}
+    	keyList.forEach(key->{
+    		resultList.add(BaseEntity.pretendToBe(targetClassName, key));
+    	});
+    	this.alias(resultList);
+    	return resultList;
+    }
     
+    protected String mapToInternalColumn(String field){
+		char [] fieldArray = field.toCharArray();
+		StringBuilder internalFieldBuffer = new StringBuilder();
+		int i = 0;
+		for(char ch:fieldArray){
+			i++;
+			if(Character.isUpperCase(ch) ){
+				if (i > 1) {
+					internalFieldBuffer.append('_');
+				}
+				char lowerCaseChar = Character.toLowerCase(ch);
+				internalFieldBuffer.append(lowerCaseChar);
+				continue;
+			}
+			internalFieldBuffer.append(ch);
+		}
+		return internalFieldBuffer.toString();
+	}
 }
-
-
 
 
 

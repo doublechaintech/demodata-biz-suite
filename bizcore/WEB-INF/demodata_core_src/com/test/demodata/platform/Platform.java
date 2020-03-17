@@ -4,8 +4,10 @@ package com.test.demodata.platform;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.KeyValuePair;
@@ -51,20 +53,24 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 	
 		
 	public 	Platform(){
-		//lazy load for all the properties
+		// lazy load for all the properties
 	}
-	//disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
+	public 	static Platform withId(String id){
+		Platform platform = new Platform();
+		platform.setId(id);
+		platform.setVersion(Integer.MAX_VALUE);
+		return platform;
+	}
+	public 	static Platform refById(String id){
+		return withId(id);
+	}
+	
+	// disconnect from all, 中文就是一了百了，跟所有一切尘世断绝往来藏身于茫茫数据海洋
 	public 	void clearFromAll(){
 
 		this.changed = true;
 	}
 	
-	public 	Platform(String name)
-	{
-		setName(name);
-
-		this.mImageList = new SmartList<Image>();	
-	}
 	
 	//Support for changing the property
 	
@@ -79,6 +85,7 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
     
     
 	protected void changeNameProperty(String newValueExpr){
+	
 		String oldValue = getName();
 		String newValue = parseString(newValueExpr);
 		if(equalsString(oldValue , newValue)){
@@ -88,11 +95,29 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 		updateName(newValue);
 		this.onChangeProperty(NAME_PROPERTY, oldValue, newValue);
 		return;
-  
+   
 	}
 			
 			
 			
+
+
+	
+	public Object propertyOf(String property) {
+     	
+		if(NAME_PROPERTY.equals(property)){
+			return getName();
+		}
+		if(IMAGE_LIST.equals(property)){
+			List<BaseEntity> list = getImageList().stream().map(item->item).collect(Collectors.toList());
+			return list;
+		}
+
+    		//other property not include here
+		return super.propertyOf(property);
+	}
+    
+    
 
 
 	
@@ -109,6 +134,9 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeId(String id){
+		if(id != null) { setId(id);}
+	}
 	
 	
 	public void setName(String name){
@@ -122,6 +150,9 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 		this.changed = true;
 		return this;
 	}
+	public void mergeName(String name){
+		if(name != null) { setName(name);}
+	}
 	
 	
 	public void setVersion(int version){
@@ -134,6 +165,9 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 		this.mVersion = version;;
 		this.changed = true;
 		return this;
+	}
+	public void mergeVersion(int version){
+		setVersion(version);
 	}
 	
 	
@@ -167,7 +201,16 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 		}
 		getImageList().addAll(imageList);
 	}
-	
+	public  void mergeImageList(SmartList<Image> imageList){
+		if(imageList==null){
+			return;
+		}
+		if(imageList.isEmpty()){
+			return;
+		}
+		addImageList( imageList );
+		
+	}
 	public  Image removeImage(Image imageIndex){
 		
 		int index = getImageList().indexOf(imageIndex);
@@ -294,7 +337,42 @@ public class Platform extends BaseEntity implements  java.io.Serializable{
 		super.copyTo(baseDest);
 		return baseDest;
 	}
+	public BaseEntity mergeDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof Platform){
+		
+			
+			Platform dest =(Platform)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeName(getName());
+			dest.mergeVersion(getVersion());
+			dest.mergeImageList(getImageList());
+
+		}
+		super.copyTo(baseDest);
+		return baseDest;
+	}
 	
+	public BaseEntity mergePrimitiveDataTo(BaseEntity baseDest){
+		
+		
+		if(baseDest instanceof Platform){
+		
+			
+			Platform dest =(Platform)baseDest;
+		
+			dest.mergeId(getId());
+			dest.mergeName(getName());
+			dest.mergeVersion(getVersion());
+
+		}
+		return baseDest;
+	}
+	public Object[] toFlatArray(){
+		return new Object[]{getId(), getName(), getVersion()};
+	}
 	public String toString(){
 		StringBuilder stringBuilder=new StringBuilder(128);
 

@@ -3,16 +3,20 @@ package com.test.demodata.image;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
-import com.test.demodata.platform.PlatformCustom2DAO;
+
+import com.test.demodata.platform.Platform;
+
+import com.test.demodata.platform.PlatformDAO;
 
 
-public interface ImageDAO{
+public interface ImageDAO extends BaseDAO{
 
-	
+	public SmartList<Image> loadAll();
 	public Image load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<Image> imageList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface ImageDAO{
 	
 	
 	public SmartList<Image> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<Image> findImageByPlatform(String platformId, Map<String,Object> options);
  	public int countImageByPlatform(String platformId, Map<String,Object> options);
@@ -50,6 +55,7 @@ public interface ImageDAO{
  	public void analyzeImageByPlatform(SmartList<Image> resultList, String platformId, Map<String,Object> options);
 
  
- }
+ 
+}
 
 

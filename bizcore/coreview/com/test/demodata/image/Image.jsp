@@ -128,6 +128,7 @@
 
 	<div class="row">
 <c:set var="platform" value="${ result.platform}" scope="request" />
+<c:set var="referName" value="" scope="request" />
 <sky:include page="com/test/demodata/platform/Platform$Info.jsp" />
 
 </div>

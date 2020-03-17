@@ -7,8 +7,8 @@ import com.test.demodata.image.Image;
 import com.test.demodata.userdomain.UserDomain;
 import com.test.demodata.userwhitelist.UserWhiteList;
 import com.test.demodata.secuser.SecUser;
-import com.test.demodata.secuserblocking.SecUserBlocking;
 import com.test.demodata.userapp.UserApp;
+import com.test.demodata.quicklink.QuickLink;
 import com.test.demodata.listaccess.ListAccess;
 import com.test.demodata.objectaccess.ObjectAccess;
 import com.test.demodata.loginhistory.LoginHistory;
@@ -17,6 +17,11 @@ import com.test.demodata.formmessage.FormMessage;
 import com.test.demodata.formfieldmessage.FormFieldMessage;
 import com.test.demodata.formfield.FormField;
 import com.test.demodata.formaction.FormAction;
+import com.test.demodata.candidatecontainer.CandidateContainer;
+import com.test.demodata.candidateelement.CandidateElement;
+import com.test.demodata.wechatworkappidentify.WechatWorkappIdentify;
+import com.test.demodata.wechatminiappidentify.WechatMiniappIdentify;
+import com.test.demodata.treenode.TreeNode;
 
 public class BeanFactoryImpl{
 
@@ -46,13 +51,13 @@ public class BeanFactoryImpl{
 	}
 
 
-	public SecUserBlocking createSecUserBlocking(Map<String,Object> options){
-		return new SecUserBlocking();
+	public UserApp createUserApp(Map<String,Object> options){
+		return new UserApp();
 	}
 
 
-	public UserApp createUserApp(Map<String,Object> options){
-		return new UserApp();
+	public QuickLink createQuickLink(Map<String,Object> options){
+		return new QuickLink();
 	}
 
 
@@ -96,12 +101,35 @@ public class BeanFactoryImpl{
 	}
 
 
+	public CandidateContainer createCandidateContainer(Map<String,Object> options){
+		return new CandidateContainer();
+	}
+
+
+	public CandidateElement createCandidateElement(Map<String,Object> options){
+		return new CandidateElement();
+	}
+
+
+	public WechatWorkappIdentify createWechatWorkappIdentify(Map<String,Object> options){
+		return new WechatWorkappIdentify();
+	}
+
+
+	public WechatMiniappIdentify createWechatMiniappIdentify(Map<String,Object> options){
+		return new WechatMiniappIdentify();
+	}
+
+
+	public TreeNode createTreeNode(Map<String,Object> options){
+		return new TreeNode();
+	}
+
+
 
 
 
 }
-
-
 
 
 

@@ -3,19 +3,26 @@ package com.test.demodata.genericform;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.formfieldmessage.FormFieldMessage;
+import com.test.demodata.formmessage.FormMessage;
+import com.test.demodata.formfield.FormField;
+import com.test.demodata.formaction.FormAction;
+
 import com.test.demodata.formmessage.FormMessageDAO;
 import com.test.demodata.formfieldmessage.FormFieldMessageDAO;
 import com.test.demodata.formaction.FormActionDAO;
 import com.test.demodata.formfield.FormFieldDAO;
 
 
-public interface GenericFormDAO{
+public interface GenericFormDAO extends BaseDAO{
 
-	
+	public SmartList<GenericForm> loadAll();
 	public GenericForm load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<GenericForm> genericFormList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -73,6 +80,20 @@ public interface GenericFormDAO{
 
 	
 	public SmartList<GenericForm> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
+
+	// 需要一个加载引用我的对象的enhance方法:FormMessage的form的FormMessageList
+	public SmartList<FormMessage> loadOurFormMessageList(DemodataUserContext userContext, List<GenericForm> us, Map<String,Object> options) throws Exception;
+	
+	// 需要一个加载引用我的对象的enhance方法:FormFieldMessage的form的FormFieldMessageList
+	public SmartList<FormFieldMessage> loadOurFormFieldMessageList(DemodataUserContext userContext, List<GenericForm> us, Map<String,Object> options) throws Exception;
+	
+	// 需要一个加载引用我的对象的enhance方法:FormField的form的FormFieldList
+	public SmartList<FormField> loadOurFormFieldList(DemodataUserContext userContext, List<GenericForm> us, Map<String,Object> options) throws Exception;
+	
+	// 需要一个加载引用我的对象的enhance方法:FormAction的form的FormActionList
+	public SmartList<FormAction> loadOurFormActionList(DemodataUserContext userContext, List<GenericForm> us, Map<String,Object> options) throws Exception;
+	
 }
 
 

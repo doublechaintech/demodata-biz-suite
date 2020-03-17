@@ -3,16 +3,20 @@ package com.test.demodata.userwhitelist;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import com.test.demodata.BaseDAO;
 import com.test.demodata.BaseEntity;
 import com.test.demodata.SmartList;
 import com.test.demodata.MultipleAccessKey;
 import com.test.demodata.DemodataUserContext;
+
+import com.test.demodata.userdomain.UserDomain;
+
 import com.test.demodata.userdomain.UserDomainDAO;
 
 
-public interface UserWhiteListDAO{
+public interface UserWhiteListDAO extends BaseDAO{
 
-	
+	public SmartList<UserWhiteList> loadAll();
 	public UserWhiteList load(String id, Map<String,Object> options) throws Exception;
 	public void enhanceList(List<UserWhiteList> userWhiteListList);
 	public void collectAndEnhance(BaseEntity ownerEntity);
@@ -42,6 +46,7 @@ public interface UserWhiteListDAO{
 	
 	
 	public SmartList<UserWhiteList> queryList(String sql, Object ... parmeters);
+	public int count(String sql, Object ... parmeters);
  
  	public SmartList<UserWhiteList> findUserWhiteListByDomain(String userDomainId, Map<String,Object> options);
  	public int countUserWhiteListByDomain(String userDomainId, Map<String,Object> options);
@@ -50,6 +55,7 @@ public interface UserWhiteListDAO{
  	public void analyzeUserWhiteListByDomain(SmartList<UserWhiteList> resultList, String userDomainId, Map<String,Object> options);
 
  
- }
+ 
+}
 
 

@@ -2,13 +2,20 @@ package com.test.demodata;
 
 
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.test.demodata.secuser.SecUser;
 import com.test.demodata.secuser.SecUserCustomManagerImpl;
@@ -21,23 +28,23 @@ public class DemodataUserContextImpl extends UserContextImpl implements Demodata
 
 	//默认支持中文和英文
 	protected static Map<String,String> chineseMap;
-	
+
 	protected static Map<String,String> englishMap;
-	
+
 	protected double longitude;
 	protected double latitude;
-	
-	
+
+
 	static final String RESOURCE_PATH="com.test.demodata.DemodataResources";
 	static final String CUSTOM_RESOURCE_PATH="com.test.demodata.DemodataCustomResources";
-	
+
 	public Map<String,String> ensureLocaleMaps(Locale locale ){
-		
+
 		String [] resources = {RESOURCE_PATH, CUSTOM_RESOURCE_PATH};
 		return ensureResourceAddResourceMaps(resources, locale);
-		
+
 	}
-	
+
 	protected Map<String,String> ensureResourceAddResourceMaps(String[] paths, Locale locale){
 		Map<String,String> localeMap= new HashMap<String,String>();
 		for(String path: paths){
@@ -51,7 +58,7 @@ public class DemodataUserContextImpl extends UserContextImpl implements Demodata
 		}
 		return localeMap;
 	}
-	
+
 	protected void addResourceToMap(Map<String,String> localeMap, ResourceBundle resourceBundle){
 		Enumeration<String> bundleKeys = resourceBundle.getKeys();
 
@@ -61,8 +68,8 @@ public class DemodataUserContextImpl extends UserContextImpl implements Demodata
 		    //System.out.println("key = " + key + ", " + "value = " + value);
 		    localeMap.put(key, value);
 		}
-		
-		
+
+
 	}
 	public void init(){
 		if(chineseMap==null){
@@ -72,22 +79,24 @@ public class DemodataUserContextImpl extends UserContextImpl implements Demodata
 			englishMap = ensureLocaleMaps(Locale.US);
 		}
 
-		
+
 	}
 	public Map<String,String> getLocaleMap(){
-		
+
 		init();
-		return englishMap;
-		
+
+		return chineseMap;
+
+
 	}
-	
+
 	protected Locale getLocale(){
 		return Locale.US;
 	}
 	public String getLocaleKey(String subject) {
 		return getLocaleMap().get(subject);
 	}
-	
+
 	public double getLatitude() {
         return latitude;
     }
@@ -185,44 +194,184 @@ public class DemodataUserContextImpl extends UserContextImpl implements Demodata
 		}
 		return apps.get(0);
 	}
-	
-	private DemodataChecker checker;
-	public void setChecker(DemodataChecker checker) {
+
+	private DemodataObjectChecker checker;
+	public void setChecker(DemodataObjectChecker checker) {
 		this.checker = checker;
-		
+
 	}
 
 	@Override
-	public DemodataChecker getChecker() {
-		
+	public DemodataObjectChecker getChecker() {
+
 		if(this.checker==null) {
 			throw new IllegalStateException("每个实例必须配置Checker，请检查相关Spring的XML配置文件中 checker的配置");
 		}
 		checker.setUserContext(this);
 		return checker;
 	}
-	
-	@Override
+
+	protected static final String ACCESS_PARAMETERS_KEY = "$access_parameters";
+	protected static final String ACCESS_METHOD_NAME_KEY = "$access_method_name";
+	protected static final String ACCESS_BEAN_NAME_KEY = "$access_bean_name";
+
 	public void saveAccessInfo(String beanName, String methodName, Object[] parameters) {
+		putIntoContextLocalStorage(ACCESS_BEAN_NAME_KEY, beanName);
+		putIntoContextLocalStorage(ACCESS_METHOD_NAME_KEY, methodName);
+		putIntoContextLocalStorage(ACCESS_PARAMETERS_KEY, parameters);
+		putToCache(getFootprintMarkKey(), true, 1*60*60);
 	}
-	
-	@Override
+
+	protected String getFootprintMarkKey() {
+		return tokenId()+":$acces_page_without_foorprint";
+	}
+
 	public void addFootprint(FootprintProducer helper) throws Exception {
+		String beanName = (String) this.getFromContextLocalStorage(ACCESS_BEAN_NAME_KEY);
+		String methodName =  (String) this.getFromContextLocalStorage(ACCESS_METHOD_NAME_KEY);
+		Object[] parameters =  (Object[]) this.getFromContextLocalStorage(ACCESS_PARAMETERS_KEY);
+		if (beanName == null) {
+			throw new Exception("Please make sure you had invoke user-context saveAccessInfo() inside your onAccess().");
+		}
+		if (!beanName.equals(helper.getBeanName())) {
+			throw new Exception("This request was from " + beanName+", not from " + helper.getBeanName()+".");
+		}
+		if (methodName == null) {
+			return;// 没保存过，就不用处理了。
+		}
+		this.removeFromCache(getFootprintMarkKey());
+		// 核心问题是怎么处理堆栈。 是持续累加，还是‘短路’算法（clear_top)，或者‘提升’（brought—to-front）
+		Footprint fp = new Footprint();
+		fp.setBeanName(helper.getBeanName());
+		fp.setMethodName(methodName);
+		fp.setParameters(parameters);
+		// 先从缓存中拿到历史记录
+		List<Footprint> history = getFootprintListFromCache();
+		if (history == null || history.isEmpty()) {
+			// 历史是空的，直接追加
+			history = new ArrayList<>();
+			history.add(fp);
+			this.log("add footprint " + beanName+"."+methodName+"("+Arrays.asList(fp.getParameters())+")");
+			putFootprintIntoCache(history);
+			return;
+		}
+
+		Footprint replacedFp = null;
+		for(Footprint item : history) {
+			if (helper.canReplaceFootPrint(fp, item)) {
+				replacedFp = item;
+				break;
+			}
+		}
+
+		if (replacedFp == null) {
+			// 没找到可替换的目标，追加到队列最后
+			history.add(fp);
+			this.log("add new footprint " + beanName+"."+methodName+"("+Arrays.asList(fp.getParameters())+")");
+			putFootprintIntoCache(history);
+			return;
+		}
+
+		// 找到可替换的目标以后，还要决定怎么做
+		if (helper.clearTop()) {
+			Iterator<Footprint> it = history.iterator();
+			boolean found = false;
+			while(it.hasNext()) {
+				Footprint item = it.next();
+				if (item == replacedFp) {
+					found = true;
+				}
+				if (found) {
+					it.remove();
+				}
+			}
+		}else {
+			int idx = history.indexOf(replacedFp);
+			history.remove(idx);
+		}
+		history.add(fp);
+		this.log("replace footprint " + beanName+"."+methodName+"("+Arrays.asList(fp.getParameters())+")");
+		putFootprintIntoCache(history);
 	}
 
-	@Override
-	public Object getPreviousViewPage() throws Exception {
-		return null;
+	public int getFootprintDeepth() throws Exception {
+		List<Footprint> history = getFootprintListFromCache();
+		if (history == null || history.isEmpty()) {
+			return 0;
+		}
+		return history.size();
+	}
+	protected void putFootprintIntoCache(List<Footprint> history) throws Exception {
+		String historyJson = new ObjectMapper().writeValueAsString(history);
+		this.putToCache(getFootprintKey(), historyJson, 1*60*60); // 1个小时
 	}
 
-	@Override
+	protected List<Footprint> getFootprintListFromCache() throws Exception {
+		String historyJson = (String) this.getCachedObject(getFootprintKey(), String.class);
+		if (historyJson == null || historyJson.isEmpty()) {
+			return null;
+		}
+		return new ObjectMapper().readValue(historyJson, new TypeReference<List<Footprint>>() {
+		});
+	}
+
+	protected String getFootprintKey() {
+		return this.tokenId+":footprint";
+	}
+
 	public Object getLastViewPage() throws Exception {
+		List<Footprint> history = getFootprintListFromCache();
+		if (history == null || history.isEmpty()) {
+			return null;
+		}
+
+		Footprint fp = history.remove(history.size()-1);
+		putFootprintIntoCache(history);
+
+		Object service = this.getBean(fp.getBeanName());
+		fp.getParameters()[0] = this;
+		Method[] methods = service.getClass().getMethods();
+		for(Method m: methods) {
+			if (m.getName().equals(fp.getMethodName()) && m.getParameterTypes().length == fp.getParameters().length) {
+				return m.invoke(service, fp.getParameters());
+			}
+		}
 		return null;
 	}
 
-	@Override
-	public Object goback() throws Exception {
+	public Object getPreviousViewPage() throws Exception {
+		List<Footprint> history = getFootprintListFromCache();
+		if (history == null || history.isEmpty()) {
+			return null;
+		}
+
+		Footprint fp = history.remove(history.size()-1);
+		if (history.isEmpty()) {
+			putFootprintIntoCache(history);
+			return null;
+		}
+		fp = history.remove(history.size()-1);
+		putFootprintIntoCache(history);
+
+		Object service = this.getBean(fp.getBeanName());
+		fp.getParameters()[0] = this;
+		Method[] methods = service.getClass().getMethods();
+		for(Method m: methods) {
+			if (m.getName().equals(fp.getMethodName()) && m.getParameterTypes().length == fp.getParameters().length) {
+				return m.invoke(service, fp.getParameters());
+			}
+		}
 		return null;
 	}
+
+	public Object goback() throws Exception {
+		Object mark = getCachedObject(getFootprintMarkKey(), Boolean.class);
+		if (mark instanceof Boolean && ((Boolean) mark).booleanValue()) {
+			// 没压栈
+			return getLastViewPage();
+		}
+		return getPreviousViewPage();
+	}
+
 }
 

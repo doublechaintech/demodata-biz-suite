@@ -4,20 +4,22 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import com.terapico.caf.DateTime;
+import com.terapico.caf.Images;
 import com.test.demodata.DemodataUserContext;
 import com.test.demodata.BaseEntity;
+import com.test.demodata.BaseManager;
 import com.test.demodata.SmartList;
 
-public interface UserWhiteListManager{
+public interface UserWhiteListManager extends BaseManager{
 
 		
 
-	public UserWhiteList createUserWhiteList(DemodataUserContext userContext, String userIdentity, String userSpecialFunctions, String domainId) throws Exception;	
+	public UserWhiteList createUserWhiteList(DemodataUserContext userContext, String userIdentity,String userSpecialFunctions,String domainId) throws Exception;
 	public UserWhiteList updateUserWhiteList(DemodataUserContext userContext,String userWhiteListId, int userWhiteListVersion, String property, String newValueExpr,String [] tokensExpr) throws Exception;
 	public UserWhiteList loadUserWhiteList(DemodataUserContext userContext, String userWhiteListId, String [] tokensExpr) throws Exception;
 	public UserWhiteList internalSaveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList) throws Exception;
 	public UserWhiteList internalSaveUserWhiteList(DemodataUserContext userContext, UserWhiteList userWhiteList,Map<String,Object>option) throws Exception;
-	
+
 	public UserWhiteList transferToAnotherDomain(DemodataUserContext userContext, String userWhiteListId, String anotherDomainId)  throws Exception;
  
 
@@ -26,9 +28,12 @@ public interface UserWhiteListManager{
 	public void onNewInstanceCreated(DemodataUserContext userContext, UserWhiteList newCreated)throws Exception;
 
 	/*======================================================DATA MAINTENANCE===========================================================*/
-	
 
 
+
+	public Object listByDomain(DemodataUserContext userContext,String domainId) throws Exception;
+	public Object listPageByDomain(DemodataUserContext userContext,String domainId, int start, int count) throws Exception;
+  
 
 }
 

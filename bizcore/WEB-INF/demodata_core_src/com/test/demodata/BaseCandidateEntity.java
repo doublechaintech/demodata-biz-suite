@@ -69,5 +69,3 @@ public class BaseCandidateEntity<T extends BaseEntity> extends BaseEntity {
 
 
 
-
-
